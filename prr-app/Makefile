@@ -1,4 +1,4 @@
-PO_UILIB_DIR=../../../po-uilib
+PO_UILIB_DIR=../../po-uilib
 JARNAME=prr-app
 
 all:
