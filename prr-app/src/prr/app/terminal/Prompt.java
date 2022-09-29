@@ -27,10 +27,17 @@ interface Prompt {
 	}
 
 	/**
+	 * @return string prompting for the communication key.
+	 */
+	static String commKey() {
+		return "Número da comunicação: ";
+	}
+
+	/**
 	 * @return string prompting for the communication type.
 	 */
 	static String commType() {
-		return "Tipo de comunicação a iniciar (TEXT, VOICE, VIDEO): ";
+		return "Tipo de comunicação a iniciar (VOICE, VIDEO): ";
 	}
 
 	/**
@@ -45,5 +52,12 @@ interface Prompt {
 	 */
 	static String characters() {
 		return "Número de caracteres da comunicação: ";
+	}
+
+	/**
+	 * @return string prompting for the text message.
+	 */
+	static String textMessage() {
+		return "Mensagem de texto a enviar: ";
 	}
 }
