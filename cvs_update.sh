@@ -2,8 +2,6 @@
 
 # THIS SCRIPT ONLY WORKS WITH ZSH
 
-export CVS_RSH=ssh
-
 CVS_FOLDER=../project
 
 removed_files() {
@@ -20,7 +18,8 @@ cvs_update() {
 	(cd $CVS_FOLDER && cvs -q update)
 }
 
-cp --parents **/*.java $CVS_FOLDER/
+cp --parents ./prr-app/**/*.java $CVS_FOLDER
+cp --parents ./prr-core/**/*.java $CVS_FOLDER
 
 echo Changes to commit:
 cvs_update
@@ -43,4 +42,4 @@ if cvs_update |& grep -w '?' &>/dev/null; then
 fi
 
 echo Then, commit with
-echo 'cvs commit -m "'"$(git log -1 --pretty="%B - From Git by %an at %ai")"'"'
+echo 'cvs commit -m "'"$(git log -1 --pretty="%B")"'"'
