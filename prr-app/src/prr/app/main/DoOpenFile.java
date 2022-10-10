@@ -14,7 +14,7 @@ class DoOpenFile extends Command<NetworkManager> {
 
     DoOpenFile(NetworkManager receiver) {
     	super(Label.OPEN_FILE, receiver);
-        addStringField("filename", Prompt.openfile());
+        addStringField("filename", Prompt.openFile());
     }
 
     @Override

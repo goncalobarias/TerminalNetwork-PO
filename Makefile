@@ -3,6 +3,11 @@ PRR_APP_PATH=./prr-app
 PO_UILIB_PATH=./po-uilib
 CLASSPATH=$(shell pwd)/po-uilib/po-uilib.jar:$(shell pwd)/prr-app/prr-app.jar:$(shell pwd)/prr-core/prr-core.jar
 
+tests::
+	$(MAKE) $(MFLAGS) -C $(PO_UILIB_PATH)
+	$(MAKE) $(MFLAGS) -C $(PRR_CORE_PATH)
+	$(MAKE) $(MFLAGS) -C $(PRR_APP_PATH)
+
 all::
 	$(MAKE) $(MFLAGS) -C $(PO_UILIB_PATH)
 	$(MAKE) $(MFLAGS) -C $(PRR_CORE_PATH)
