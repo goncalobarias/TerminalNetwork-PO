@@ -7,7 +7,6 @@ import prr.exceptions.ImportFileException;
 import prr.exceptions.MissingFileAssociationException;
 import prr.exceptions.UnavailableFileException;
 import prr.exceptions.UnrecognizedEntryException;
-
 //FIXME add more import if needed (cannot import from pt.tecnico or prr.app)
 
 /**
@@ -15,27 +14,31 @@ import prr.exceptions.UnrecognizedEntryException;
  */
 public class NetworkManager {
 
-	/** The network itself. */
-	private Network _network = new Network();
         //FIXME  addmore fields if needed
 
-        public Network getNetwork() {
+	/** The network itself. */
+	private Network _network = new Network();
+
+    /** The name of the current file storing the network. */
+    private String _filename = "";
+
+    public Network getNetwork() {
 		return _network;
 	}
 
 	/**
 	 * @param filename name of the file containing the serialized application's state
-         *        to load.
+     *        to load.
 	 * @throws UnavailableFileException if the specified file does not exist or there is
-         *         an error while processing this file.
+     *         an error while processing this file.
 	 */
 	public void load(String filename) throws UnavailableFileException {
 		//FIXME implement serialization method
 	}
 
 	/**
-         * Saves the serialized application's state into the file associated to the current network.
-         *
+     * Saves the serialized application's state into the file associated to the current network.
+     *
 	 * @throws FileNotFoundException if for some reason the file cannot be created or opened. 
 	 * @throws MissingFileAssociationException if the current network does not have a file.
 	 * @throws IOException if there is some error while serializing the state of the network to disk.
@@ -45,9 +48,9 @@ public class NetworkManager {
 	}
 
 	/**
-         * Saves the serialized application's state into the specified file. The current network is
-         * associated to this file.
-         *
+     * Saves the serialized application's state into the specified file. The current network is
+     * associated to this file.
+     *
 	 * @param filename the name of the file.
 	 * @throws FileNotFoundException if for some reason the file cannot be created or opened.
 	 * @throws MissingFileAssociationException if the current network does not have a file.
@@ -65,10 +68,10 @@ public class NetworkManager {
 	 */
 	public void importFile(String filename) throws ImportFileException {
 		try {
-                        _network.importFile(filename);
-                } catch (IOException | UnrecognizedEntryException /* FIXME maybe other exceptions */ e) {
-                        throw new ImportFileException(filename, e);
-    }
+            _network.importFile(filename);
+        } catch (IOException | UnrecognizedEntryException /* FIXME maybe other exceptions */ e) {
+            throw new ImportFileException(filename, e);
+        }
 	}
 
 }
