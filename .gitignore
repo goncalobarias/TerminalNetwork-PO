@@ -2,6 +2,10 @@
 # Compiled class file
 *.class
 
+# Test related files
+*.outhyp
+*.diff
+
 # Log file
 *.log
 
