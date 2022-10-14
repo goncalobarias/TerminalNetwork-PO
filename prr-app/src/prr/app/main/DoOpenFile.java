@@ -3,7 +3,6 @@ package prr.app.main;
 import prr.NetworkManager;
 import prr.app.exceptions.FileOpenFailedException;
 import prr.exceptions.UnavailableFileException;
-import pt.tecnico.uilib.forms.Form;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
