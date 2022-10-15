@@ -2,6 +2,12 @@ package prr;
 
 import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.ObjectOutputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 
 import prr.exceptions.ImportFileException;
 import prr.exceptions.MissingFileAssociationException;
@@ -34,7 +40,18 @@ public class NetworkManager {
      *                                  file.
      */
     public void load(String filename) throws UnavailableFileException {
-        //FIXME implement serialization method
+        if (filename == null || filename.equals("")) {
+            throw new UnavailableFileException(filename);
+        }
+
+        _filename = filename;
+        try (ObjectInputStream ois = new ObjectInputStream(
+          new BufferedInputStream(new FileInputStream(_filename)))) {
+            _network = (Network) ois.readObject();
+            _network.setChanged(false);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new UnavailableFileException(_filename);
+        }
     }
 
     /**
@@ -51,7 +68,17 @@ public class NetworkManager {
      */
     public void save() throws MissingFileAssociationException, 
       FileNotFoundException, IOException {
-        //FIXME implement serialization method
+        if (_filename == null || _filename.equals("")) {
+            throw new MissingFileAssociationException();
+        }
+
+        if (_network.hasChanged()) {
+            try (ObjectOutputStream oos = new ObjectOutputStream(
+              new BufferedOutputStream(new FileOutputStream(_filename)))) {
+                oos.writeObject(_network);
+                _network.setChanged(false);
+            }
+        }
     }
 
     /**
@@ -69,13 +96,14 @@ public class NetworkManager {
      */
     public void saveAs(String filename) throws MissingFileAssociationException, 
       FileNotFoundException, IOException {
-        //FIXME implement serialization method
+        _filename = filename;
+        save();
     }
 
     /**
      * Read text input file and create domain entities..
      * 
-     * @param filename name of the text input file
+     * @param filename Name of the text input file
      * @throws ImportFileException
      */
     public void importFile(String filename) throws ImportFileException {
