@@ -1,4 +1,4 @@
-package prr;
+package prr.communications;
 
 import java.io.Serializable;
 

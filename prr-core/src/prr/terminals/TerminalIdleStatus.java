@@ -1,4 +1,4 @@
-package prr;
+package prr.terminals;
 
 public class TerminalIdleStatus extends Terminal.Status {
 

@@ -1,4 +1,4 @@
-package prr;
+package prr.tariffs;
 
 import java.io.Serializable;
 

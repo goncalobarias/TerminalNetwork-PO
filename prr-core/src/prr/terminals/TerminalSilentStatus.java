@@ -1,4 +1,4 @@
-package prr;
+package prr.terminals;
 
 public class TerminalSilentStatus extends Terminal.Status {
 

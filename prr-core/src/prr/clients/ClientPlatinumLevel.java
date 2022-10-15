@@ -1,4 +1,4 @@
-package prr;
+package prr.clients;
 
 public class ClientPlatinumLevel extends Client.Level {
 

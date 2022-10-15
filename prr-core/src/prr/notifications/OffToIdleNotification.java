@@ -1,4 +1,4 @@
-package prr;
+package prr.notifications;
 
 public class OffToIdleNotification extends Notification {
 }

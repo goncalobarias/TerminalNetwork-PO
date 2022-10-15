@@ -1,4 +1,4 @@
-package prr;
+package prr.notifications;
 
 import java.io.Serializable;
 

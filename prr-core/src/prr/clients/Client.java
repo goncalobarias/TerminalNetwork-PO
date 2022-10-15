@@ -1,4 +1,4 @@
-package prr;
+package prr.clients;
 
 import java.io.Serializable;
 

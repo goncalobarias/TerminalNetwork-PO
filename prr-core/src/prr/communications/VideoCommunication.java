@@ -1,4 +1,4 @@
-package prr;
+package prr.communications;
 
 public class VideoCommunication extends InteractiveCommunication {
 }

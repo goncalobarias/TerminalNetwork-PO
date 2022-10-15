@@ -1,4 +1,4 @@
-package prr;
+package prr.tariffs;
 
 public class BasePlan extends TariffPlan {
 }

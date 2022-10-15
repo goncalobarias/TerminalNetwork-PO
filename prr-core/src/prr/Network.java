@@ -2,7 +2,6 @@ package prr;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Stream;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Serializable;
@@ -16,7 +15,6 @@ import prr.exceptions.InvalidTerminalKeyException;
 import prr.exceptions.UnknownClientKeyException;
 import prr.exceptions.UnknownTerminalKeyException;
 import prr.exceptions.IllegalEntryException;
-// FIXME add more import if needed (cannot import from pt.tecnico or prr.app)
 
 /**
  * Class Store implements a store.
@@ -25,8 +23,6 @@ public class Network implements Serializable {
 
     /** Serial number for serialization. */
     private static final long serialVersionUID = 202208091753L;
-        // FIXME define contructor(s)
-        // FIXME define methods
 
     /** */
     private Map<String, Client> _clients = new TreeMap<>();
@@ -113,11 +109,17 @@ public class Network implements Serializable {
     }
 
     /** */
-    private void parseClient(String[] fields) throws IllegalEntryException,
-      UnrecognizedEntryException {
-        if (fields.length != 4) {
+    private void assertFieldsLength(String[] fields, int expectedSize) 
+      throws UnrecognizedEntryException {
+        if (fields.length != expectedSize) {
             throw new UnrecognizedEntryException(_currentEntry);
         }
+    }
+
+    /** */
+    private void parseClient(String[] fields) throws IllegalEntryException,
+      UnrecognizedEntryException {
+        assertFieldsLength(fields, 4);
 
         try {
             registerClient(fields[1], fields[2], Integer.parseInt(fields[3]));
@@ -154,9 +156,7 @@ public class Network implements Serializable {
     /** */
     private void parseTerminal(String[] fields) 
       throws IllegalEntryException, UnrecognizedEntryException {
-        if (fields.length != 4) {
-            throw new UnrecognizedEntryException(_currentEntry);
-        }
+        assertFieldsLength(fields, 4);
 
         try {
             registerTerminal(fields[0], 
@@ -180,6 +180,7 @@ public class Network implements Serializable {
             case "BASIC" -> new BasicTerminal(idTerminal, idClient, status);
             case "FANCY" -> new FancyTerminal(idTerminal, idClient, status);
             default -> throw new UnrecognizedEntryException(_currentEntry);
+            // FIXME disgusting implementation on the terminal status
         };
 
         _terminals.put(idTerminal, terminal);
@@ -191,6 +192,9 @@ public class Network implements Serializable {
       throws InvalidTerminalKeyException, DuplicateTerminalKeyException {
         if (_terminals.containsKey(id)) {
             throw new DuplicateTerminalKeyException(id);
+        }
+        if (id < 100000 || id > 999999) {
+            throw new InvalidTerminalKeyException(id);
         }
     }
 
@@ -207,9 +211,7 @@ public class Network implements Serializable {
     /** */
     private void parseTerminalFriends(String[] fields) 
       throws IllegalEntryException, UnrecognizedEntryException {
-        if (fields.length != 2) {
-            throw new UnrecognizedEntryException(_currentEntry);
-        }
+        assertFieldsLength(fields, 3);
 
         try {
             String[] terminalFriendsIds = fields[2].split(",");
@@ -226,6 +228,7 @@ public class Network implements Serializable {
         for (String terminalFriendId : terminalFriendsIds) {
             assertTerminalExists(Integer.parseInt(terminalFriendId));
             terminal.addFriend(Integer.parseInt(terminalFriendId));
+            // FIXME weird implementation
         }
         changed();
     }
