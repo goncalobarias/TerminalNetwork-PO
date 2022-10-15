@@ -5,6 +5,7 @@
 # Test related files
 *.outhyp
 *.diff
+*.dat
 
 # Log file
 *.log

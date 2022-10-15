@@ -59,7 +59,7 @@ for x in "$tests/"*.in; do
     let total++;
 done
 
-rm -f saved*
+rm -f *.dat
 
 let res=100*$correct/$total;
 let failures=total-correct;
