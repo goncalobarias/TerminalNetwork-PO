@@ -35,7 +35,7 @@ abstract public class Terminal implements Serializable /* FIXME maybe addd more 
             case "SILENCE" -> new TerminalSilentStatus(this);
             default -> new TerminalIdleStatus(this);
         };
-        owner.addTerminal(this);
+        _owner.addTerminal(this);
     }
 
     public abstract String getTerminalType();
@@ -88,7 +88,11 @@ abstract public class Terminal implements Serializable /* FIXME maybe addd more 
      **/
     public boolean canStartCommunication() {
         // FIXME add implementation code
-	    return false;
+	    return true;
+    }
+
+    public boolean isUnused() {
+        return getPayments() == 0 && getDebts() == 0;
     }
 
     public void setStatus(Status status) {

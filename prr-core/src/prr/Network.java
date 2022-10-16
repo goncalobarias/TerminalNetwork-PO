@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Serializable;
@@ -238,6 +239,13 @@ public class Network implements Serializable {
     /** */
     public Collection<Terminal> getAllTerminals() {
         return Collections.unmodifiableCollection(_terminals.values());
+    }
+
+    /** */
+    public Collection<Terminal> getUnusedTerminals() {
+        return getAllTerminals().stream()
+                                .filter(terminal -> terminal.isUnused())
+                                .collect(Collectors.toList());
     }
 
     /** */
