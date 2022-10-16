@@ -1,4 +1,4 @@
-<div align="center">__Terminal Network (Project PO)__</div>
+__<p align="center"> Terminal Network (Project PO) </p>__
 ___
 The goal of this project is to develop an application to manage a network of communication terminals, called prr. Generically, the program allows the registration, management and consultation of clients, terminals and communications.
 
