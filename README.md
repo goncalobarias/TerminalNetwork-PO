@@ -1,14 +1,13 @@
-__Terminal Network (Project PO)__
+<div align="center">__Terminal Network (Project PO)__</div>
 ___
 The goal of this project is to develop an application to manage a network of communication terminals, called prr. Generically, the program allows the registration, management and consultation of clients, terminals and communications.
 
-[Project Statement](docs/statement.pdf) |
-[Evaluation Methods](docs/evaluation.pdf)
+[Project Statement](docs/statement.pdf) | [Evaluation Methods](docs/evaluation.pdf)
 ___
-### Requirements
+### Requirements:
 Java 14+
-
-### Use
+___
+### Use:
 
 1. Clone the repo
 ```
@@ -33,5 +32,5 @@ make
 
 In case you get this error `bash: ./run_tests.sh: Permission denied` run
 ```
-chmod +x runtests.sh
+chmod +x run_tests.sh
 ```

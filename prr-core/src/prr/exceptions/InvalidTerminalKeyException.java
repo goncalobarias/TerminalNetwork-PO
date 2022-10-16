@@ -9,15 +9,15 @@ public class InvalidTerminalKeyException extends Exception {
     private static final long serialVersionUID = 202210140738L;
 
     /** The terminal's key. */
-    private final int _key;
+    private final String _key;
 
     /** @param key */
-    public InvalidTerminalKeyException(int key) {
+    public InvalidTerminalKeyException(String key) {
         _key = key;
     }
 
     /** @return the key */
-    public int getKey() {
+    public String getKey() {
         return _key;
     }
 

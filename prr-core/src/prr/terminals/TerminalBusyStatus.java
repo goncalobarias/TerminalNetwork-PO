@@ -6,4 +6,9 @@ public class TerminalBusyStatus extends Terminal.Status {
         terminal.super();
     }
 
+    @Override
+    public String getStatusType() {
+        return "BUSY";
+    }
+
 }

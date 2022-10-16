@@ -13,7 +13,6 @@ import prr.exceptions.ImportFileException;
 import prr.exceptions.MissingFileAssociationException;
 import prr.exceptions.UnavailableFileException;
 import prr.exceptions.UnrecognizedEntryException;
-import prr.exceptions.IllegalEntryException;
 //FIXME add more import if needed (cannot import from pt.tecnico or prr.app)
 
 /**
@@ -109,8 +108,7 @@ public class NetworkManager {
     public void importFile(String filename) throws ImportFileException {
         try {
             _network.importFile(filename);
-        } catch (IOException | IllegalEntryException | 
-          UnrecognizedEntryException e) {
+        } catch (IOException | UnrecognizedEntryException e) {
             throw new ImportFileException(filename, e);
         }
     }

@@ -6,4 +6,9 @@ public class ClientGoldLevel extends Client.Level {
         client.super();
     }
 
+    @Override
+    public String getLevelType() {
+        return "GOLD";
+    }
+
 }

@@ -6,4 +6,9 @@ public class ClientPlatinumLevel extends Client.Level {
         client.super();
     }
 
+    @Override
+    public String getLevelType() {
+        return "PLATINUM";
+    }
+
 }

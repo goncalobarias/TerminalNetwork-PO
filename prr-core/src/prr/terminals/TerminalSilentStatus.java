@@ -6,4 +6,9 @@ public class TerminalSilentStatus extends Terminal.Status {
         terminal.super();
     }
 
+    @Override
+    public String getStatusType() {
+        return "SILENCE";
+    }
+
 }

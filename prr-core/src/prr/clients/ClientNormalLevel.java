@@ -6,4 +6,9 @@ public class ClientNormalLevel extends Client.Level {
         client.super();
     }
 
+    @Override
+    public String getLevelType() {
+        return "NORMAL";
+    }
+
 }

@@ -6,4 +6,9 @@ public class TerminalOffStatus extends Terminal.Status {
         terminal.super();
     }
 
+    @Override
+    public String getStatusType() {
+        return "OFF";
+    }
+
 }
