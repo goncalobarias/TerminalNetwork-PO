@@ -16,9 +16,12 @@ public abstract class Communication implements Serializable {
     private Terminal _terminalReceiver;
     private Terminal _terminalSender;
 
-    public Communication(int id, Terminal terminalReceiver, 
+    public Communication(int id, Terminal terminalReceiver,
       Terminal terminalSender) {
         _id = id;
+        _isPaid = false;
+        _isOngoing = true;
+        _units = 0.0;
         _terminalReceiver = terminalReceiver;
         _terminalSender = terminalSender;
     }

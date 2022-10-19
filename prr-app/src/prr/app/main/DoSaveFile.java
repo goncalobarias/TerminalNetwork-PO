@@ -13,24 +13,24 @@ import pt.tecnico.uilib.menus.Command;
  */
 class DoSaveFile extends Command<NetworkManager> {
 
-	DoSaveFile(NetworkManager receiver) {
-		super(Label.SAVE_FILE, receiver);
-	}
+    DoSaveFile(NetworkManager receiver) {
+        super(Label.SAVE_FILE, receiver);
+    }
 
-	@Override
-	protected final void execute() {
+    @Override
+    protected final void execute() {
         try {
             try {
                 save();
-            } catch (MissingFileAssociationException | FileNotFoundException e1) {
+            } catch (MissingFileAssociationException | FileNotFoundException e) {
                 saveAs();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-	}
+    }
 
-    private void save() throws MissingFileAssociationException, 
+    private void save() throws MissingFileAssociationException,
       FileNotFoundException, IOException {
         _receiver.save();
     }

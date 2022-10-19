@@ -10,18 +10,19 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowClient extends Command<Network> {
 
-	DoShowClient(Network receiver) {
-		super(Label.SHOW_CLIENT, receiver);
+    DoShowClient(Network receiver) {
+        super(Label.SHOW_CLIENT, receiver);
         addStringField("clientId", Prompt.key());
-	}
+    }
 
-	@Override
-	protected final void execute() throws CommandException {
+    @Override
+    protected final void execute() throws CommandException {
         try {
-            _display.popup(_receiver.getClient(stringField("clientId"))
-                                    .toString());
+            String clientId = stringField("clientId");
+            _display.popup(_receiver.getClient(clientId).toString());
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());
         }
-	}
+    }
+
 }

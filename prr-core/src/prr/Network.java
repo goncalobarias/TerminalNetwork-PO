@@ -24,6 +24,7 @@ import prr.exceptions.UnknownClientKeyException;
 import prr.exceptions.UnknownTerminalKeyException;
 import prr.exceptions.UnknownEntryTypeException;
 import prr.exceptions.UnknownEntryLengthException;
+import prr.exceptions.UnknownTerminalStatusException;
 
 /**
  * Class Store implements a store.
@@ -34,28 +35,40 @@ public class Network implements Serializable {
     private static final long serialVersionUID = 202208091753L;
 
     /** */
-    private Map<String, Client> _clients = new TreeMap<>();
+    private Map<String, Client> _clients;
 
     /** */
-    private Map<Integer, Terminal> _terminals = new TreeMap<>();
+    private Map<String, Terminal> _terminals;
 
     /** */
-    private Map<Integer, Communication> _communications = new TreeMap<>();
+    private Map<Integer, Communication> _communications;
 
     /** */
-    private int _nextCommunicationId = 0;
+    private int _nextCommunicationId;
 
     /** */
-    private double _globalPayments = 0.0;
+    private double _globalPayments;
 
     /** */
-    private double _globalDebts = 0.0;
+    private double _globalDebts;
 
     /** */
-    private boolean _changed = false;
+    private boolean _changed;
 
     /** */
-    private String _currentEntry = "";
+    private String _currentEntry;
+
+    /** Default constructor. */
+    public Network() {
+        _clients = new TreeMap<String, Client>(new NaturalTextComparator());
+        _terminals = new TreeMap<String, Terminal>();
+        _communications = new TreeMap<Integer, Communication>();
+        _nextCommunicationId = 0;
+        _globalPayments = 0.0;
+        _globalDebts = 0.0;
+        _changed = false;
+        _currentEntry = "";
+    }
 
     /** */
     private int getNextCommunicationId() {
@@ -68,52 +81,52 @@ public class Network implements Serializable {
     }
 
     /** */
-    public boolean hasChanged() {
-        return _changed;
-    }
-
-    /** */
     public void changed() {
         setChanged(true);
     }
 
     /** */
-    public void setCurrentEntry(String entry) {
+    private void setCurrentEntry(String entry) {
         _currentEntry = entry;
+    }
+
+    /** */
+    public boolean hasChanged() {
+        return _changed;
     }
 
     /**
      * Read text input file and create corresponding domain entities.
-     * 
+     *
      * @param filename Name of the text input file
-     * @throws ImportFileException        if an error occured while importing 
+     * @throws ImportFileException        if an error occured while importing
      *                                    the file
      * @throws UnrecognizedEntryException if some entry is not correct
-     * @throws IOException                if there is an IO error while 
+     * @throws IOException                if there is an IO error while
      *                                    processing the text file
      */
-    void importFile(String filename) throws IOException, 
+    void importFile(String filename) throws IOException,
       UnrecognizedEntryException {
-        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+        try (BufferedReader reader = new BufferedReader(
+          new FileReader(filename))) {
             String entry;
             while ((entry = reader.readLine()) != null) {
                 setCurrentEntry(entry);
                 String[] fields = entry.split("\\|");
-                registerEntry(fields);
+                parseEntry(fields);
             }
         }
     }
 
-    /** 
+    /**
      * Receive fields from an entry line and register it into the network.
      *
-     * @param fields Fields that were previously split in order to contain 
+     * @param fields Fields that were previously split in order to contain
      *               information for an entry ready to be registered
-     * @throws UnrecognizedEntryException if the entry type is unknown by 
+     * @throws UnrecognizedEntryException if the entry type is unknown by
      *                                    the program
      */
-    private void registerEntry(String[] fields) 
-      throws UnrecognizedEntryException {
+    private void parseEntry(String[] fields) throws UnrecognizedEntryException {
         try {
             switch (fields[0]) {
                 case "CLIENT" -> parseClient(fields);
@@ -122,12 +135,12 @@ public class Network implements Serializable {
                 default -> throw new UnknownEntryTypeException(fields[0]);
             }
         } catch (UnknownEntryTypeException e) {
-            throw new UnrecognizedEntryException(_currentEntry);
+            throw new UnrecognizedEntryException(_currentEntry, e);
         }
     }
 
     /** */
-    private void assertEntryLength(String[] fields, int expectedSize) 
+    private void assertEntryLength(String[] fields, int expectedSize)
       throws UnknownEntryLengthException {
         if (fields.length != expectedSize) {
             throw new UnknownEntryLengthException(fields.length);
@@ -135,24 +148,40 @@ public class Network implements Serializable {
     }
 
     /** */
-    private void parseClient(String[] fields) 
+    private void parseClient(String[] fields)
       throws UnrecognizedEntryException {
         try {
             assertEntryLength(fields, 4);
             registerClient(fields[1], fields[2], Integer.parseInt(fields[3]));
-        } catch (DuplicateClientKeyException | NumberFormatException | 
-          UnknownEntryLengthException e) {
-            throw new UnrecognizedEntryException(_currentEntry);
+        } catch (UnknownEntryLengthException | NumberFormatException |
+          DuplicateClientKeyException e) {
+            throw new UnrecognizedEntryException(_currentEntry, e);
         }
     }
 
     /** */
-    public void registerClient(String id, String name, int taxId) 
+    public void registerClient(String id, String name, int taxId)
       throws DuplicateClientKeyException {
         assertNewClient(id);
         Client client = new Client(id, name, taxId);
         _clients.put(id, client);
         changed();
+    }
+
+    /** */
+    public void assertNewClient(String id)
+      throws DuplicateClientKeyException {
+        if (_clients.containsKey(id)) {
+            throw new DuplicateClientKeyException(id);
+        }
+    }
+
+    /** */
+    public void assertClientExists(String id)
+      throws UnknownClientKeyException {
+        if (!_clients.containsKey(id)) {
+            throw new UnknownClientKeyException(id);
+        }
     }
 
     /** */
@@ -175,63 +204,70 @@ public class Network implements Serializable {
     }
 
     /** */
-    public void assertNewClient(String id) throws DuplicateClientKeyException {
-        if (_clients.containsKey(id)) {
-            throw new DuplicateClientKeyException(id);
-        }
-    }
-
-    /** */
-    public void assertClientExists(String id) 
-      throws UnknownClientKeyException {
-        if (!_clients.containsKey(id)) {
-            throw new UnknownClientKeyException(id);
-        }
-    }
-
-    /** */
-    private void parseTerminal(String[] fields) 
+    private void parseTerminal(String[] fields)
       throws UnrecognizedEntryException {
         try {
             assertEntryLength(fields, 4);
-            registerTerminal(fields[0], Integer.parseInt(fields[1]), 
-                            fields[2], fields[3]);
-        } catch (UnknownClientKeyException | InvalidTerminalKeyException | 
-          DuplicateTerminalKeyException | NumberFormatException | 
-          UnknownEntryLengthException | UnknownEntryTypeException e) {
-            throw new UnrecognizedEntryException(_currentEntry);
+            Terminal registeredTerminal =
+                registerTerminal(fields[0], fields[1], fields[2]);
+            registeredTerminal.setStatus(fields[3]);
+        } catch (UnknownEntryLengthException | InvalidTerminalKeyException |
+          DuplicateTerminalKeyException | UnknownClientKeyException |
+          UnknownEntryTypeException | UnknownTerminalStatusException e) {
+            throw new UnrecognizedEntryException(_currentEntry, e);
         }
     }
 
     /** */
-    public void registerTerminal(String type, int idTerminal, String idClient, 
-      String status) throws UnknownClientKeyException, 
-      InvalidTerminalKeyException, DuplicateTerminalKeyException, 
+    public Terminal registerTerminal(String type, String terminalId,
+      String clientId) throws InvalidTerminalKeyException,
+      DuplicateTerminalKeyException, UnknownClientKeyException,
       UnknownEntryTypeException {
-        assertNewTerminal(idTerminal);
-        assertClientExists(idClient);
+        assertNewTerminal(terminalId);
+        assertClientExists(clientId);
 
         Terminal terminal = switch(type) {
-            case "BASIC" -> new BasicTerminal(idTerminal, getClient(idClient), status);
-            case "FANCY" -> new FancyTerminal(idTerminal, getClient(idClient), status);
+            case "BASIC" -> new BasicTerminal(terminalId, getClient(clientId));
+            case "FANCY" -> new FancyTerminal(terminalId, getClient(clientId));
             default -> throw new UnknownEntryTypeException(type);
-            // FIXME disgusting implementation on the terminal status
         };
 
-        _terminals.put(idTerminal, terminal);
+        _terminals.put(terminalId, terminal);
         changed();
+        return terminal;
     }
 
     /** */
-    public Terminal getTerminal(int id) throws UnknownTerminalKeyException {
+    public void assertNewTerminal(String id) throws InvalidTerminalKeyException,
+      DuplicateTerminalKeyException {
+        String validTerminalIdRegex = "^\\d{6}$";
+        if (!id.matches(validTerminalIdRegex)) {
+            throw new InvalidTerminalKeyException(id);
+        }
+        if (_terminals.containsKey(id)) {
+            throw new DuplicateTerminalKeyException(id);
+        }
+    }
+
+    /** */
+    public void assertTerminalExists(String id)
+      throws UnknownTerminalKeyException {
+        if (!_terminals.containsKey(id)) {
+            throw new UnknownTerminalKeyException(id);
+        }
+    }
+
+    /** */
+    public Terminal getTerminal(String id) throws UnknownTerminalKeyException {
         return fetchTerminal(id);
     }
 
     /** */
-    private Terminal fetchTerminal(int id) throws UnknownTerminalKeyException {
+    private Terminal fetchTerminal(String id)
+      throws UnknownTerminalKeyException {
         Terminal terminal = _terminals.get(id);
         if (terminal == null) {
-            throw new UnknownTerminalKeyException(Integer.toString(id));
+            throw new UnknownTerminalKeyException(id);
         }
         return terminal;
     }
@@ -243,51 +279,32 @@ public class Network implements Serializable {
 
     /** */
     public Collection<Terminal> getUnusedTerminals() {
-        return getAllTerminals().stream()
-                                .filter(terminal -> terminal.isUnused())
-                                .collect(Collectors.toList());
+        return Collections.unmodifiableCollection(
+                                getAllTerminals().stream()
+                                .filter(t -> t.isUnused())
+                                .collect(Collectors.toList()));
     }
 
     /** */
-    public void assertNewTerminal(int id) 
-      throws InvalidTerminalKeyException, DuplicateTerminalKeyException {
-        if (_terminals.containsKey(id)) {
-            throw new DuplicateTerminalKeyException(Integer.toString(id));
-        }
-        if (id < 100000 || id > 999999) {
-            throw new InvalidTerminalKeyException(Integer.toString(id));
-        }
-    }
-
-    /** */
-    public void assertTerminalExists(int id) 
-      throws UnknownTerminalKeyException {
-        if (!_terminals.containsKey(id)) {
-            throw new UnknownTerminalKeyException(Integer.toString(id));
-        }
-    }
-
-    /** */
-    private void parseTerminalFriends(String[] fields) 
+    private void parseTerminalFriends(String[] fields)
       throws UnrecognizedEntryException {
         try {
             assertEntryLength(fields, 3);
             String[] terminalFriendsIds = fields[2].split(",");
             registerTerminalFriends(fields[1], terminalFriendsIds);
-        } catch (UnknownTerminalKeyException | NumberFormatException | 
-          UnknownEntryLengthException e) {
-            throw new UnrecognizedEntryException(_currentEntry);
+        } catch (UnknownEntryLengthException | UnknownTerminalKeyException e) {
+            throw new UnrecognizedEntryException(_currentEntry, e);
         }
     }
 
     /** */
-    public void registerTerminalFriends(String terminalId, 
-      String[] terminalFriendsIds) throws UnknownTerminalKeyException, 
-      NumberFormatException {
-        Terminal terminal = getTerminal(Integer.parseInt(terminalId));
+    private void registerTerminalFriends(String terminalId,
+      String[] terminalFriendsIds) throws UnknownTerminalKeyException {
+        assertTerminalExists(terminalId);
+        Terminal terminal = getTerminal(terminalId);
         for (String terminalFriendId : terminalFriendsIds) {
-            assertTerminalExists(Integer.parseInt(terminalFriendId));
-            terminal.addFriend(Integer.parseInt(terminalFriendId));
+            assertTerminalExists(terminalFriendId);
+            terminal.addFriend(getTerminal(terminalFriendId));
         }
         changed();
     }

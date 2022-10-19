@@ -40,35 +40,35 @@ for x in "$tests/"*.in; do
     expected_output_file="./tests/${test_name}.out"
     diff_file="./tests/${test_name}.diff"
 
-    if [ -e ${import_file} ]; then
-        java -Dimport=${import_file} -Din=${in_file} -Dout=${actual_output_file} prr.app.App;
+    if [ -e "${import_file}" ]; then
+        java -Dimport="${import_file}" -Din="${in_file}" -Dout="${actual_output_file}" prr.app.App;
     else
-        java -Din=${in_file} -Dout=${actual_output_file} prr.app.App;
+        java -Din="${in_file}" -Dout="${actual_output_file}" prr.app.App;
     fi
 
-    diff -cB -w ${expected_output_file} ${actual_output_file} > ${diff_file} ;
+    diff -cB -w "${expected_output_file}" "${actual_output_file}" > "${diff_file}" ;
     "$DIFF" "$expected_output_file" "$actual_output_file"
-    
-    if [ -s ${diff_file} ]; then
+
+    if [ -s "${diff_file}" ]; then
         test=$test"${RED}FAIL: ${in_file}: See file ${diff_file}\n${RESET}"
     else
         test=$test"${GREEN}CORRECT: ${in_file}\n${RESET}"
         let correct++;
-        rm -f ${diff_file} ${actual_output_file} ; 
+        rm -f "${diff_file}" "${actual_output_file}" ;
     fi
     let total++;
 done
 
-rm -f *.dat
+rm -f ./*.dat
 
-let res=100*$correct/$total;
+let res=100*correct/total;
 let failures=total-correct;
 echo ""
 printf "$test"
 echo ""
-echo "Total Tests =" $total 
-echo -e "${GREEN}Passed Tests${RESET} =" $correct
-echo -e "${RED}Failed Tests${RESET} =" $failures
-echo -e "${BOLD}Result${RESET} =" $res"%"
+echo "Total Tests =" "$total"
+echo -e "${GREEN}Passed Tests${RESET} =" "$correct"
+echo -e "${RED}Failed Tests${RESET} =" "$failures"
+echo -e "${BOLD}Result${RESET} =" "$res""%"
 
 make -s clean;

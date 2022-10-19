@@ -1,13 +1,16 @@
 package prr.clients;
 
 import java.util.Queue;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.io.Serializable;
 
 import prr.notifications.NotificationDeliveryMethod;
-import prr.tariffs.TariffPlan;
 import prr.notifications.Notification;
+import prr.tariffs.BasePlan;
+import prr.tariffs.TariffPlan;
 import prr.terminals.Terminal;
 
 public class Client implements Serializable {
@@ -19,9 +22,9 @@ public class Client implements Serializable {
     private String _name;
     private int _taxId;
     private boolean _receiveNotifications;
-    private NotificationDeliveryMethod _deliveryMethod = new DefaultDeliveryMethod();
-    private Queue<Notification> _notifications = new LinkedList<>(); // FIXME figure out data structure for this
-    private List<Terminal> _terminals = new LinkedList<>(); // FIXME figure out data structure for this
+    private NotificationDeliveryMethod _deliveryMethod;
+    private Queue<Notification> _notifications;
+    private Map<String, Terminal> _terminals;
     private Level _level;
 
     public Client(String id, String name, int taxId) {
@@ -29,10 +32,13 @@ public class Client implements Serializable {
         _name = name;
         _taxId = taxId;
         _receiveNotifications = true;
+        _deliveryMethod = new DefaultDeliveryMethod();
+        _notifications = new LinkedList<Notification>();
+        _terminals = new HashMap<String, Terminal>(); //FIXME figure out the data structure for this
         _level = new ClientNormalLevel(this);
     }
 
-    public String getClientId() {
+    public String getId() {
         return _id;
     }
 
@@ -42,14 +48,6 @@ public class Client implements Serializable {
 
     public int getTaxId() {
         return _taxId;
-    }
-
-    public String getLevelType() {
-        return _level.getLevelType();
-    }
-
-    public boolean hasNotificationsEnabled() {
-        return _receiveNotifications;
     }
 
     public int getAmountOfTerminals() {
@@ -64,15 +62,23 @@ public class Client implements Serializable {
         return _level.getDebts();
     }
 
+    public String getLevelType() {
+        return _level.getLevelType();
+    }
+
+    public boolean hasNotificationsEnabled() {
+        return _receiveNotifications;
+    }
+
     public void addTerminal(Terminal terminal) {
-        _terminals.add(terminal);
+        _terminals.put(terminal.getTerminalId(), terminal);
     }
 
     @Override
     public String toString() {
-        return "CLIENT" + "|" + getClientId() + "|" + getName() + "|" + 
-                getTaxId() + "|" + getLevelType() + "|" + 
-                (hasNotificationsEnabled() ? "YES" : "NO") + "|" + 
+        return "CLIENT" + "|" + getId() + "|" + getName() + "|" +
+                getTaxId() + "|" + getLevelType() + "|" +
+                (hasNotificationsEnabled() ? "YES" : "NO") + "|" +
                 getAmountOfTerminals() + "|" + Math.round(getPayments()) + "|" +
                 Math.round(getDebts());
     }
@@ -92,6 +98,12 @@ public class Client implements Serializable {
         private double _payments;
         private double _debts;
         private TariffPlan _plan;
+
+        public Level() {
+            _payments = 0.0;
+            _debts = 0.0;
+            _plan = new BasePlan();
+        }
 
         public abstract String getLevelType();
 

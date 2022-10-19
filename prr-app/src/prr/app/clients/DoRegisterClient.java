@@ -10,22 +10,23 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoRegisterClient extends Command<Network> {
 
-	DoRegisterClient(Network receiver) {
-		super(Label.REGISTER_CLIENT, receiver);
+    DoRegisterClient(Network receiver) {
+        super(Label.REGISTER_CLIENT, receiver);
         addStringField("clientId", Prompt.key());
         addStringField("clientName", Prompt.name());
         addIntegerField("taxId", Prompt.taxId());
-	}
+    }
 
-	@Override
-	protected final void execute() throws CommandException {
+    @Override
+    protected final void execute() throws CommandException {
         try {
-            _receiver.registerClient(stringField("clientId"), 
-                                    stringField("clientName"), 
-                                    integerField("taxId"));
+            String clientId = stringField("clientId");
+            String clientName = stringField("clientName");
+            int taxId = integerField("taxId");
+            _receiver.registerClient(clientId, clientName, taxId);
         } catch (prr.exceptions.DuplicateClientKeyException e) {
             throw new DuplicateClientKeyException(e.getKey());
         }
-	}
+    }
 
 }

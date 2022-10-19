@@ -9,16 +9,16 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowUnusedTerminals extends Command<Network> {
 
-	DoShowUnusedTerminals(Network receiver) {
-		super(Label.SHOW_UNUSED_TERMINALS, receiver);
-	}
+    DoShowUnusedTerminals(Network receiver) {
+        super(Label.SHOW_UNUSED_TERMINALS, receiver);
+    }
 
-	@Override
-	protected final void execute() throws CommandException {
+    @Override
+    protected final void execute() throws CommandException {
         _receiver.getUnusedTerminals()
                 .stream()
                 .map(t -> t.toString())
                 .forEach(_display::popup);
-	}
+    }
 
 }

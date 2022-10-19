@@ -9,16 +9,16 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowAllClients extends Command<Network> {
 
-	DoShowAllClients(Network receiver) {
-		super(Label.SHOW_ALL_CLIENTS, receiver);
-	}
+    DoShowAllClients(Network receiver) {
+        super(Label.SHOW_ALL_CLIENTS, receiver);
+    }
 
-	@Override
-	protected final void execute() throws CommandException {
+    @Override
+    protected final void execute() throws CommandException {
         _receiver.getAllClients()
                 .stream()
                 .map(c -> c.toString())
                 .forEach(_display::popup);
-	}
+    }
 
 }

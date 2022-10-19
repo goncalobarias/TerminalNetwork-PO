@@ -4,8 +4,8 @@ import prr.clients.Client;
 
 public class FancyTerminal extends Terminal {
 
-    public FancyTerminal(int idTerminal, Client owner, String status) {
-        super(idTerminal, owner, status);
+    public FancyTerminal(String idTerminal, Client owner) {
+        super(idTerminal, owner);
     }
 
     @Override

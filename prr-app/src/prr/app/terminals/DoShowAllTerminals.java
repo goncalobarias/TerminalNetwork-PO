@@ -9,16 +9,16 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowAllTerminals extends Command<Network> {
 
-	DoShowAllTerminals(Network receiver) {
-		super(Label.SHOW_ALL_TERMINALS, receiver);
-	}
+    DoShowAllTerminals(Network receiver) {
+        super(Label.SHOW_ALL_TERMINALS, receiver);
+    }
 
-	@Override
-	protected final void execute() throws CommandException {
+    @Override
+    protected final void execute() throws CommandException {
         _receiver.getAllTerminals()
                 .stream()
-                .map(c -> c.toString())
+                .map(t -> t.toString())
                 .forEach(_display::popup);
-	}
+    }
 
 }
