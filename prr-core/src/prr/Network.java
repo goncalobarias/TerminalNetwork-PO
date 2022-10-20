@@ -382,8 +382,8 @@ public class Network implements Serializable {
             Terminal registeredTerminal =
                 registerTerminal(fields[0], fields[1], fields[2]);
             registeredTerminal.setStatus(fields[3]);
-        } catch (UnknownEntryLengthException | InvalidTerminalKeyException |
-          DuplicateTerminalKeyException | UnknownClientKeyException |
+        } catch (UnknownEntryLengthException | UnknownClientKeyException |
+          InvalidTerminalKeyException | DuplicateTerminalKeyException |
           UnknownEntryTypeException | IllegalTerminalStatusException e) {
             throw new UnrecognizedEntryException(_currentEntry, e);
         }
