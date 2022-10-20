@@ -1,11 +1,14 @@
 package prr.exceptions;
 
+import java.io.Serial;
+
 /**
  * Exception for entries of an unexpected type.
  */
 public class UnknownEntryTypeException extends Exception {
 
 	/** Class serial number. */
+    @Serial
 	private static final long serialVersionUID = 202210161154L;
 
 	/** Unrecognized entry type. */

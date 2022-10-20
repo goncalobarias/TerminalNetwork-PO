@@ -30,10 +30,10 @@ class DoRegisterTerminal extends Command<Network> {
             throw new InvalidTerminalKeyException(e.getKey());
         } catch (prr.exceptions.DuplicateTerminalKeyException e) {
             throw new DuplicateTerminalKeyException(e.getKey());
-        } catch (prr.exceptions.UnknownClientKeyException e) {
-            throw new UnknownClientKeyException(e.getKey());
         } catch (prr.exceptions.UnknownEntryTypeException e) {
             e.printStackTrace();
+        } catch (prr.exceptions.UnknownClientKeyException e) {
+            throw new UnknownClientKeyException(e.getKey());
         }
     }
 

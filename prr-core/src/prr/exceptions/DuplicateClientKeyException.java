@@ -1,11 +1,14 @@
 package prr.exceptions;
 
-/** 
- * Given client id has already been used. 
+import java.io.Serial;
+
+/**
+ * Given client id has already been used.
  */
 public class DuplicateClientKeyException extends Exception {
 
     /** Class serial number. */
+    @Serial
     private static final long serialVersionUID = 202210140735L;
 
     /** The client's key. */

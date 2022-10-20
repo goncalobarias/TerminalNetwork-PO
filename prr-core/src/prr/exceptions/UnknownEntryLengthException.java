@@ -1,11 +1,14 @@
 package prr.exceptions;
 
+import java.io.Serial;
+
 /**
  * Exception for entries with an unrecognized length.
  */
 public class UnknownEntryLengthException extends Exception {
 
 	/** Class serial number. */
+    @Serial
 	private static final long serialVersionUID = 202210161157L;
 
 	/** Unrecognized entry length. */

@@ -1,20 +1,23 @@
 package prr.exceptions;
 
+import java.io.Serial;
+
 /**
- * Exception for terminal entries with unknown status type.
+ * Exception for terminal entries with unknown or unwanted status type.
  */
-public class UnknownTerminalStatusException extends Exception {
+public class IllegalTerminalStatusException extends Exception {
 
 	/** Class serial number. */
+    @Serial
 	private static final long serialVersionUID = 202210181717L;
 
-	/** Unrecognized terminal status type. */
+	/** Illegal terminal status type. */
 	private String _statusType;
 
 	/**
 	 * @param statusType
 	 */
-	public UnknownTerminalStatusException(String statusType) {
+	public IllegalTerminalStatusException(String statusType) {
 		_statusType = statusType;
 	}
 
@@ -22,7 +25,7 @@ public class UnknownTerminalStatusException extends Exception {
 	 * @param statusType
 	 * @param cause
 	 */
-	public UnknownTerminalStatusException(String statusType, Exception cause) {
+	public IllegalTerminalStatusException(String statusType, Exception cause) {
 		super(cause);
 		_statusType = statusType;
 	}

@@ -1,21 +1,24 @@
 package prr.clients;
 
 import java.util.Queue;
-import java.util.Map;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ArrayList;
 import java.io.Serializable;
+import java.io.Serial;
 
+import prr.util.Visitable;
+import prr.util.Visitor;
 import prr.notifications.NotificationDeliveryMethod;
 import prr.notifications.Notification;
 import prr.tariffs.BasePlan;
 import prr.tariffs.TariffPlan;
 import prr.terminals.Terminal;
 
-public class Client implements Serializable {
+public class Client implements Serializable, Visitable {
 
     /** Serial number for serialization. */
+    @Serial
     private static final long serialVersionUID = 202210150050L;
 
     private final String _id;
@@ -24,7 +27,7 @@ public class Client implements Serializable {
     private boolean _receiveNotifications;
     private NotificationDeliveryMethod _deliveryMethod;
     private Queue<Notification> _notifications;
-    private Map<String, Terminal> _terminals;
+    private List<Terminal> _terminals;
     private Level _level;
 
     public Client(String id, String name, int taxId) {
@@ -34,7 +37,7 @@ public class Client implements Serializable {
         _receiveNotifications = true;
         _deliveryMethod = new DefaultDeliveryMethod();
         _notifications = new LinkedList<Notification>();
-        _terminals = new HashMap<String, Terminal>(); //FIXME figure out the data structure for this
+        _terminals = new ArrayList<Terminal>();
         _level = new ClientNormalLevel(this);
     }
 
@@ -50,7 +53,7 @@ public class Client implements Serializable {
         return _taxId;
     }
 
-    public int getAmountOfTerminals() {
+    public int getNumberOfTerminals() {
         return _terminals.size();
     }
 
@@ -71,19 +74,19 @@ public class Client implements Serializable {
     }
 
     public void addTerminal(Terminal terminal) {
-        _terminals.put(terminal.getTerminalId(), terminal);
+        _terminals.add(terminal);
     }
 
     @Override
-    public String toString() {
-        return "CLIENT" + "|" + getId() + "|" + getName() + "|" +
-                getTaxId() + "|" + getLevelType() + "|" +
-                (hasNotificationsEnabled() ? "YES" : "NO") + "|" +
-                getAmountOfTerminals() + "|" + Math.round(getPayments()) + "|" +
-                Math.round(getDebts());
+    public <T> T accept(Visitor<T> visitor) {
+        return visitor.visit(this);
     }
 
     public class DefaultDeliveryMethod extends NotificationDeliveryMethod {
+
+        /** Serial number for serialization. */
+        @Serial
+        private static final long serialVersionUID = 202210192341L;
 
         public void deliver(Notification notification) {
         }
@@ -93,6 +96,7 @@ public class Client implements Serializable {
     public abstract class Level implements Serializable {
 
         /** Serial number for serialization. */
+        @Serial
         private static final long serialVersionUID = 202210150052L;
 
         private double _payments;

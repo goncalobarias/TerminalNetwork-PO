@@ -1,10 +1,16 @@
 package prr.communications;
 
+import java.io.Serial;
+
 import prr.terminals.Terminal;
 
 public class VideoCommunication extends InteractiveCommunication {
 
-    public VideoCommunication(double duration, int id, 
+    /** Serial number for serialization. */
+    @Serial
+    private static final long serialVersionUID = 202210192345L;
+
+    public VideoCommunication(double duration, int id,
       Terminal terminalReceiver, Terminal terminalSender) {
         super(duration, id, terminalReceiver, terminalSender);
     }

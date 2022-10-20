@@ -1,12 +1,14 @@
 package prr.communications;
 
 import java.io.Serializable;
+import java.io.Serial;
 
 import prr.terminals.Terminal;
 
 public abstract class Communication implements Serializable {
 
     /** Serial number for serialization. */
+    @Serial
     private static final long serialVersionUID = 202210150053L;
 
     private final int _id;
