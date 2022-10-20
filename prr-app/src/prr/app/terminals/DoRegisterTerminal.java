@@ -26,14 +26,14 @@ class DoRegisterTerminal extends Command<Network> {
             String terminalId = stringField("terminalId");
             String clientId = stringField("clientId");
             _receiver.registerTerminal(terminalType, terminalId, clientId);
+        } catch (prr.exceptions.UnknownClientKeyException e) {
+            throw new UnknownClientKeyException(e.getKey());
         } catch (prr.exceptions.InvalidTerminalKeyException e) {
             throw new InvalidTerminalKeyException(e.getKey());
         } catch (prr.exceptions.DuplicateTerminalKeyException e) {
             throw new DuplicateTerminalKeyException(e.getKey());
         } catch (prr.exceptions.UnknownEntryTypeException e) {
             e.printStackTrace();
-        } catch (prr.exceptions.UnknownClientKeyException e) {
-            throw new UnknownClientKeyException(e.getKey());
         }
     }
 

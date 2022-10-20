@@ -439,22 +439,22 @@ public class Network implements Serializable {
      * @param terminalId The unique identifier of each terminal
      * @param clientId   The client id of the owner of the terminal
      * @return The {@link Terminal} that just got registered
+     * @throws UnknownClientKeyException     if there exists no client with the
+     *                                       given id in the network
      * @throws InvalidTerminalKeyException   if the terminal id isn't exactly 6
      *                                       characters long and only made up
      *                                       of the digits 0 through 9.
      * @throws DuplicateTerminalKeyException if there already exists a terminal
      *                                       with the same id in the network
-     * @throws UnknownClientKeyException     if there exists no client with the
-     *                                       given id in the network
      * @throws UnknownEntryTypeException     if the terminal type isn't exactly
      *                                       equal to BASIC or FANCY
      */
     public Terminal registerTerminal(String type, String terminalId,
-      String clientId) throws InvalidTerminalKeyException,
-      DuplicateTerminalKeyException, UnknownClientKeyException,
+      String clientId) throws UnknownClientKeyException,
+      InvalidTerminalKeyException, DuplicateTerminalKeyException,
       UnknownEntryTypeException {
-        assertNewTerminal(terminalId);
         assertClientExists(clientId);
+        assertNewTerminal(terminalId);
 
         Terminal terminal = switch(type) {
             case "BASIC" -> new BasicTerminal(terminalId, getClient(clientId));
