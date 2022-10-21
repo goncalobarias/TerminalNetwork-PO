@@ -52,7 +52,7 @@ public class Network implements Serializable {
     /** Contains the total value of the payments performed in the network. */
     private double _globalPayments;
 
-    /** Contains the total value of the debts acquired in the network. */
+    /** Contains the total value of the acquired debts in the network. */
     private double _globalDebts;
 
     /** Was the network changed since the last time it was saved or created? */
@@ -75,8 +75,8 @@ public class Network implements Serializable {
 
     /**
      * Obtains a new communication ID and increases its value once more. Since
-     * every communication has an unique ID we will always get a new value on
-     * each call of this method.
+     * every communication requires an unique ID we will always get a new value
+     * on each call of this method.
      *
      * @return The next communication ID for a new communication
      */
@@ -390,7 +390,7 @@ public class Network implements Serializable {
     }
 
     /**
-     * Parses and imports a terminal friends entry from plain text.
+     * Parses and imports terminal friends from an entry in a plain text file.
      * <p>
      * A correct terminal friends entry needs to have the following format:
      * {@code FRIENDS|idTerminal|idTerminal1,...,idTerminalN}
