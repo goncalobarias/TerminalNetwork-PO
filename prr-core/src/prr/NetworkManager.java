@@ -48,11 +48,11 @@ public class NetworkManager {
         try (ObjectInputStream ois = new ObjectInputStream(
           new BufferedInputStream(new FileInputStream(filename)))) {
             _network = (Network) ois.readObject();
-            _network.setChanged(false);
         } catch (IOException | ClassNotFoundException e) {
             throw new UnavailableFileException(filename);
         }
         _filename = filename;
+        _network.setChanged(false);
     }
 
     /**
@@ -77,8 +77,8 @@ public class NetworkManager {
             try (ObjectOutputStream oos = new ObjectOutputStream(
               new BufferedOutputStream(new FileOutputStream(_filename)))) {
                 oos.writeObject(_network);
-                _network.setChanged(false);
             }
+            _network.setChanged(false);
         }
     }
 
@@ -111,10 +111,10 @@ public class NetworkManager {
     public void importFile(String filename) throws ImportFileException {
         try {
             _network.importFile(filename);
-            _network.changed();
         } catch (IOException | UnrecognizedEntryException e) {
             throw new ImportFileException(filename, e);
         }
+        _network.changed();
     }
 
 }
