@@ -1,7 +1,7 @@
 package prr.app.clients;
 
 import prr.Network;
-import prr.app.visitors.ToStringer;
+import prr.app.visitors.RenderClient;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -10,7 +10,7 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowAllClients extends Command<Network> {
 
-    private ToStringer toStringer = new ToStringer();
+    private RenderClient _renderer = new RenderClient();
 
     DoShowAllClients(Network receiver) {
         super(Label.SHOW_ALL_CLIENTS, receiver);
@@ -20,7 +20,7 @@ class DoShowAllClients extends Command<Network> {
     protected final void execute() throws CommandException {
         _receiver.getAllClients()
                 .stream()
-                .map(c -> c.accept(toStringer))
+                .map(c -> c.accept(_renderer))
                 .forEach(_display::popup);
     }
 

@@ -63,7 +63,7 @@ public class Network implements Serializable {
 
     /** Default constructor. */
     public Network() {
-        _clients = new TreeMap<String, Client>(new NaturalTextComparator()); //TODO figure out the data structure for this
+        _clients = new TreeMap<String, Client>(new NaturalTextComparator());
         _terminals = new TreeMap<String, Terminal>();
         _communications = new TreeMap<Integer, Communication>();
         _nextCommunicationId = 0;

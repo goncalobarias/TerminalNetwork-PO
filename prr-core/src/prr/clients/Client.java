@@ -7,15 +7,14 @@ import java.util.ArrayList;
 import java.io.Serializable;
 import java.io.Serial;
 
-import prr.util.Visitable;
-import prr.util.Visitor;
+import prr.util.ClientVisitor;
 import prr.notifications.NotificationDeliveryMethod;
 import prr.notifications.Notification;
 import prr.tariffs.BasePlan;
 import prr.tariffs.TariffPlan;
 import prr.terminals.Terminal;
 
-public class Client implements Serializable, Visitable {
+public class Client implements Serializable {
 
     /** Serial number for serialization. */
     @Serial
@@ -77,8 +76,7 @@ public class Client implements Serializable, Visitable {
         _terminals.add(terminal);
     }
 
-    @Override
-    public <T> T accept(Visitor<T> visitor) {
+    public <T> T accept(ClientVisitor<T> visitor) {
         return visitor.visit(this);
     }
 

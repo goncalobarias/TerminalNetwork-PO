@@ -10,8 +10,7 @@ import java.util.stream.Collectors;
 import java.io.Serializable;
 import java.io.Serial;
 
-import prr.util.Visitable;
-import prr.util.Visitor;
+import prr.util.TerminalVisitor;
 import prr.clients.Client;
 import prr.communications.Communication;
 import prr.exceptions.IllegalTerminalStatusException;
@@ -19,7 +18,7 @@ import prr.exceptions.IllegalTerminalStatusException;
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Serializable, Visitable /* FIXME maybe addd more interfaces */{
+abstract public class Terminal implements Serializable /* FIXME maybe addd more interfaces */{
 
     /** Serial number for serialization. */
     @Serial
@@ -117,8 +116,7 @@ abstract public class Terminal implements Serializable, Visitable /* FIXME maybe
         _terminalFriends.remove(terminalFriend.getTerminalId());
     }
 
-    @Override
-    public <T> T accept(Visitor<T> visitor) {
+    public <T> T accept(TerminalVisitor<T> visitor) {
         return visitor.visit(this);
     }
 

@@ -1,7 +1,7 @@
 package prr.app.terminals;
 
 import prr.Network;
-import prr.app.visitors.ToStringer;
+import prr.app.visitors.RenderTerminal;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -10,7 +10,7 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowAllTerminals extends Command<Network> {
 
-    private ToStringer toStringer = new ToStringer();
+    private RenderTerminal _renderer = new RenderTerminal();
 
     DoShowAllTerminals(Network receiver) {
         super(Label.SHOW_ALL_TERMINALS, receiver);
@@ -20,7 +20,7 @@ class DoShowAllTerminals extends Command<Network> {
     protected final void execute() throws CommandException {
         _receiver.getAllTerminals()
                 .stream()
-                .map(t -> t.accept(toStringer))
+                .map(t -> t.accept(_renderer))
                 .forEach(_display::popup);
     }
 

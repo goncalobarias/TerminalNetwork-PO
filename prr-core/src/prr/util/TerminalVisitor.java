@@ -1,12 +1,9 @@
 package prr.util;
 
-import prr.terminals.BasicTerminal;
-import prr.terminals.FancyTerminal;
+import prr.terminals.Terminal;
 
 public interface TerminalVisitor<T> {
 
-    T visit(BasicTerminal terminal);
-
-    T visit(FancyTerminal terminal);
+    T visit(Terminal terminal);
 
 }

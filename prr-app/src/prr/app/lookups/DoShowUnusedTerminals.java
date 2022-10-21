@@ -1,7 +1,7 @@
 package prr.app.lookups;
 
 import prr.Network;
-import prr.app.visitors.ToStringer;
+import prr.app.visitors.RenderTerminal;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -10,7 +10,7 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowUnusedTerminals extends Command<Network> {
 
-    private ToStringer toStringer = new ToStringer();
+    private RenderTerminal _renderer = new RenderTerminal();
 
     DoShowUnusedTerminals(Network receiver) {
         super(Label.SHOW_UNUSED_TERMINALS, receiver);
@@ -20,7 +20,7 @@ class DoShowUnusedTerminals extends Command<Network> {
     protected final void execute() throws CommandException {
         _receiver.getUnusedTerminals()
                 .stream()
-                .map(t -> t.accept(toStringer))
+                .map(t -> t.accept(_renderer))
                 .forEach(_display::popup);
     }
 
