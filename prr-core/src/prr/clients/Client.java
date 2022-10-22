@@ -72,6 +72,10 @@ public class Client implements Serializable {
         return _receiveNotifications;
     }
 
+    public void setNotificationState(boolean notificationState) {
+        _receiveNotifications = notificationState;
+    }
+
     public void addTerminal(Terminal terminal) {
         _terminals.add(terminal);
     }

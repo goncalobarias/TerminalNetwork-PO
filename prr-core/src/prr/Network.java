@@ -22,6 +22,7 @@ import prr.exceptions.ImportFileException;
 import prr.exceptions.DuplicateClientKeyException;
 import prr.exceptions.DuplicateTerminalKeyException;
 import prr.exceptions.InvalidTerminalKeyException;
+import prr.exceptions.NotificationsAlreadyToggledException;
 import prr.exceptions.UnknownClientKeyException;
 import prr.exceptions.UnknownTerminalKeyException;
 import prr.exceptions.UnknownEntryTypeException;
@@ -503,6 +504,26 @@ public class Network implements Serializable {
             }
         }
         changed();
+    }
+
+    /** */
+    public void enableClientNotifications(String id)
+      throws UnknownClientKeyException, NotificationsAlreadyToggledException {
+        final Client client = getClient(id);
+        if (client.hasNotificationsEnabled()) {
+            throw new NotificationsAlreadyToggledException(true);
+        }
+        client.setNotificationState(true);
+    }
+
+    /** */
+    public void disableClientNotifications(String id)
+      throws UnknownClientKeyException, NotificationsAlreadyToggledException {
+        final Client client = getClient(id);
+        if (!client.hasNotificationsEnabled()) {
+            throw new NotificationsAlreadyToggledException(false);
+        }
+        client.setNotificationState(false);
     }
 
 }
