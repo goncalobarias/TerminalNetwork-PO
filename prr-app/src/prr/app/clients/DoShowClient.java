@@ -11,8 +11,6 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowClient extends Command<Network> {
 
-    private RenderClient _renderer = new RenderClient();
-
     DoShowClient(Network receiver) {
         super(Label.SHOW_CLIENT, receiver);
         addStringField("clientId", Prompt.key());
@@ -21,6 +19,7 @@ class DoShowClient extends Command<Network> {
     @Override
     protected final void execute() throws CommandException {
         try {
+            RenderClient _renderer = new RenderClient();
             String clientId = stringField("clientId");
             _display.popup(_receiver.getClient(clientId)
                                     .accept(_renderer));

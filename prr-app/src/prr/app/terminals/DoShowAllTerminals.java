@@ -10,14 +10,13 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowAllTerminals extends Command<Network> {
 
-    private RenderTerminal _renderer = new RenderTerminal();
-
     DoShowAllTerminals(Network receiver) {
         super(Label.SHOW_ALL_TERMINALS, receiver);
     }
 
     @Override
     protected final void execute() throws CommandException {
+        RenderTerminal _renderer = new RenderTerminal();
         _receiver.getAllTerminals()
                 .stream()
                 .map(t -> t.accept(_renderer))

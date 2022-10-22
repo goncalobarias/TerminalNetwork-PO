@@ -10,14 +10,13 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowAllClients extends Command<Network> {
 
-    private RenderClient _renderer = new RenderClient();
-
     DoShowAllClients(Network receiver) {
         super(Label.SHOW_ALL_CLIENTS, receiver);
     }
 
     @Override
     protected final void execute() throws CommandException {
+        RenderClient _renderer = new RenderClient();
         _receiver.getAllClients()
                 .stream()
                 .map(c -> c.accept(_renderer))

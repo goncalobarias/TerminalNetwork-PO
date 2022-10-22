@@ -10,14 +10,13 @@ import pt.tecnico.uilib.menus.CommandException;
  */
 class DoShowUnusedTerminals extends Command<Network> {
 
-    private RenderTerminal _renderer = new RenderTerminal();
-
     DoShowUnusedTerminals(Network receiver) {
         super(Label.SHOW_UNUSED_TERMINALS, receiver);
     }
 
     @Override
     protected final void execute() throws CommandException {
+        RenderTerminal _renderer = new RenderTerminal();
         _receiver.getUnusedTerminals()
                 .stream()
                 .map(t -> t.accept(_renderer))
