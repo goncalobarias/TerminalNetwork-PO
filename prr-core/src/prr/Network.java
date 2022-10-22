@@ -85,6 +85,50 @@ public class Network implements Serializable {
     }
 
     /**
+     * Gets the global payments performed in the network.
+     *
+     * @return the global payments
+     */
+    public double getGlobalPayments() {
+        return _globalPayments;
+    }
+
+    /**
+     * Gets the global debts acquired in the network.
+     *
+     * @return the global debts
+     */
+    public double getGlobalDebts() {
+        return _globalDebts;
+    }
+
+    /**
+     * Gets the payments of a given client.
+     *
+     * @param id The key of the client
+     * @return The given clients payments
+     * @throws UnknownClientKeyException if the client id is not present in the
+     *                                   network.
+     */
+    public double getClientPayments(String id) throws UnknownClientKeyException {
+        final Client client = getClient(id);
+        return client.getPayments();
+    }
+
+    /**
+     * Gets the debts of a given client.
+     *
+     * @param id The key of the client
+     * @return The given clients debts
+     * @throws UnknownClientKeyException if the client key is not present in the
+     *                                   network.
+     */
+    public double getClientDebts(String id) throws UnknownClientKeyException {
+        final Client client = getClient(id);
+        return client.getPayments();
+    }
+
+    /**
      * Sets the changed flag to the value it receives.
      *
      * @param changed The value of the changed flag
@@ -121,12 +165,12 @@ public class Network implements Serializable {
     }
 
     /**
-     * Gets a client by its id. Two clients are considered the same in the
-     * network if their ids are the same, or only differ by their case.
+     * Gets a client by its key. Two clients are considered the same in the
+     * network if their keyss are the same, or only differ by their case.
      *
-     * @param id The id of the client to get
+     * @param id The key of the client to get
      * @return The requested {@link Client}
-     * @throws UnknownClientKeyException if the client id is not present in the
+     * @throws UnknownClientKeyException if the client key is not present in the
      *                                   network.
      */
     public Client getClient(String id) throws UnknownClientKeyException {
@@ -135,9 +179,9 @@ public class Network implements Serializable {
 
     /**
      * Gets all the clients associated to the network, sorted by their
-     * case-insensitive id.
+     * case-insensitive key.
      *
-     * @return The clients sorted by their id on a {@link Collection}
+     * @return The clients sorted by their key on a {@link Collection}
      */
     public Collection<Client> getAllClients() {
         return Collections.unmodifiableCollection(_clients.values());
@@ -145,9 +189,9 @@ public class Network implements Serializable {
 
     /**
      * Checks if a client is elicit to be fetched and retrieves it from the
-     * network by its id.
+     * network by its key.
      *
-     * @param id The id of the client to fetch
+     * @param id The key of the client to fetch
      * @return The {@link Client} with the given key that got fetched from the
      *         network
      * @throws UnknownClientKeyException if the client if is not present in the
@@ -162,12 +206,12 @@ public class Network implements Serializable {
     }
 
     /**
-     * Gets a terminal by its id. Two terminals are considered the same in the
-     * network if their ids are the same.
+     * Gets a terminal by its key. Two terminals are considered the same in the
+     * network if their keys are the same.
      *
-     * @param id The id of the terminal to get
+     * @param id The key of the terminal to get
      * @return The requested {@link Terminal}
-     * @throws UnknownTerminalKeyException if the terminal id is not present in
+     * @throws UnknownTerminalKeyException if the terminal key is not present in
      *                                     the network.
      */
     public Terminal getTerminal(String id) throws UnknownTerminalKeyException {
@@ -175,9 +219,9 @@ public class Network implements Serializable {
     }
 
     /**
-     * Gets all the terminals associated to the network, sorted by their id.
+     * Gets all the terminals associated to the network, sorted by their key.
      *
-     * @return The terminals sorted by their id on a {@link Collection}
+     * @return The terminals sorted by their key on a {@link Collection}
      */
     public Collection<Terminal> getAllTerminals() {
         return Collections.unmodifiableCollection(_terminals.values());
@@ -185,10 +229,10 @@ public class Network implements Serializable {
 
     /**
      * Gets all the unused terminals associated to the network, sorted by their
-     * id. A terminal is considered unused if there are no known communications
+     * key. A terminal is considered unused if there are no known communications
      * associated with it.
      *
-     * @return The unusued terminals sorted by their id on a {@link Collection}
+     * @return The unusued terminals sorted by their key on a {@link Collection}
      */
     public Collection<Terminal> getUnusedTerminals() {
         return Collections.unmodifiableCollection(
@@ -199,10 +243,10 @@ public class Network implements Serializable {
 
     /**
      * Checks if a terminal is elicit to be fetched and retrieves it from the
-     * network by its id.
+     * network by its key.
      *
-     * @param id The id of the terminal to fetch
-     * @return The {@link Terminal} with the given id that got fetched from the
+     * @param id The key of the terminal to fetch
+     * @return The {@link Terminal} with the given key that got fetched from the
      *         network
      * @throws UnknownTerminalKeyException if the terminal if is not present in
      *                                     the network.
@@ -230,12 +274,12 @@ public class Network implements Serializable {
     }
 
     /**
-     * Checks if a new client is elicit for registeration, meaning that their id
+     * Checks if a new client is elicit for registeration, meaning that their key
      * must not already be in the network.
      *
-     * @param id The client id to check
+     * @param id The client key to check
      * @throws DuplicateClientKeyException if there already exists a client with
-     *                                     the same id in the network
+     *                                     the same key in the network
      *                                     (case-insensitive)
      */
     public void assertNewClient(String id)
@@ -246,30 +290,15 @@ public class Network implements Serializable {
     }
 
     /**
-     * Checks if an id is already associated with a client in the network,
-     * making it elicit for retrieval.
-     *
-     * @param id The client id to check
-     * @throws UnknownClientKeyException if the client id is not already
-     *                                   present on the network.
-     */
-    public void assertClientExists(String id)
-      throws UnknownClientKeyException {
-        if (!_clients.containsKey(id)) {
-            throw new UnknownClientKeyException(id);
-        }
-    }
-
-    /**
      * Checks if a new terminal is elicit for registeration, meaning that their
-     * id must not already be in the network.
+     * key must not already be in the network.
      *
-     * @param id The terminal id to check
-     * @param InvalidTerminalKeyException    if the terminal id isn't exactly 6
+     * @param id The terminal key to check
+     * @param InvalidTerminalKeyException    if the terminal key isn't exactly 6
      *                                       characters long and only made up of
      *                                       the digits 0 through 9.
      * @throws DuplicateTerminalKeyException if there already exists a terminal
-     *                                       with the same id in the network
+     *                                       with the same key in the network
      */
     public void assertNewTerminal(String id) throws InvalidTerminalKeyException,
       DuplicateTerminalKeyException {
@@ -279,21 +308,6 @@ public class Network implements Serializable {
         }
         if (_terminals.containsKey(id)) {
             throw new DuplicateTerminalKeyException(id);
-        }
-    }
-
-    /**
-     * Checks if an id is already associated with a terminal in the network,
-     * making it elicit for retrieval.
-     *
-     * @param id The terminal id to check
-     * @throws UnknownTerminalKeyException if the terminal id is not already
-     *                                     present on the network.
-     */
-    public void assertTerminalExists(String id)
-      throws UnknownTerminalKeyException {
-        if (!_terminals.containsKey(id)) {
-            throw new UnknownTerminalKeyException(id);
         }
     }
 
@@ -419,7 +433,7 @@ public class Network implements Serializable {
      * @param taxId The tax id of the client
      * @return The {@link Client} that just got registered
      * @throws DuplicateClientKeyException if there already exists a client
-     *                                     with the same id in the network
+     *                                     with the same key in the network
      *                                     (case-insensitive)
      */
     public Client registerClient(String id, String name, int taxId)
@@ -440,12 +454,12 @@ public class Network implements Serializable {
      * @param clientId   The client id of the owner of the terminal
      * @return The {@link Terminal} that just got registered
      * @throws UnknownClientKeyException     if there exists no client with the
-     *                                       given id in the network
-     * @throws InvalidTerminalKeyException   if the terminal id isn't exactly 6
+     *                                       given key in the network
+     * @throws InvalidTerminalKeyException   if the terminal key isn't exactly 6
      *                                       characters long and only made up
      *                                       of the digits 0 through 9.
      * @throws DuplicateTerminalKeyException if there already exists a terminal
-     *                                       with the same id in the network
+     *                                       with the same key in the network
      * @throws UnknownEntryTypeException     if the terminal type isn't exactly
      *                                       equal to BASIC or FANCY
      */
@@ -453,12 +467,12 @@ public class Network implements Serializable {
       String clientId) throws UnknownClientKeyException,
       InvalidTerminalKeyException, DuplicateTerminalKeyException,
       UnknownEntryTypeException {
-        assertClientExists(clientId);
+        Client client = getClient(clientId);
         assertNewTerminal(terminalId);
 
         Terminal terminal = switch(type) {
-            case "BASIC" -> new BasicTerminal(terminalId, getClient(clientId));
-            case "FANCY" -> new FancyTerminal(terminalId, getClient(clientId));
+            case "BASIC" -> new BasicTerminal(terminalId, client);
+            case "FANCY" -> new FancyTerminal(terminalId, client);
             default -> throw new UnknownEntryTypeException(type);
         };
 
@@ -472,21 +486,19 @@ public class Network implements Serializable {
      * relationship between terminals is asymmetric, meaning A being a friend
      * of B doesn't imply the opposite.
      *
-     * @param terminalId         The id of the terminal that is going to
+     * @param terminalId         The key of the terminal that is going to
      *                           receive friends
-     * @param terminalFriendsIds The ids of the terminal friends
+     * @param terminalFriendsIds The keys of the terminal friends
      * @throws UnknownTerminalKeyException if any of the given terminal keys
      *                                     is not connected to a terminal on
      *                                     the network
      */
     private void registerTerminalFriends(String terminalId,
       String[] terminalFriendsIds) throws UnknownTerminalKeyException {
-        assertTerminalExists(terminalId);
         Terminal terminal = getTerminal(terminalId);
         for (String terminalFriendId : terminalFriendsIds) {
             Terminal terminalFriend = getTerminal(terminalFriendId);
             if (!terminal.equals(terminalFriend)) {
-                assertTerminalExists(terminalFriendId);
                 terminal.addFriend(terminalFriend);
             }
         }
