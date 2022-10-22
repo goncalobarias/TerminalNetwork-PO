@@ -484,8 +484,11 @@ public class Network implements Serializable {
         assertTerminalExists(terminalId);
         Terminal terminal = getTerminal(terminalId);
         for (String terminalFriendId : terminalFriendsIds) {
-            assertTerminalExists(terminalFriendId);
-            terminal.addFriend(getTerminal(terminalFriendId));
+            Terminal terminalFriend = getTerminal(terminalFriendId);
+            if (!terminal.equals(terminalFriend)) {
+                assertTerminalExists(terminalFriendId);
+                terminal.addFriend(terminalFriend);
+            }
         }
         changed();
     }

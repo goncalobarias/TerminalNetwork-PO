@@ -1,6 +1,5 @@
 package prr.terminals;
 
-import java.util.List;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
@@ -18,7 +17,7 @@ import prr.exceptions.IllegalTerminalStatusException;
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Serializable /* FIXME maybe addd more interfaces */{
+abstract public class Terminal implements Comparable<Terminal>, Serializable {
 
     /** Serial number for serialization. */
     @Serial
@@ -114,6 +113,23 @@ abstract public class Terminal implements Serializable /* FIXME maybe addd more 
 
     public void removeFriend(Terminal terminalFriend) {
         _terminalFriends.remove(terminalFriend.getTerminalId());
+    }
+
+    @Override
+    public int compareTo(Terminal terminal) {
+        return getTerminalId().compareTo(terminal.getTerminalId());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o instanceof Terminal) {
+            Terminal terminal = (Terminal) o;
+            return compareTo(terminal) == 0;
+        }
+        return false;
     }
 
     public <T> T accept(TerminalVisitor<T> visitor) {
