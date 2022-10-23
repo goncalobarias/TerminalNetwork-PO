@@ -31,14 +31,15 @@ public class Client implements Serializable {
     private Level _level;
     public static final Comparator<Client> DEBT_COMPARATOR = new DebtComparator();
 
-    private static class DebtComparator implements Comparator<Client>, Serializable {
+    private static class DebtComparator implements Comparator<Client>,
+      Serializable {
 
         /** Serial number for serialization. */
         @Serial
         private static final long serialVersionUID = 202210231030L;
 
         public int compare(Client c1, Client c2) {
-            return Double.compare(c1.getDebts(), c2.getDebts());
+            return Double.compare(c2.getDebts(), c1.getDebts());
         }
 
     }

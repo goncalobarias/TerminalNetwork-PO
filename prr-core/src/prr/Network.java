@@ -201,7 +201,7 @@ public class Network implements Serializable {
     public Collection<Client> getClientsWithDebts() {
         return Collections.unmodifiableCollection(
             getAllClients().stream()
-            .filter(c -> c.getDebts() != 0.0)
+            .filter(c -> c.getDebts() > 0.0)
             .sorted(Client.DEBT_COMPARATOR)
             .collect(Collectors.toList())
         );
@@ -266,7 +266,7 @@ public class Network implements Serializable {
     public Collection<Terminal> getTerminalsWithPositiveBalance() {
         return Collections.unmodifiableCollection(
             getAllTerminals().stream()
-            .filter(t -> t.getPayments() - t.getDebts() > 0)
+            .filter(t -> t.getBalance() > 0)
             .collect(Collectors.toList())
         );
     }

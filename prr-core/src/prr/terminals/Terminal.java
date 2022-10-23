@@ -68,6 +68,10 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return _debts;
     }
 
+    public double getBalance() {
+        return getPayments() - getDebts();
+    }
+
     public String getFriendsIds() {
         return _terminalFriends.keySet()
                                 .stream()
