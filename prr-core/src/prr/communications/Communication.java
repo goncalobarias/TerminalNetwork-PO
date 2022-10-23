@@ -3,6 +3,7 @@ package prr.communications;
 import java.io.Serializable;
 import java.io.Serial;
 
+import prr.util.CommunicationVisitor;
 import prr.terminals.Terminal;
 
 public abstract class Communication implements Serializable {
@@ -58,6 +59,10 @@ public abstract class Communication implements Serializable {
 
     public void computePrice() {
         _price = 0.0; // TODO: update the method to actually compute the costs accordingly
+    }
+
+    public <T> T accept(CommunicationVisitor<T> visitor) {
+        return visitor.visit(this);
     }
 
 }
