@@ -4,6 +4,7 @@ import java.util.Queue;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.io.Serializable;
 import java.io.Serial;
 
@@ -28,6 +29,19 @@ public class Client implements Serializable {
     private Queue<Notification> _notifications;
     private List<Terminal> _terminals;
     private Level _level;
+    public static final Comparator<Client> DEBT_COMPARATOR = new DebtComparator();
+
+    private static class DebtComparator implements Comparator<Client>, Serializable {
+
+        /** Serial number for serialization. */
+        @Serial
+        private static final long serialVersionUID = 202210231030L;
+
+        public int compare(Client c1, Client c2) {
+            return Double.compare(c1.getDebts(), c2.getDebts());
+        }
+
+    }
 
     public Client(String id, String name, int taxId) {
         _id = id;

@@ -188,6 +188,25 @@ public class Network implements Serializable {
         return Collections.unmodifiableCollection(_clients.values());
     }
 
+    /** TODO: javadoc */
+    public Collection<Client> getClientsWithoutDebts() {
+        return Collections.unmodifiableCollection(
+            getAllClients().stream()
+            .filter(c -> c.getDebts() == 0.0)
+            .collect(Collectors.toList())
+        );
+    }
+
+    /** TODO: javadoc */
+    public Collection<Client> getClientsWithDebts() {
+        return Collections.unmodifiableCollection(
+            getAllClients().stream()
+            .filter(c -> c.getDebts() != 0.0)
+            .sorted(Client.DEBT_COMPARATOR)
+            .collect(Collectors.toList())
+        );
+    }
+
     /**
      * Checks if a client is elicit to be fetched and retrieves it from the
      * network by its key.
@@ -237,9 +256,19 @@ public class Network implements Serializable {
      */
     public Collection<Terminal> getUnusedTerminals() {
         return Collections.unmodifiableCollection(
-                                getAllTerminals().stream()
-                                .filter(t -> t.isUnused())
-                                .collect(Collectors.toList()));
+            getAllTerminals().stream()
+            .filter(t -> t.isUnused())
+            .collect(Collectors.toList())
+        );
+    }
+
+    /** TODO: javadoc */
+    public Collection<Terminal> getTerminalsWithPositiveBalance() {
+        return Collections.unmodifiableCollection(
+            getAllTerminals().stream()
+            .filter(t -> t.getPayments() - t.getDebts() > 0)
+            .collect(Collectors.toList())
+        );
     }
 
     /**
