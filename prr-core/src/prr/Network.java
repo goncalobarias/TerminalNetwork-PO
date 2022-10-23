@@ -261,6 +261,23 @@ public class Network implements Serializable {
         return terminal;
     }
 
+    /** TODO: javadoc */
+    public Collection<Communication> getAllCommunications() {
+        return Collections.unmodifiableCollection(_communications.values());
+    }
+
+    /** TODO: javadoc */
+    public Collection<Communication> getAllCommunicationsMadeByClient(
+      String id) {
+        return Collections.unmodifiableCollection(getAllCommunications()); // TODO: get the right communications
+    }
+
+    /** TODO: javadoc */
+    public Collection<Communication> getAllCommunicationsReceivedByClient(
+      String id) {
+        return Collections.unmodifiableCollection(getAllCommunications()); // TODO: get the right communications
+    }
+
     /**
      * Checks if the entry has the expected number of fields.
      *
@@ -506,7 +523,7 @@ public class Network implements Serializable {
         changed();
     }
 
-    /** */
+    /** TODO: javadoc */
     public void enableClientNotifications(String id)
       throws UnknownClientKeyException, NotificationsAlreadyToggledException {
         final Client client = getClient(id);
@@ -516,7 +533,7 @@ public class Network implements Serializable {
         client.setNotificationState(true);
     }
 
-    /** */
+    /** TODO: javadoc */
     public void disableClientNotifications(String id)
       throws UnknownClientKeyException, NotificationsAlreadyToggledException {
         final Client client = getClient(id);

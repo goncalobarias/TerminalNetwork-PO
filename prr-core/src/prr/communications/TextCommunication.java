@@ -23,4 +23,9 @@ public class TextCommunication extends Communication {
         return "TEXT";
     }
 
+    @Override
+    public double getUnits() {
+        return _message.length();
+    }
+
 }

@@ -31,6 +31,6 @@ class DoShowClientPaymentsAndDebts extends Command<Network> {
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());
         }
-	}
+    }
 
 }

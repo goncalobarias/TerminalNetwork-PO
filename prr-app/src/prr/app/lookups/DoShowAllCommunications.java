@@ -1,21 +1,26 @@
 package prr.app.lookups;
 
 import prr.Network;
+import prr.app.visitors.RenderCommunication;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
-//FIXME more imports if needed
 
 /**
  * Command for showing all communications.
  */
 class DoShowAllCommunications extends Command<Network> {
 
-	DoShowAllCommunications(Network receiver) {
-		super(Label.SHOW_ALL_COMMUNICATIONS, receiver);
-	}
+    DoShowAllCommunications(Network receiver) {
+        super(Label.SHOW_ALL_COMMUNICATIONS, receiver);
+    }
 
-	@Override
-	protected final void execute() throws CommandException {
-                //FIXME implement command
-	}
+    @Override
+    protected final void execute() throws CommandException {
+        RenderCommunication _renderer = new RenderCommunication();
+        _receiver.getAllCommunications()
+                .stream()
+                .map(c -> c.accept(_renderer))
+                .forEach(_display::popup);
+    }
+
 }

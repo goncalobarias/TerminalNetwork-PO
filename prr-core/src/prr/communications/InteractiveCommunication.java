@@ -20,4 +20,9 @@ public abstract class InteractiveCommunication extends Communication {
 
     public abstract String getCommunicationType();
 
+    @Override
+    public double getUnits() {
+        return _duration;
+    }
+
 }

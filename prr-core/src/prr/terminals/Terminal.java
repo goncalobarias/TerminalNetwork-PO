@@ -40,7 +40,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         _ongoingCommunication = null;
         _payments = 0.0;
         _debts = 0.0;
-        _communications = new HashMap<Integer, Communication>(); //TODO figure out the data structure for this
+        _communications = new HashMap<Integer, Communication>(); // TODO figure out the data structure for this
         _terminalFriends = new TreeMap<String, Terminal>();
         _clientsToNotify = new LinkedList<Client>();
         _owner.addTerminal(this);
