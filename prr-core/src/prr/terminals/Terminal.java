@@ -15,6 +15,7 @@ import prr.clients.Client;
 import prr.communications.Communication;
 import prr.exceptions.IllegalTerminalStatusException;
 import prr.exceptions.TerminalStatusAlreadySetException;
+import prr.exceptions.NoOngoingCommunicationException;
 
 /**
  * Abstract terminal.
@@ -94,6 +95,14 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
                 .filter(comm -> this.equals(comm.getTerminalReceiver()));
     }
 
+    public Communication getOngoingCommunication()
+      throws NoOngoingCommunicationException {
+        if (_ongoingCommunication == null) {
+            throw new NoOngoingCommunicationException();
+        }
+        return _ongoingCommunication;
+    }
+
     public void setStatus(String status) throws IllegalTerminalStatusException {
         _status.setStatus(status);
     }
@@ -132,7 +141,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
     }
 
     public void addFriend(Terminal terminalFriend) {
-        if (!this.equals(terminalFriend) ||
+        if (!this.equals(terminalFriend) &&
           !this.isAlreadyFriend(terminalFriend)) {
             _terminalFriends.put(terminalFriend.getTerminalId(),
                                 terminalFriend);

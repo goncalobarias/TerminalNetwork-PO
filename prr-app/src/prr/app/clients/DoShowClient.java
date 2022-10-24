@@ -19,10 +19,10 @@ class DoShowClient extends Command<Network> {
     @Override
     protected final void execute() throws CommandException {
         try {
-            RenderClient _renderer = new RenderClient();
+            RenderClient renderer = new RenderClient();
             String clientId = stringField("clientId");
             _display.popup(_receiver.getClient(clientId)
-                                    .accept(_renderer));
+                                    .accept(renderer));
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());
         }

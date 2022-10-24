@@ -3,7 +3,7 @@ package prr.exceptions;
 import java.io.Serial;
 
 /**
- * Given client already has their notifications toggled on or off.
+ * TODO: comment
  */
 public class TerminalStatusAlreadySetException extends Exception {
 
