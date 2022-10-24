@@ -14,6 +14,7 @@ import prr.util.TerminalVisitor;
 import prr.clients.Client;
 import prr.communications.Communication;
 import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.TerminalStatusAlreadySetException;
 
 /**
  * Abstract terminal.
@@ -144,15 +145,15 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         }
     }
 
-    public void setOnIdle() {
+    public void setOnIdle() throws TerminalStatusAlreadySetException {
         _status.setOnIdle();
     }
 
-    public void setOnSilent() {
+    public void setOnSilent() throws TerminalStatusAlreadySetException {
         _status.setOnSilent();
     }
 
-    public void turnOff() {
+    public void turnOff() throws TerminalStatusAlreadySetException {
         _status.turnOff();
     }
 
@@ -203,11 +204,11 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             Terminal.this._status = status;
         }
 
-        protected abstract void setOnIdle();
+        protected abstract void setOnIdle() throws TerminalStatusAlreadySetException;
 
-        protected abstract void setOnSilent();
+        protected abstract void setOnSilent() throws TerminalStatusAlreadySetException;
 
-        protected abstract void turnOff();
+        protected abstract void turnOff() throws TerminalStatusAlreadySetException;
 
     }
 

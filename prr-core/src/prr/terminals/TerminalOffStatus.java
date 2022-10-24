@@ -2,6 +2,8 @@ package prr.terminals;
 
 import java.io.Serial;
 
+import prr.exceptions.TerminalStatusAlreadySetException;
+
 public class TerminalOffStatus extends Terminal.Status {
 
     /** Serial number for serialization. */
@@ -19,14 +21,17 @@ public class TerminalOffStatus extends Terminal.Status {
 
     @Override
     protected void setOnIdle() {
+        updateStatus(new TerminalIdleStatus(getTerminal()));
     }
 
     @Override
     protected void setOnSilent() {
+        updateStatus(new TerminalSilentStatus(getTerminal()));
     }
 
     @Override
-    protected void turnOff() {
+    protected void turnOff() throws TerminalStatusAlreadySetException {
+        throw new TerminalStatusAlreadySetException(getStatusType());
     }
 
 }
