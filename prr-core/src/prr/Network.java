@@ -56,11 +56,11 @@ public class Network implements Serializable {
     /** Contains the total value of the acquired debts in the network. */
     private double _globalDebts;
 
-    /** Was the network changed since the last time it was saved or created? */
-    private boolean _changed;
-
     /** Stores the current entry from the file that is being parsed. */
     private String _currentEntry;
+
+    /** Was the network changed since the last time it was saved or created? */
+    private boolean _changed;
 
     /** Default constructor. */
     public Network() {
@@ -70,8 +70,8 @@ public class Network implements Serializable {
         _nextCommunicationId = 0;
         _globalPayments = 0.0;
         _globalDebts = 0.0;
-        _changed = false;
         _currentEntry = "";
+        _changed = false;
     }
 
     /**
@@ -128,43 +128,6 @@ public class Network implements Serializable {
         final Client client = getClient(id);
         return client.getPayments();
     }
-
-    /**
-     * Sets the changed flag to the value it receives.
-     *
-     * @param changed The value of the changed flag
-     */
-    public void setChanged(boolean changed) {
-        _changed = changed;
-    }
-
-    /**
-     * Turns the change flag on to indicate that the network has changed since
-     * it was last saved or created.
-     */
-    public void changed() {
-        setChanged(true);
-    }
-
-    /**
-     * Sets the current entry being parsed.
-     *
-     * @param entry The current entry being parsed
-     */
-    private void setCurrentEntry(String entry) {
-        _currentEntry = entry;
-    }
-
-    /**
-     * Indicates whether the network has changed since it was last saved or
-     * created.
-     *
-     * @return The current value of the changed flag.
-     */
-    public boolean hasChanged() {
-        return _changed;
-    }
-
     /**
      * Gets a client by its key. Two clients are considered the same in the
      * network if their keyss are the same, or only differ by their case.
@@ -176,35 +139,6 @@ public class Network implements Serializable {
      */
     public Client getClient(String id) throws UnknownClientKeyException {
         return fetchClient(id);
-    }
-
-    /**
-     * Gets all the clients associated to the network, sorted by their
-     * case-insensitive key.
-     *
-     * @return The clients sorted by their key on a {@link Collection}
-     */
-    public Collection<Client> getAllClients() {
-        return Collections.unmodifiableCollection(_clients.values());
-    }
-
-    /** TODO: javadoc */
-    public Collection<Client> getClientsWithoutDebts() {
-        return Collections.unmodifiableCollection(
-            _clients.values().stream()
-            .filter(c -> c.getDebts() == 0.0)
-            .collect(Collectors.toList())
-        );
-    }
-
-    /** TODO: javadoc */
-    public Collection<Client> getClientsWithDebts() {
-        return Collections.unmodifiableCollection(
-            _clients.values().stream()
-            .filter(c -> c.getDebts() > 0.0)
-            .sorted(Client.DEBT_COMPARATOR)
-            .collect(Collectors.toList())
-        );
     }
 
     /**
@@ -226,6 +160,47 @@ public class Network implements Serializable {
     }
 
     /**
+     * Gets all the clients associated to the network, sorted by their
+     * case-insensitive key.
+     *
+     * @return The clients sorted by their key on a {@link Collection}
+     */
+    public Collection<Client> getAllClients() {
+        return Collections.unmodifiableCollection(_clients.values());
+    }
+
+    /**
+     * Gets all the clients associated to the network that have no debts, sorted
+     * by their case-insensitive key.
+     *
+     * @return The clients with no debts sorted by their key on
+     * a {@link Collection}
+     */
+    public Collection<Client> getClientsWithoutDebts() {
+        return Collections.unmodifiableCollection(
+            _clients.values().stream()
+            .filter(c -> c.getDebts() == 0.0)
+            .collect(Collectors.toList())
+        );
+    }
+
+    /**
+     * Gets all the clients associated to the network that have acquired debt,
+     * sorted by their case-insensitive key.
+     *
+     * @return The clients with debts sorted by their key on
+     * a {@link Collection}
+     */
+    public Collection<Client> getClientsWithDebts() {
+        return Collections.unmodifiableCollection(
+            _clients.values().stream()
+            .filter(c -> c.getDebts() > 0.0)
+            .sorted(Client.DEBT_COMPARATOR)
+            .collect(Collectors.toList())
+        );
+    }
+
+    /**
      * Gets a terminal by its key. Two terminals are considered the same in the
      * network if their keys are the same.
      *
@@ -236,6 +211,25 @@ public class Network implements Serializable {
      */
     public Terminal getTerminal(String id) throws UnknownTerminalKeyException {
         return fetchTerminal(id);
+    }
+
+    /**
+     * Checks if a terminal is elicit to be fetched and retrieves it from the
+     * network by its key.
+     *
+     * @param id The key of the terminal to fetch
+     * @return The {@link Terminal} with the given key that got fetched from the
+     *         network
+     * @throws UnknownTerminalKeyException if the terminal if is not present in
+     *                                     the network.
+     */
+    private Terminal fetchTerminal(String id)
+      throws UnknownTerminalKeyException {
+        Terminal terminal = _terminals.get(id);
+        if (terminal == null) {
+            throw new UnknownTerminalKeyException(id);
+        }
+        return terminal;
     }
 
     /**
@@ -262,7 +256,14 @@ public class Network implements Serializable {
         );
     }
 
-    /** TODO: javadoc */
+    /**
+     * Gets all the terminals with a positive balance associated to the network,
+     * sorted by their key. The concept of balance is defined as the difference
+     * between the payments made and debts acquired by the terminal.
+     *
+     * @return The terminals with a net positive balance sorted by their key on
+     * a {@link Collection}
+     */
     public Collection<Terminal> getTerminalsWithPositiveBalance() {
         return Collections.unmodifiableCollection(
             _terminals.values().stream()
@@ -272,25 +273,11 @@ public class Network implements Serializable {
     }
 
     /**
-     * Checks if a terminal is elicit to be fetched and retrieves it from the
-     * network by its key.
+     * Gets all the communications associated to the network, sorted by their
+     * key.
      *
-     * @param id The key of the terminal to fetch
-     * @return The {@link Terminal} with the given key that got fetched from the
-     *         network
-     * @throws UnknownTerminalKeyException if the terminal if is not present in
-     *                                     the network.
+     * @return The communications sorted by their key on a {@link Collection}
      */
-    private Terminal fetchTerminal(String id)
-      throws UnknownTerminalKeyException {
-        Terminal terminal = _terminals.get(id);
-        if (terminal == null) {
-            throw new UnknownTerminalKeyException(id);
-        }
-        return terminal;
-    }
-
-    /** TODO: javadoc */
     public Collection<Communication> getAllCommunications() {
         return Collections.unmodifiableCollection(
             _communications.values().stream()
@@ -298,7 +285,16 @@ public class Network implements Serializable {
         );
     }
 
-    /** TODO: javadoc */
+    /**
+     * Gets all the communications made by a given client on any of their
+     * terminals.
+     *
+     * @param clientId The key of the client
+     * @return The communications made by the client, sorted by their key on
+     * a {@link Collection}
+     * @throws UnknownClientKeyException if the client if is not present in the
+     *                                   network.
+     */
     public Collection<Communication> getAllCommunicationsMadeByClient(
       String clientId) throws UnknownClientKeyException {
         final Client client = getClient(clientId);
@@ -311,7 +307,16 @@ public class Network implements Serializable {
         );
     }
 
-    /** TODO: javadoc */
+    /**
+     * Gets all the communications received by a given client on any of their
+     * terminals.
+     *
+     * @param clientId The key of the client
+     * @return The communications received by the client, sorted by their key on
+     * a {@link Collection}
+     * @throws UnknownClientKeyException if the client if is not present in the
+     *                                   network.
+     */
     public Collection<Communication> getAllCommunicationsReceivedByClient(
       String clientId) throws UnknownClientKeyException {
         final Client client = getClient(clientId);
@@ -322,6 +327,42 @@ public class Network implements Serializable {
             .flatMap(Terminal::getReceivedCommunications)
             .collect(Collectors.toList())
         );
+    }
+
+    /**
+     * Sets the current entry being parsed.
+     *
+     * @param entry The current entry being parsed
+     */
+    private void setCurrentEntry(String entry) {
+        _currentEntry = entry;
+    }
+
+    /**
+     * Sets the changed flag to the value it receives.
+     *
+     * @param changed The value of the changed flag
+     */
+    public void setChanged(boolean changed) {
+        _changed = changed;
+    }
+
+    /**
+     * Turns the change flag on to indicate that the network has changed since
+     * it was last saved or created.
+     */
+    public void changed() {
+        setChanged(true);
+    }
+
+    /**
+     * Indicates whether the network has changed since it was last saved or
+     * created.
+     *
+     * @return The current value of the changed flag.
+     */
+    public boolean hasChanged() {
+        return _changed;
     }
 
     /**
@@ -570,20 +611,38 @@ public class Network implements Serializable {
         changed();
     }
 
-    /** TODO: javadoc */
-    public void enableClientNotifications(String id)
+    /**
+     * Enables the given client's reception of failed contacts.
+     *
+     * @param clientId The key of the client to turn notifications on
+     * @throws UnknownClientKeyException            if there exists no client
+     *                                              with the given key in the
+     *                                              network
+     * @throws NotificationsAlreadyToggledException if the client already has
+     *                                              notifications turned on
+     */
+    public void enableClientNotifications(String clientId)
       throws UnknownClientKeyException, NotificationsAlreadyToggledException {
-        final Client client = getClient(id);
+        final Client client = getClient(clientId);
         if (client.hasNotificationsEnabled()) {
             throw new NotificationsAlreadyToggledException(true);
         }
         client.setNotificationState(true);
     }
 
-    /** TODO: javadoc */
-    public void disableClientNotifications(String id)
+    /**
+     * Disables the given client's reception of failed contacts.
+     *
+     * @param clientId The key of the client to turn notifications on
+     * @throws UnknownClientKeyException            if there exists no client
+     *                                              with the given key in the
+     *                                              network
+     * @throws NotificationsAlreadyToggledException if the client already has
+     *                                              notifications turned on
+     */
+    public void disableClientNotifications(String clientId)
       throws UnknownClientKeyException, NotificationsAlreadyToggledException {
-        final Client client = getClient(id);
+        final Client client = getClient(clientId);
         if (!client.hasNotificationsEnabled()) {
             throw new NotificationsAlreadyToggledException(false);
         }
