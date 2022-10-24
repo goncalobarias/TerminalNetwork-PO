@@ -31,6 +31,7 @@ public class TerminalSilentStatus extends Terminal.Status {
 
     @Override
     protected void turnOff() {
+        updateStatus(new TerminalOffStatus(getTerminal()));
     }
 
 }

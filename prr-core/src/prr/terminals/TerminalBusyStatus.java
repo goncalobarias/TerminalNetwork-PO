@@ -19,14 +19,17 @@ public class TerminalBusyStatus extends Terminal.Status {
 
     @Override
     protected void setOnIdle() {
+        // do nothing
     }
 
     @Override
     protected void setOnSilent() {
+        // do nothing
     }
 
     @Override
     protected void turnOff() {
+        // do nothing
     }
 
 }
