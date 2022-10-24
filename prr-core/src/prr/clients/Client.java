@@ -24,11 +24,11 @@ public class Client implements Serializable {
     private final String _id;
     private String _name;
     private int _taxId;
-    private boolean _receiveNotifications;
-    private NotificationDeliveryMethod _deliveryMethod;
-    private Queue<Notification> _notifications;
     private Map<String, Terminal> _terminals;
     private Level _level;
+    private boolean _receiveNotifications;
+    private Queue<Notification> _notifications;
+    private NotificationDeliveryMethod _deliveryMethod;
     public static final Comparator<Client> DEBT_COMPARATOR = new DebtComparator();
 
     private static class DebtComparator implements Comparator<Client>,
@@ -48,11 +48,11 @@ public class Client implements Serializable {
         _id = id;
         _name = name;
         _taxId = taxId;
-        _receiveNotifications = true;
-        _deliveryMethod = new DefaultDeliveryMethod();
-        _notifications = new LinkedList<Notification>();
         _terminals = new HashMap<String, Terminal>(); // TODO: fix this data structure to a map
         _level = new ClientNormalLevel(this);
+        _receiveNotifications = true;
+        _notifications = new LinkedList<Notification>();
+        _deliveryMethod = new DefaultDeliveryMethod();
     }
 
     public String getId() {
@@ -71,16 +71,16 @@ public class Client implements Serializable {
         return _terminals.size();
     }
 
+    public String getLevelType() {
+        return _level.getLevelType();
+    }
+
     public double getPayments() {
         return _level.getPayments();
     }
 
     public double getDebts() {
         return _level.getDebts();
-    }
-
-    public String getLevelType() {
-        return _level.getLevelType();
     }
 
     public boolean hasNotificationsEnabled() {
@@ -130,13 +130,17 @@ public class Client implements Serializable {
             _plan = new BasePlan();
         }
 
-        public abstract String getLevelType();
+        protected Client getClient() {
+            return Client.this;
+        }
 
-        public double getPayments() {
+        protected abstract String getLevelType();
+
+        protected double getPayments() {
             return _payments;
         }
 
-        public double getDebts() {
+        protected double getDebts() {
             return _debts;
         }
 

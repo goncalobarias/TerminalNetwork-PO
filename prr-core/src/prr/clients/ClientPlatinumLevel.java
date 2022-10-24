@@ -13,7 +13,7 @@ public class ClientPlatinumLevel extends Client.Level {
     }
 
     @Override
-    public String getLevelType() {
+    protected String getLevelType() {
         return "PLATINUM";
     }
 

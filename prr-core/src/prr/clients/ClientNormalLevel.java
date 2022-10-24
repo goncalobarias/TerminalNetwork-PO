@@ -13,7 +13,7 @@ public class ClientNormalLevel extends Client.Level {
     }
 
     @Override
-    public String getLevelType() {
+    protected String getLevelType() {
         return "NORMAL";
     }
 
