@@ -191,7 +191,7 @@ public class Network implements Serializable {
     /** TODO: javadoc */
     public Collection<Client> getClientsWithoutDebts() {
         return Collections.unmodifiableCollection(
-            getAllClients().stream()
+            _clients.values().stream()
             .filter(c -> c.getDebts() == 0.0)
             .collect(Collectors.toList())
         );
@@ -200,7 +200,7 @@ public class Network implements Serializable {
     /** TODO: javadoc */
     public Collection<Client> getClientsWithDebts() {
         return Collections.unmodifiableCollection(
-            getAllClients().stream()
+            _clients.values().stream()
             .filter(c -> c.getDebts() > 0.0)
             .sorted(Client.DEBT_COMPARATOR)
             .collect(Collectors.toList())
@@ -256,7 +256,7 @@ public class Network implements Serializable {
      */
     public Collection<Terminal> getUnusedTerminals() {
         return Collections.unmodifiableCollection(
-            getAllTerminals().stream()
+            _terminals.values().stream()
             .filter(t -> t.isUnused())
             .collect(Collectors.toList())
         );
@@ -265,7 +265,7 @@ public class Network implements Serializable {
     /** TODO: javadoc */
     public Collection<Terminal> getTerminalsWithPositiveBalance() {
         return Collections.unmodifiableCollection(
-            getAllTerminals().stream()
+            _terminals.values().stream()
             .filter(t -> t.getBalance() > 0)
             .collect(Collectors.toList())
         );
@@ -292,19 +292,36 @@ public class Network implements Serializable {
 
     /** TODO: javadoc */
     public Collection<Communication> getAllCommunications() {
-        return Collections.unmodifiableCollection(_communications.values());
+        return Collections.unmodifiableCollection(
+            _communications.values().stream()
+            .collect(Collectors.toList())
+        );
     }
 
     /** TODO: javadoc */
     public Collection<Communication> getAllCommunicationsMadeByClient(
-      String id) {
-        return Collections.unmodifiableCollection(getAllCommunications()); // TODO: get the right communications
+      String clientId) throws UnknownClientKeyException {
+        final Client client = getClient(clientId);
+
+        return Collections.unmodifiableCollection(
+            _terminals.values().stream()
+            .filter(term -> client.isOwnerOf(term))
+            .flatMap(Terminal::getMadeCommunications)
+            .collect(Collectors.toList())
+        );
     }
 
     /** TODO: javadoc */
     public Collection<Communication> getAllCommunicationsReceivedByClient(
-      String id) {
-        return Collections.unmodifiableCollection(getAllCommunications()); // TODO: get the right communications
+      String clientId) throws UnknownClientKeyException {
+        final Client client = getClient(clientId);
+
+        return Collections.unmodifiableCollection(
+            _terminals.values().stream()
+            .filter(term -> client.isOwnerOf(term))
+            .flatMap(Terminal::getReceivedCommunications)
+            .collect(Collectors.toList())
+        );
     }
 
     /**
@@ -545,7 +562,8 @@ public class Network implements Serializable {
         Terminal terminal = getTerminal(terminalId);
         for (String terminalFriendId : terminalFriendsIds) {
             Terminal terminalFriend = getTerminal(terminalFriendId);
-            if (!terminal.equals(terminalFriend)) {
+            if (!terminal.equals(terminalFriend) ||
+              !terminal.isAlreadyFriend(terminalFriend)) {
                 terminal.addFriend(terminalFriend);
             }
         }

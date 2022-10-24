@@ -2,21 +2,27 @@ package prr.app.terminal;
 
 import prr.Network;
 import prr.terminals.Terminal;
+import prr.app.exceptions.UnknownTerminalKeyException;
 import pt.tecnico.uilib.menus.CommandException;
-//FIXME add more imports if needed
 
 /**
  * Remove friend.
  */
 class DoRemoveFriend extends TerminalCommand {
 
-	DoRemoveFriend(Network context, Terminal terminal) {
-		super(Label.REMOVE_FRIEND, context, terminal);
-		//FIXME add command fields
-	}
+    DoRemoveFriend(Network context, Terminal terminal) {
+        super(Label.REMOVE_FRIEND, context, terminal);
+        addStringField("terminalFriendId", Prompt.terminalKey());
+    }
 
-	@Override
-	protected final void execute() throws CommandException {
-                //FIXME implement command
-	}
+    @Override
+    protected final void execute() throws CommandException {
+        try {
+            String terminalFriendId = stringField("terminalFriendId");
+            _receiver.removeFriend(_network.getTerminal(terminalFriendId));
+        } catch (prr.exceptions.UnknownTerminalKeyException e) {
+            throw new UnknownTerminalKeyException(e.getKey());
+        }
+    }
+
 }

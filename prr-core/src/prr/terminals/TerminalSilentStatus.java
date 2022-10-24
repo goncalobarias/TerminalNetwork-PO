@@ -17,4 +17,16 @@ public class TerminalSilentStatus extends Terminal.Status {
         return "SILENCE";
     }
 
+    @Override
+    protected void setOnIdle() {
+    }
+
+    @Override
+    protected void setOnSilent() {
+    }
+
+    @Override
+    protected void turnOff() {
+    }
+
 }

@@ -18,7 +18,8 @@ class DoShowGlobalBalance extends Command<Network> {
         long globalPayments = Math.round(_receiver.getGlobalPayments());
         long globalDebts = Math.round(_receiver.getGlobalDebts());
         _display.popup(
-            Message.globalPaymentsAndDebts(globalPayments, globalDebts));
+            Message.globalPaymentsAndDebts(globalPayments, globalDebts)
+        );
     }
 
 }

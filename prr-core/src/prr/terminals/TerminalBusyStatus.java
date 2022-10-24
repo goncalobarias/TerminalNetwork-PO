@@ -17,4 +17,16 @@ public class TerminalBusyStatus extends Terminal.Status {
         return "BUSY";
     }
 
+    @Override
+    protected void setOnIdle() {
+    }
+
+    @Override
+    protected void setOnSilent() {
+    }
+
+    @Override
+    protected void turnOff() {
+    }
+
 }

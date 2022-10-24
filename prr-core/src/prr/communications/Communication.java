@@ -39,8 +39,16 @@ public abstract class Communication implements Serializable {
         return _terminalSender.getTerminalId();
     }
 
+    public Terminal getTerminalSender() {
+        return _terminalSender;
+    }
+
     public String getReceiverId() {
         return _terminalReceiver.getTerminalId();
+    }
+
+    public Terminal getTerminalReceiver() {
+        return _terminalReceiver;
     }
 
     public abstract double getUnits();

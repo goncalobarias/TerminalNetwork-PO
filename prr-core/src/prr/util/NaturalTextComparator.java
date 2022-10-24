@@ -10,7 +10,7 @@ import java.util.Locale;
 
 /**
  * Comparator used between strings that provides a lexicographic order and
- * ignores case and accentuated characters.
+ * ignores case characters.
  */
 public class NaturalTextComparator implements Comparator<String>, Serializable {
 
@@ -22,9 +22,6 @@ public class NaturalTextComparator implements Comparator<String>, Serializable {
 
     public NaturalTextComparator() {
         _collator = Collator.getInstance(Locale.getDefault());
-        // setting the strength to PRIMARY let's us ignore case and accentuated
-        // characters
-        _collator.setStrength(Collator.PRIMARY);
     }
 
     @Serial
@@ -32,7 +29,6 @@ public class NaturalTextComparator implements Comparator<String>, Serializable {
       ClassNotFoundException {
         ois.defaultReadObject();
         _collator = Collator.getInstance(Locale.getDefault());
-        _collator.setStrength(Collator.PRIMARY);
     }
 
     @Override

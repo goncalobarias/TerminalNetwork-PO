@@ -2,6 +2,7 @@ package prr.app.lookups;
 
 import prr.Network;
 import prr.app.visitors.RenderCommunication;
+import prr.app.exceptions.UnknownClientKeyException;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -17,12 +18,16 @@ class DoShowCommunicationsToClient extends Command<Network> {
 
     @Override
     protected final void execute() throws CommandException {
-        RenderCommunication _renderer = new RenderCommunication();
-        String clientId = stringField("clientId");
-        _receiver.getAllCommunicationsReceivedByClient(clientId)
-                .stream()
-                .map(c -> c.accept(_renderer))
-                .forEach(_display::popup);
+        try {
+            RenderCommunication _renderer = new RenderCommunication();
+            String clientId = stringField("clientId");
+            _receiver.getAllCommunicationsReceivedByClient(clientId)
+                    .stream()
+                    .map(c -> c.accept(_renderer))
+                    .forEach(_display::popup);
+        } catch (prr.exceptions.UnknownClientKeyException e) {
+            throw new UnknownClientKeyException(e.getKey());
+        }
     }
 
 }

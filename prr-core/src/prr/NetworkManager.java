@@ -87,19 +87,22 @@ public class NetworkManager {
      * current network is associated to this file.
      *
      * @param filename The name of the file
-     * @throws MissingFileAssociationException if the filename provided is
-     *                                         invalid, which makes serializing
-     *                                         the network state impossible
      * @throws FileNotFoundException           if for some reason the file
      *                                         cannot be created or opened
      * @throws IOException                     if there is some error while
      *                                         serializing the state of the
      *                                         network to disk
      */
-    public void saveAs(String filename) throws MissingFileAssociationException,
-      FileNotFoundException, IOException {
+    public void saveAs(String filename) throws FileNotFoundException,
+      IOException {
         _filename = filename;
-        save();
+        try {
+            save();
+        } catch (MissingFileAssociationException e) {
+            // this shouldn't happen since we expect the filename to be valid
+            // after we prompt the user
+            e.printStackTrace();
+        }
     }
 
     /**

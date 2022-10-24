@@ -7,7 +7,7 @@ import pt.tecnico.uilib.forms.Form;
 
 /**
  * Command represents an operation that can be carried out by or over an entity.
- * 
+ *
  * @param <Receiver> the entity providing the command's context.
  */
 public abstract class Command<Receiver> {
@@ -88,7 +88,7 @@ public abstract class Command<Receiver> {
 
   /**
    * Indicates whether, in a menu, this is the last command.
-   * 
+   *
    * @return true if, in a menu, this is the last command.
    */
   public boolean isLast() {
@@ -154,7 +154,7 @@ public abstract class Command<Receiver> {
   /**
    * Executes the command: as defined in the Command pattern, the command's
    * execution should eventually invoke the receiver's action.
-   * 
+   *
    * @throws CommandException if something wrong or unexpected occurs.
    */
   protected abstract void execute() throws CommandException;

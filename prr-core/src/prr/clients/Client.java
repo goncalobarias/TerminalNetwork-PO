@@ -2,8 +2,8 @@ package prr.clients;
 
 import java.util.Queue;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Comparator;
 import java.io.Serializable;
 import java.io.Serial;
@@ -27,7 +27,7 @@ public class Client implements Serializable {
     private boolean _receiveNotifications;
     private NotificationDeliveryMethod _deliveryMethod;
     private Queue<Notification> _notifications;
-    private List<Terminal> _terminals;
+    private Map<String, Terminal> _terminals;
     private Level _level;
     public static final Comparator<Client> DEBT_COMPARATOR = new DebtComparator();
 
@@ -51,7 +51,7 @@ public class Client implements Serializable {
         _receiveNotifications = true;
         _deliveryMethod = new DefaultDeliveryMethod();
         _notifications = new LinkedList<Notification>();
-        _terminals = new ArrayList<Terminal>();
+        _terminals = new HashMap<String, Terminal>(); // TODO: fix this data structure to a map
         _level = new ClientNormalLevel(this);
     }
 
@@ -87,12 +87,16 @@ public class Client implements Serializable {
         return _receiveNotifications;
     }
 
+    public boolean isOwnerOf(Terminal terminal) {
+        return _terminals.containsKey(terminal.getTerminalId());
+    }
+
     public void setNotificationState(boolean notificationState) {
         _receiveNotifications = notificationState;
     }
 
     public void addTerminal(Terminal terminal) {
-        _terminals.add(terminal);
+        _terminals.put(terminal.getTerminalId(), terminal);
     }
 
     public <T> T accept(ClientVisitor<T> visitor) {
