@@ -83,6 +83,10 @@ public class Client implements Serializable {
         return _level.getDebts();
     }
 
+    public void setNotificationState(boolean notificationState) {
+        _receiveNotifications = notificationState;
+    }
+
     public boolean hasNotificationsEnabled() {
         return _receiveNotifications;
     }
@@ -91,15 +95,11 @@ public class Client implements Serializable {
         return _terminals.containsKey(terminal.getTerminalId());
     }
 
-    public void setNotificationState(boolean notificationState) {
-        _receiveNotifications = notificationState;
-    }
-
     public void addTerminal(Terminal terminal) {
         _terminals.put(terminal.getTerminalId(), terminal);
     }
 
-    public <T> T accept(ClientVisitor<T> visitor) {
+    public String accept(ClientVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -109,6 +109,7 @@ public class Client implements Serializable {
         @Serial
         private static final long serialVersionUID = 202210192341L;
 
+        @Override
         public void deliver(Notification notification) {
         }
 

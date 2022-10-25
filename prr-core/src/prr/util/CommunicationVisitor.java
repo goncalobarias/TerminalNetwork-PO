@@ -2,8 +2,8 @@ package prr.util;
 
 import prr.communications.Communication;
 
-public interface CommunicationVisitor<T> {
+public interface CommunicationVisitor {
 
-    T visit(Communication communication);
+    String visit(Communication communication);
 
 }

@@ -15,7 +15,7 @@ public class TerminalOffStatus extends Terminal.Status {
     }
 
     @Override
-    public String getStatusType() {
+    protected String getStatusType() {
         return "OFF";
     }
 

@@ -2,8 +2,8 @@ package prr.util;
 
 import prr.terminals.Terminal;
 
-public interface TerminalVisitor<T> {
+public interface TerminalVisitor {
 
-    T visit(Terminal terminal);
+    String visit(Terminal terminal);
 
 }

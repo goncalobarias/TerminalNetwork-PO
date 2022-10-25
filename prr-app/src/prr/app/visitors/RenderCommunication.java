@@ -3,7 +3,7 @@ package prr.app.visitors;
 import prr.util.CommunicationVisitor;
 import prr.communications.Communication;
 
-public class RenderCommunication implements CommunicationVisitor<String> {
+public class RenderCommunication implements CommunicationVisitor {
 
     @Override
     public String visit(Communication communication) {

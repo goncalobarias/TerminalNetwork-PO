@@ -15,7 +15,7 @@ public class TerminalIdleStatus extends Terminal.Status {
     }
 
     @Override
-    public String getStatusType() {
+    protected String getStatusType() {
         return "IDLE";
     }
 

@@ -2,8 +2,8 @@ package prr.util;
 
 import prr.clients.Client;
 
-public interface ClientVisitor<T> {
+public interface ClientVisitor {
 
-    T visit(Client client);
+    String visit(Client client);
 
 }

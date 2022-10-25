@@ -3,7 +3,7 @@ package prr.app.visitors;
 import prr.util.ClientVisitor;
 import prr.clients.Client;
 
-public class RenderClient implements ClientVisitor<String> {
+public class RenderClient implements ClientVisitor {
 
     @Override
     public String visit(Client client) {

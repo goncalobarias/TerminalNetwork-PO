@@ -28,23 +28,23 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
 
     private final String _id;
     private Client _owner;
-    private Status _status;
-    private Communication _ongoingCommunication;
     private double _payments;
     private double _debts;
+    private Communication _ongoingCommunication;
     private Map<Integer, Communication> _communications;
     private Map<String, Terminal> _terminalFriends;
+    private Status _status;
     private Queue<Client> _clientsToNotify;
 
     public Terminal(String id, Client owner) {
         _id = id;
         _owner = owner;
-        _status = new TerminalIdleStatus(this);
-        _ongoingCommunication = null;
         _payments = 0.0;
         _debts = 0.0;
+        _ongoingCommunication = null;
         _communications = new TreeMap<Integer, Communication>();
         _terminalFriends = new TreeMap<String, Terminal>();
+        _status = new TerminalIdleStatus(this);
         _clientsToNotify = new LinkedList<Client>();
         _owner.addTerminal(this);
     }
@@ -63,10 +63,6 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return _owner;
     }
 
-    public String getStatusType() {
-        return _status.getStatusType();
-    }
-
     public double getPayments() {
         return _payments;
     }
@@ -79,10 +75,12 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return getPayments() - getDebts();
     }
 
-    public String getFriendsIds() {
-        return _terminalFriends.keySet()
-                                .stream()
-                                .collect(Collectors.joining(","));
+    public Communication getOngoingCommunication()
+      throws NoOngoingCommunicationException {
+        if (_ongoingCommunication == null) {
+            throw new NoOngoingCommunicationException();
+        }
+        return _ongoingCommunication;
     }
 
     public Stream<Communication> getMadeCommunications() {
@@ -95,16 +93,30 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
                 .filter(comm -> this.equals(comm.getTerminalReceiver()));
     }
 
-    public Communication getOngoingCommunication()
-      throws NoOngoingCommunicationException {
-        if (_ongoingCommunication == null) {
-            throw new NoOngoingCommunicationException();
-        }
-        return _ongoingCommunication;
+    public String getFriendsIds() {
+        return _terminalFriends.keySet()
+                                .stream()
+                                .collect(Collectors.joining(","));
+    }
+
+    public String getStatusType() {
+        return _status.getStatusType();
     }
 
     public void setStatus(String status) throws IllegalTerminalStatusException {
         _status.setStatus(status);
+    }
+
+    public void setOnIdle() throws TerminalStatusAlreadySetException {
+        _status.setOnIdle();
+    }
+
+    public void setOnSilent() throws TerminalStatusAlreadySetException {
+        _status.setOnSilent();
+    }
+
+    public void turnOff() throws TerminalStatusAlreadySetException {
+        _status.turnOff();
     }
 
     public boolean hasFriends() {
@@ -154,18 +166,6 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         }
     }
 
-    public void setOnIdle() throws TerminalStatusAlreadySetException {
-        _status.setOnIdle();
-    }
-
-    public void setOnSilent() throws TerminalStatusAlreadySetException {
-        _status.setOnSilent();
-    }
-
-    public void turnOff() throws TerminalStatusAlreadySetException {
-        _status.turnOff();
-    }
-
     @Override
     public int compareTo(Terminal terminal) {
         return getTerminalId().compareTo(terminal.getTerminalId());
@@ -183,7 +183,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return false;
     }
 
-    public <T> T accept(TerminalVisitor<T> visitor) {
+    public String accept(TerminalVisitor visitor) {
         return visitor.visit(this);
     }
 
@@ -197,7 +197,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             return Terminal.this;
         }
 
-        public abstract String getStatusType();
+        protected abstract String getStatusType();
 
         protected void setStatus(String status)
           throws IllegalTerminalStatusException {

@@ -13,7 +13,7 @@ public class TerminalBusyStatus extends Terminal.Status {
     }
 
     @Override
-    public String getStatusType() {
+    protected String getStatusType() {
         return "BUSY";
     }
 

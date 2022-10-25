@@ -3,7 +3,7 @@ package prr.app.visitors;
 import prr.util.TerminalVisitor;
 import prr.terminals.Terminal;
 
-public class RenderTerminal implements TerminalVisitor<String> {
+public class RenderTerminal implements TerminalVisitor {
 
     @Override
     public String visit(Terminal terminal) {

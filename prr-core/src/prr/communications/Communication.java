@@ -13,20 +13,20 @@ public abstract class Communication implements Serializable {
     private static final long serialVersionUID = 202210150053L;
 
     private final int _id;
-    private boolean _isPaid;
-    private boolean _isOngoing;
-    private double _price;
     private Terminal _terminalReceiver;
     private Terminal _terminalSender;
+    private boolean _isOngoing;
+    private double _price;
+    private boolean _isPaid;
 
     public Communication(int id, Terminal terminalReceiver,
       Terminal terminalSender) {
         _id = id;
-        _isPaid = false;
-        _isOngoing = true;
-        _price = 0.0;
         _terminalReceiver = terminalReceiver;
         _terminalSender = terminalSender;
+        _isOngoing = true;
+        _price = 0.0;
+        _isPaid = false;
     }
 
     public abstract String getCommunicationType();
@@ -69,7 +69,7 @@ public abstract class Communication implements Serializable {
         _price = 0.0; // TODO: update the method to actually compute the costs accordingly
     }
 
-    public <T> T accept(CommunicationVisitor<T> visitor) {
+    public String accept(CommunicationVisitor visitor) {
         return visitor.visit(this);
     }
 

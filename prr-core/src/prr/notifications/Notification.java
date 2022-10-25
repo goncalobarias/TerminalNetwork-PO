@@ -17,10 +17,10 @@ public abstract class Notification implements Serializable {
         _notifyingTerminal = notifyingTerminal;
     }
 
+    public abstract String getNotificationType();
+
     public Terminal getNotifyingTerminal() {
         return _notifyingTerminal;
     }
-
-    public abstract String getNotificationType();
 
 }
