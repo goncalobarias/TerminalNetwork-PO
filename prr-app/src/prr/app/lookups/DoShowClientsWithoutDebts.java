@@ -19,7 +19,7 @@ class DoShowClientsWithoutDebts extends Command<Network> {
         RenderClient _renderer = new RenderClient();
         _receiver.getClientsWithoutDebts()
                 .stream()
-                .map(c -> c.accept(_renderer))
+                .map(o -> o.accept(_renderer))
                 .forEach(_display::popup);
     }
 

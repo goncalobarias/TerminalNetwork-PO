@@ -19,7 +19,7 @@ class DoShowTerminalsWithPositiveBalance extends Command<Network> {
         RenderTerminal _renderer = new RenderTerminal();
         _receiver.getTerminalsWithPositiveBalance()
                 .stream()
-                .map(t -> t.accept(_renderer))
+                .map(o -> o.accept(_renderer))
                 .forEach(_display::popup);
     }
 

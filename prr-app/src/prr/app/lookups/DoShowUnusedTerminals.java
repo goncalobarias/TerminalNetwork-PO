@@ -19,7 +19,7 @@ class DoShowUnusedTerminals extends Command<Network> {
         RenderTerminal _renderer = new RenderTerminal();
         _receiver.getUnusedTerminals()
                 .stream()
-                .map(t -> t.accept(_renderer))
+                .map(o -> o.accept(_renderer))
                 .forEach(_display::popup);
     }
 

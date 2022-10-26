@@ -19,7 +19,7 @@ class DoShowAllClients extends Command<Network> {
         RenderClient _renderer = new RenderClient();
         _receiver.getAllClients()
                 .stream()
-                .map(c -> c.accept(_renderer))
+                .map(o -> o.accept(_renderer))
                 .forEach(_display::popup);
     }
 

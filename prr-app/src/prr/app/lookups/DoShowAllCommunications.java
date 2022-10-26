@@ -19,7 +19,7 @@ class DoShowAllCommunications extends Command<Network> {
         RenderCommunication _renderer = new RenderCommunication();
         _receiver.getAllCommunications()
                 .stream()
-                .map(c -> c.accept(_renderer))
+                .map(o -> o.accept(_renderer))
                 .forEach(_display::popup);
     }
 

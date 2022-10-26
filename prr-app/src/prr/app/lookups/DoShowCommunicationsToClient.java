@@ -23,7 +23,7 @@ class DoShowCommunicationsToClient extends Command<Network> {
             String clientId = stringField("clientId");
             _receiver.getAllCommunicationsReceivedByClient(clientId)
                     .stream()
-                    .map(c -> c.accept(_renderer))
+                    .map(o -> o.accept(_renderer))
                     .forEach(_display::popup);
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());

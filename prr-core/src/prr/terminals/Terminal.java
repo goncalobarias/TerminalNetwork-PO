@@ -3,7 +3,6 @@ package prr.terminals;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
