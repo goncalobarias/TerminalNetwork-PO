@@ -18,7 +18,6 @@ cvs_update() {
 	(cd $CVS_FOLDER && cvs -q update)
 }
 
-cvs_update
 cp --parents ./prr-app/**/*.java $CVS_FOLDER
 cp --parents ./prr-core/**/*.java $CVS_FOLDER
 
