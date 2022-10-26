@@ -23,6 +23,7 @@ class DoShowClient extends Command<Network> {
             String clientId = stringField("clientId");
             _display.popup(_receiver.getClient(clientId)
                                     .accept(renderer));
+            // TODO: get notifications and display them in order (method readNotifications that collects them, clears the notifications and returns them)
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());
         }

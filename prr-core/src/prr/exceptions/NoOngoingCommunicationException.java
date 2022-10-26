@@ -3,7 +3,7 @@ package prr.exceptions;
 import java.io.Serial;
 
 /**
- * TODO: comment
+ * Given terminal doesn't have an ongoing communication.
  */
 public class NoOngoingCommunicationException extends Exception {
 

@@ -3,7 +3,7 @@ package prr.exceptions;
 import java.io.Serial;
 
 /**
- * TODO: comment
+ * Given terminal status is being updated to a status the terminal already has.
  */
 public class TerminalStatusAlreadySetException extends Exception {
 

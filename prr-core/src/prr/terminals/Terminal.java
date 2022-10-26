@@ -9,12 +9,14 @@ import java.util.stream.Stream;
 import java.io.Serializable;
 import java.io.Serial;
 
+import prr.Network;
 import prr.util.TerminalVisitor;
 import prr.clients.Client;
 import prr.communications.Communication;
 import prr.exceptions.IllegalTerminalStatusException;
-import prr.exceptions.TerminalStatusAlreadySetException;
 import prr.exceptions.NoOngoingCommunicationException;
+import prr.exceptions.TerminalStatusAlreadySetException;
+import prr.exceptions.UnknownTerminalKeyException;
 
 /**
  * Abstract terminal.
@@ -147,21 +149,24 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return _communications.isEmpty();
     }
 
-    public boolean isAlreadyFriend(Terminal terminal) {
+    public boolean isFriend(Terminal terminal) {
         return _terminalFriends.containsKey(terminal.getTerminalId());
     }
 
-    public void addFriend(Terminal terminalFriend) {
+    public void addFriend(String terminalFriendId, Network context)
+      throws UnknownTerminalKeyException {
+        Terminal terminalFriend = context.getTerminal(terminalFriendId);
         if (!this.equals(terminalFriend) &&
-          !this.isAlreadyFriend(terminalFriend)) {
-            _terminalFriends.put(terminalFriend.getTerminalId(),
-                                terminalFriend);
+          !this.isFriend(terminalFriend)) {
+            _terminalFriends.put(terminalFriendId, terminalFriend);
         }
     }
 
-    public void removeFriend(Terminal terminalFriend) {
-        if (this.isAlreadyFriend(terminalFriend)) {
-            _terminalFriends.remove(terminalFriend.getTerminalId());
+    public void removeFriend(String terminalFriendId, Network context)
+      throws UnknownTerminalKeyException {
+        Terminal terminalFriend = context.getTerminal(terminalFriendId);
+        if (this.isFriend(terminalFriend)) {
+            _terminalFriends.remove(terminalFriendId);
         }
     }
 

@@ -17,17 +17,17 @@ import prr.communications.Communication;
 import prr.terminals.Terminal;
 import prr.terminals.BasicTerminal;
 import prr.terminals.FancyTerminal;
-import prr.exceptions.UnrecognizedEntryException;
 import prr.exceptions.ImportFileException;
 import prr.exceptions.DuplicateClientKeyException;
 import prr.exceptions.DuplicateTerminalKeyException;
+import prr.exceptions.IllegalTerminalStatusException;
 import prr.exceptions.InvalidTerminalKeyException;
 import prr.exceptions.NotificationsAlreadyToggledException;
 import prr.exceptions.UnknownClientKeyException;
-import prr.exceptions.UnknownTerminalKeyException;
-import prr.exceptions.UnknownEntryTypeException;
 import prr.exceptions.UnknownEntryLengthException;
-import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.UnknownEntryTypeException;
+import prr.exceptions.UnknownTerminalKeyException;
+import prr.exceptions.UnrecognizedEntryException;
 
 /**
  * Class Store implements a store.
@@ -602,11 +602,7 @@ public class Network implements Serializable {
       String[] terminalFriendsIds) throws UnknownTerminalKeyException {
         Terminal terminal = getTerminal(terminalId);
         for (String terminalFriendId : terminalFriendsIds) {
-            Terminal terminalFriend = getTerminal(terminalFriendId);
-            if (!terminal.equals(terminalFriend) ||
-              !terminal.isAlreadyFriend(terminalFriend)) {
-                terminal.addFriend(terminalFriend);
-            }
+            terminal.addFriend(terminalFriendId, this);
         }
         changed();
     }

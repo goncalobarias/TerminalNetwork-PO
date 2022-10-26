@@ -21,6 +21,7 @@ class DoShowClientsWithDebts extends Command<Network> {
                 .stream()
                 .map(o -> o.accept(_renderer))
                 .forEach(_display::popup);
+        // TODO: the clients collection needs to be sorted here with the right comparator
     }
 
 }
