@@ -2,7 +2,7 @@ package prr.app.terminal;
 
 import prr.Network;
 import prr.terminals.Terminal;
-import prr.exceptions.TerminalStatusAlreadySetException;
+import prr.exceptions.IllegalTerminalStatusException;
 import pt.tecnico.uilib.menus.CommandException;
 
 /**
@@ -18,7 +18,7 @@ class DoTurnOffTerminal extends TerminalCommand {
     protected final void execute() throws CommandException {
         try {
             _receiver.turnOff();
-        } catch (TerminalStatusAlreadySetException e) {
+        } catch (IllegalTerminalStatusException e) {
             _display.popup(Message.alreadyOff());
         }
     }

@@ -3,6 +3,7 @@ package prr.notifications;
 import java.io.Serializable;
 import java.io.Serial;
 
+import prr.util.NotificationVisitor;
 import prr.terminals.Terminal;
 
 public abstract class Notification implements Serializable {
@@ -19,8 +20,17 @@ public abstract class Notification implements Serializable {
 
     public abstract String getNotificationType();
 
+    public String getNotifyingTerminalId() {
+        final Terminal notifyingTerminal = getNotifyingTerminal();
+        return notifyingTerminal.getTerminalId();
+    }
+
     public Terminal getNotifyingTerminal() {
         return _notifyingTerminal;
+    }
+
+    public String accept(NotificationVisitor visitor) {
+        return visitor.visit(this);
     }
 
 }

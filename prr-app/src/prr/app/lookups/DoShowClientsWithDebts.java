@@ -1,6 +1,7 @@
 package prr.app.lookups;
 
 import prr.Network;
+import prr.clients.Client;
 import prr.app.visitors.RenderClient;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
@@ -19,9 +20,9 @@ class DoShowClientsWithDebts extends Command<Network> {
         RenderClient _renderer = new RenderClient();
         _receiver.getClientsWithDebts()
                 .stream()
+                .sorted(Client.DEBT_COMPARATOR)
                 .map(o -> o.accept(_renderer))
                 .forEach(_display::popup);
-        // TODO: the clients collection needs to be sorted here with the right comparator
     }
 
 }

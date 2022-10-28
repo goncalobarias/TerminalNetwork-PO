@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.io.IOException;
 import prr.util.NaturalTextComparator;
 import prr.clients.Client;
 import prr.communications.Communication;
+import prr.notifications.Notification;
 import prr.terminals.Terminal;
 import prr.terminals.BasicTerminal;
 import prr.terminals.FancyTerminal;
@@ -21,6 +23,7 @@ import prr.exceptions.ImportFileException;
 import prr.exceptions.DuplicateClientKeyException;
 import prr.exceptions.DuplicateTerminalKeyException;
 import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.InvalidFriendException;
 import prr.exceptions.InvalidTerminalKeyException;
 import prr.exceptions.NotificationsAlreadyToggledException;
 import prr.exceptions.UnknownClientKeyException;
@@ -67,7 +70,7 @@ public class Network implements Serializable {
         _clients = new TreeMap<String, Client>(new NaturalTextComparator());
         _terminals = new TreeMap<String, Terminal>();
         _communications = new TreeMap<Integer, Communication>();
-        _nextCommunicationId = 0;
+        _nextCommunicationId = 1;
         _globalPayments = 0.0;
         _globalDebts = 0.0;
         _currentEntry = "";
@@ -128,6 +131,22 @@ public class Network implements Serializable {
         final Client client = getClient(id);
         return client.getPayments();
     }
+
+    /**
+     * Collects all the pending notifications for a given client, marking them
+     * as read.
+     *
+     * @param clientId The key of the client that read their notifications
+     * @return A {@link Collection} of the unread notifications
+     * @throws UnknownClientKeyException if there exists no client with the
+     *                                   given key in the network
+     */
+    public Collection<Notification> getClientNotifications(String clientId)
+      throws UnknownClientKeyException {
+        final Client client = getClient(clientId);
+        return Collections.unmodifiableCollection(client.readNotifications());
+    }
+
     /**
      * Gets a client by its key. Two clients are considered the same in the
      * network if their keyss are the same, or only differ by their case.
@@ -195,7 +214,6 @@ public class Network implements Serializable {
         return Collections.unmodifiableCollection(
             _clients.values().stream()
             .filter(c -> c.getDebts() > 0.0)
-            .sorted(Client.DEBT_COMPARATOR)
             .collect(Collectors.toList())
         );
     }
@@ -602,7 +620,11 @@ public class Network implements Serializable {
       String[] terminalFriendsIds) throws UnknownTerminalKeyException {
         Terminal terminal = getTerminal(terminalId);
         for (String terminalFriendId : terminalFriendsIds) {
-            terminal.addFriend(terminalFriendId, this);
+            try {
+                terminal.addFriend(terminalFriendId, this);
+            } catch (InvalidFriendException e) {
+                // do nothing
+            }
         }
         changed();
     }

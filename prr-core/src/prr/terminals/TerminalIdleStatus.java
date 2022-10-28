@@ -2,7 +2,7 @@ package prr.terminals;
 
 import java.io.Serial;
 
-import prr.exceptions.TerminalStatusAlreadySetException;
+import prr.exceptions.IllegalTerminalStatusException;
 
 public class TerminalIdleStatus extends Terminal.Status {
 
@@ -20,8 +20,8 @@ public class TerminalIdleStatus extends Terminal.Status {
     }
 
     @Override
-    protected void setOnIdle() throws TerminalStatusAlreadySetException {
-        throw new TerminalStatusAlreadySetException(getStatusType());
+    protected void setOnIdle() throws IllegalTerminalStatusException {
+        throw new IllegalTerminalStatusException(getStatusType());
     }
 
     @Override

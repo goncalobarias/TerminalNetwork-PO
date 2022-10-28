@@ -14,8 +14,8 @@ import prr.util.TerminalVisitor;
 import prr.clients.Client;
 import prr.communications.Communication;
 import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.InvalidFriendException;
 import prr.exceptions.NoOngoingCommunicationException;
-import prr.exceptions.TerminalStatusAlreadySetException;
 import prr.exceptions.UnknownTerminalKeyException;
 
 /**
@@ -108,15 +108,15 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         _status.setStatus(status);
     }
 
-    public void setOnIdle() throws TerminalStatusAlreadySetException {
+    public void setOnIdle() throws IllegalTerminalStatusException {
         _status.setOnIdle();
     }
 
-    public void setOnSilent() throws TerminalStatusAlreadySetException {
+    public void setOnSilent() throws IllegalTerminalStatusException {
         _status.setOnSilent();
     }
 
-    public void turnOff() throws TerminalStatusAlreadySetException {
+    public void turnOff() throws IllegalTerminalStatusException {
         _status.turnOff();
     }
 
@@ -154,19 +154,23 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
     }
 
     public void addFriend(String terminalFriendId, Network context)
-      throws UnknownTerminalKeyException {
+      throws UnknownTerminalKeyException, InvalidFriendException {
         Terminal terminalFriend = context.getTerminal(terminalFriendId);
         if (!this.equals(terminalFriend) &&
           !this.isFriend(terminalFriend)) {
             _terminalFriends.put(terminalFriendId, terminalFriend);
+        } else {
+            throw new InvalidFriendException();
         }
     }
 
     public void removeFriend(String terminalFriendId, Network context)
-      throws UnknownTerminalKeyException {
+      throws UnknownTerminalKeyException, InvalidFriendException {
         Terminal terminalFriend = context.getTerminal(terminalFriendId);
         if (this.isFriend(terminalFriend)) {
             _terminalFriends.remove(terminalFriendId);
+        } else {
+            throw new InvalidFriendException();
         }
     }
 
@@ -217,11 +221,11 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             Terminal.this._status = status;
         }
 
-        protected abstract void setOnIdle() throws TerminalStatusAlreadySetException;
+        protected abstract void setOnIdle() throws IllegalTerminalStatusException;
 
-        protected abstract void setOnSilent() throws TerminalStatusAlreadySetException;
+        protected abstract void setOnSilent() throws IllegalTerminalStatusException;
 
-        protected abstract void turnOff() throws TerminalStatusAlreadySetException;
+        protected abstract void turnOff() throws IllegalTerminalStatusException;
 
     }
 

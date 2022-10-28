@@ -3,7 +3,8 @@ package prr.exceptions;
 import java.io.Serial;
 
 /**
- * Exception for terminal entries with unknown or unwanted status type.
+ * Exception for invalid terminal status updates and terminal entries with
+ * unknown or unwanted status type.
  */
 public class IllegalTerminalStatusException extends Exception {
 

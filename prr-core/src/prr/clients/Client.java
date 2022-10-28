@@ -1,5 +1,6 @@
 package prr.clients;
 
+import java.util.Collection;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
@@ -9,6 +10,7 @@ import java.io.Serializable;
 import java.io.Serial;
 
 import prr.util.ClientVisitor;
+import prr.util.NaturalTextComparator;
 import prr.notifications.NotificationDeliveryMethod;
 import prr.notifications.Notification;
 import prr.tariffs.BasePlan;
@@ -29,6 +31,7 @@ public class Client implements Serializable {
     private boolean _receiveNotifications;
     private Queue<Notification> _notifications;
     private NotificationDeliveryMethod _deliveryMethod;
+    private static final Comparator<String> ID_COMPARATOR = new NaturalTextComparator();
     public static final Comparator<Client> DEBT_COMPARATOR = new DebtComparator();
 
     private static class DebtComparator implements Comparator<Client>,
@@ -39,7 +42,10 @@ public class Client implements Serializable {
         private static final long serialVersionUID = 202210231030L;
 
         public int compare(Client c1, Client c2) {
-            return Double.compare(c2.getDebts(), c1.getDebts());
+            return Comparator
+                    .comparing(Client::getDebts, Comparator.reverseOrder())
+                    .thenComparing(Client::getId, ID_COMPARATOR)
+                    .compare(c1, c2);
         }
 
     }
@@ -49,7 +55,7 @@ public class Client implements Serializable {
         _name = name;
         _taxId = taxId;
         _terminals = new HashMap<String, Terminal>(); // TODO: fix this data structure to a map
-        _level = new ClientNormalLevel(this);
+        _level = new ClientNormalLevel(this, 0.0, 0.0, 0, 0);
         _receiveNotifications = true;
         _notifications = new LinkedList<Notification>();
         _deliveryMethod = new DefaultDeliveryMethod();
@@ -83,6 +89,21 @@ public class Client implements Serializable {
         return _level.getDebts();
     }
 
+    public TariffPlan getTariffPlan() {
+        return _level.getTariffPlan();
+    }
+
+    public Collection<Notification> readNotifications() {
+        Collection<Notification> notifications =
+            new LinkedList<>(_notifications);
+        _notifications.clear();
+        return notifications;
+    }
+
+    public void setTariffPlan(TariffPlan plan) {
+        _level.setTariffPlan(plan);
+    }
+
     public void setNotificationState(boolean notificationState) {
         _receiveNotifications = notificationState;
     }
@@ -93,6 +114,18 @@ public class Client implements Serializable {
 
     public boolean isOwnerOf(Terminal terminal) {
         return _terminals.containsKey(terminal.getTerminalId());
+    }
+
+    public void increaseNumberOfConsecutiveTextCommunications() {
+        _level.increaseNumberOfConsecutiveTextCommunications();
+    }
+
+    public void increaseNumberOfConsecutiveVideoCommunications() {
+        _level.increaseNumberOfConsecutiveVideoCommunications();
+    }
+
+    public void verifyLevelUpdateConditions() {
+        _level.verifyLevelUpdateConditions();
     }
 
     public void addTerminal(Terminal terminal) {
@@ -123,11 +156,19 @@ public class Client implements Serializable {
 
         private double _payments;
         private double _debts;
+        private int _numberOfConsecutiveTextCommunications;
+        private int _numberOfConsecutiveVideoCommunications;
         private TariffPlan _plan;
 
-        public Level() {
-            _payments = 0.0;
-            _debts = 0.0;
+        public Level(double payments, double debts,
+          int numberOfConsecutiveTextCommunications,
+          int numberOfConsecutiveVideoCommunications) {
+            _payments = payments;
+            _debts = debts;
+            _numberOfConsecutiveTextCommunications =
+                numberOfConsecutiveTextCommunications;
+            _numberOfConsecutiveVideoCommunications =
+                numberOfConsecutiveVideoCommunications;
             _plan = new BasePlan();
         }
 
@@ -144,6 +185,48 @@ public class Client implements Serializable {
         protected double getDebts() {
             return _debts;
         }
+
+        protected double getBalance() {
+            return getPayments() - getDebts();
+        }
+
+        protected int getNumberOfConsecutiveTextCommunications() {
+            return _numberOfConsecutiveTextCommunications;
+        }
+
+        protected int getNumberOfConsecutiveVideoCommunications() {
+            return _numberOfConsecutiveVideoCommunications;
+        }
+
+        protected TariffPlan getTariffPlan() {
+            return _plan;
+        }
+
+        protected void updateLevel(Level level) {
+            Client.this._level = level;
+        }
+
+        protected void resetNumberOfConsecutiveTextCommunications() {
+            _numberOfConsecutiveTextCommunications = 0;
+        }
+
+        protected void resetNumberOfConsecutiveVideoCommunications() {
+            _numberOfConsecutiveVideoCommunications = 0;
+        }
+
+        protected void setTariffPlan(TariffPlan plan) {
+            _plan = plan;
+        }
+
+        protected void increaseNumberOfConsecutiveTextCommunications() {
+            _numberOfConsecutiveTextCommunications++;
+        }
+
+        protected void increaseNumberOfConsecutiveVideoCommunications() {
+            _numberOfConsecutiveVideoCommunications++;
+        }
+
+        protected abstract void verifyLevelUpdateConditions();
 
     }
 

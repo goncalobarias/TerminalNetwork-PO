@@ -2,7 +2,7 @@ package prr.terminals;
 
 import java.io.Serial;
 
-import prr.exceptions.TerminalStatusAlreadySetException;
+import prr.exceptions.IllegalTerminalStatusException;
 
 public class TerminalSilentStatus extends Terminal.Status {
 
@@ -25,8 +25,8 @@ public class TerminalSilentStatus extends Terminal.Status {
     }
 
     @Override
-    protected void setOnSilent() throws TerminalStatusAlreadySetException {
-        throw new TerminalStatusAlreadySetException(getStatusType());
+    protected void setOnSilent() throws IllegalTerminalStatusException {
+        throw new IllegalTerminalStatusException(getStatusType());
     }
 
     @Override
