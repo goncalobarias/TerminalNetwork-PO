@@ -4,6 +4,8 @@ import java.io.Serial;
 
 import prr.Network;
 import prr.clients.Client;
+import prr.exceptions.UnsupportedCommunicationAtOriginException;
+import prr.exceptions.UnsupportedCommunicationAtDestinationException;
 
 public class BasicTerminal extends Terminal {
 
@@ -21,13 +23,15 @@ public class BasicTerminal extends Terminal {
     }
 
     @Override
-    public void makeVideoCall(String terminalReceiverId, Network context) {
-        // TODO: throw exception because origin is not supported
+    public void makeVideoCall(String terminalReceiverId, Network context)
+      throws UnsupportedCommunicationAtOriginException {
+        throw new UnsupportedCommunicationAtOriginException();
     }
 
     @Override
-    protected void receiveVideoCall(Terminal sender, Network context) {
-        // TODO: throw exception because destination is not supported
+    protected void receiveVideoCall(Terminal sender, Network context)
+      throws UnsupportedCommunicationAtDestinationException {
+        throw new UnsupportedCommunicationAtDestinationException();
     }
 
 }

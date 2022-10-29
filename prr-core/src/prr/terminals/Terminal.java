@@ -1,5 +1,6 @@
 package prr.terminals;
 
+import java.util.Collection;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
@@ -16,10 +17,16 @@ import prr.communications.Communication;
 import prr.communications.TextCommunication;
 import prr.communications.InteractiveCommunication;
 import prr.communications.VoiceCommunication;
+import prr.notifications.Notification;
 import prr.exceptions.IllegalTerminalStatusException;
 import prr.exceptions.InvalidFriendException;
 import prr.exceptions.NoOngoingCommunicationException;
 import prr.exceptions.UnknownTerminalKeyException;
+import prr.exceptions.UnreachableBusyTerminalException;
+import prr.exceptions.UnreachableOffTerminalException;
+import prr.exceptions.UnreachableSilentTerminalException;
+import prr.exceptions.UnsupportedCommunicationAtOriginException;
+import prr.exceptions.UnsupportedCommunicationAtDestinationException;
 
 /**
  * Abstract terminal.
@@ -107,6 +114,10 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return _status.getStatusType();
     }
 
+    public Terminal.Status getStatus() {
+        return _status;
+    }
+
     public void setStatus(String status) throws IllegalTerminalStatusException {
         _status.setStatus(status);
     }
@@ -123,6 +134,14 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         _status.turnOff();
     }
 
+    public void setOnBusy() {
+        _status.setOnBusy();
+    }
+
+    public void unBusy() {
+        _status.unBusy();
+    }
+
     public void setOngoingCommunication(
       InteractiveCommunication communication) {
         _ongoingCommunication = communication;
@@ -130,6 +149,14 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
 
     public boolean hasFriends() {
         return !_terminalFriends.isEmpty();
+    }
+
+    public boolean isFriend(Terminal terminal) {
+        return _terminalFriends.containsKey(terminal.getTerminalId());
+    }
+
+    public boolean isUnused() {
+        return _communications.isEmpty();
     }
 
     /**
@@ -152,26 +179,12 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
 	    return _status.canStartCommunication();
     }
 
-    public boolean canReceiveTextCommunication() {
-        // TODO: throw exception because it can't receive text comm
+    protected boolean canReceiveTextCommunication() {
         return _status.canReceiveTextCommunication();
     }
 
-    public boolean canReceiveInteractiveCommunication() {
-        // TODO: throw exception because it can't receive interactive comm
+    protected boolean canReceiveInteractiveCommunication() {
         return _status.canReceiveInteractiveCommunication();
-    }
-
-    public boolean isUnused() {
-        return _communications.isEmpty();
-    }
-
-    public boolean isFriend(Terminal terminal) {
-        return _terminalFriends.containsKey(terminal.getTerminalId());
-    }
-
-    public void addCommunication(Communication communication) {
-        _communications.put(communication.getId(), communication);
     }
 
     public void addFriend(String terminalFriendId, Network context)
@@ -193,58 +206,104 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         _terminalFriends.remove(terminalFriendId);
     }
 
-    public void endOngoingCommunication(int duration) {
-        // TODO: need to register the video communications
-        _ongoingCommunication.stopCommunication();
-        _ongoingCommunication = null;
-        getOwner().verifyLevelUpdateConditions();
+    public void receiveCommunication(Communication communication) {
+        _communications.put(communication.getId(), communication);
+    }
+
+    public double endOngoingCommunication(int duration) {
+        double commPrice = 0.0;
+        if (canEndCurrentCommunication()) {
+            // TODO: fix this horrible implementation (VERY IMPORTANT)
+            if (_ongoingCommunication.getCommunicationType().equals("VIDEO")) {
+                getOwner().increaseNumberOfConsecutiveVideoCommunications();
+            } else {
+                getOwner().resetNumberOfConsecutiveCommunications();
+            }
+            commPrice = _ongoingCommunication.stopCommunication();
+            _ongoingCommunication = null;
+            unBusy();
+            getOwner().verifyLevelUpdateConditions();
+        }
+        return commPrice;
     }
 
     public void sendSMS(String terminalReceiverId, Network context,
-      String message) throws UnknownTerminalKeyException {
-        Terminal receiver = context.getTerminal(terminalReceiverId);
-        receiver.receiveSMS(this, context, message);
+      String message) throws UnknownTerminalKeyException,
+      UnreachableOffTerminalException {
+        if (canStartCommunication()) {
+            Terminal receiver = context.getTerminal(terminalReceiverId);
+            receiver.receiveSMS(this, context, message);
+        }
     }
 
     private void receiveSMS(Terminal sender, Network context,
-      String newMessage) {
+      String newMessage) throws UnreachableOffTerminalException {
         if (canReceiveTextCommunication()) {
             int newId = context.getNextCommunicationId();
-            Communication communication =
+            TextCommunication communication =
                 new TextCommunication(newMessage, newId, this, sender);
-            addCommunication(communication);
+            receiveCommunication(communication);
+            getOwner().increaseNumberOfConsecutiveTextCommunications();
             sender.getOwner().verifyLevelUpdateConditions();
-            // TODO: need to register the text communications
         } else {
             addToNotify(sender.getOwner());
+            throw new UnreachableOffTerminalException();
         }
     }
 
     public void makeVoiceCall(String terminalReceiverId, Network context)
-      throws UnknownTerminalKeyException {
-        Terminal receiver = context.getTerminal(terminalReceiverId);
-        receiver.receiveVoiceCall(this, context);
+      throws UnknownTerminalKeyException, UnreachableOffTerminalException,
+      UnreachableBusyTerminalException, UnreachableSilentTerminalException {
+        if (canStartCommunication()) {
+            Terminal receiver = context.getTerminal(terminalReceiverId);
+            receiver.receiveVoiceCall(this, context);
+        }
     }
 
-    private void receiveVoiceCall(Terminal sender, Network context) {
+    private void receiveVoiceCall(Terminal sender, Network context)
+      throws UnreachableOffTerminalException, UnreachableBusyTerminalException,
+      UnreachableSilentTerminalException {
         if (canReceiveInteractiveCommunication()) {
+            setOnBusy();
             int newId = context.getNextCommunicationId();
-            InteractiveCommunication communication =
+            VoiceCommunication communication =
                 new VoiceCommunication(newId, this, sender);
-            addCommunication(communication);
+            receiveCommunication(communication);
             setOngoingCommunication(communication);
         } else {
             addToNotify(sender.getOwner());
+            // TODO: fix this horrible mess of exceptions
+            switch (getStatusType()) {
+                case "BUSY" -> throw new UnreachableBusyTerminalException();
+                case "OFF" -> throw new UnreachableOffTerminalException();
+                case "SILENCE" -> throw new UnreachableSilentTerminalException();
+                default -> throw new UnreachableBusyTerminalException();
+            }
         }
     }
 
     public abstract void makeVideoCall(String terminalReceiverId,
-      Network context) throws UnknownTerminalKeyException;
+      Network context) throws UnsupportedCommunicationAtOriginException,
+      UnsupportedCommunicationAtDestinationException, UnknownTerminalKeyException,
+      UnreachableOffTerminalException, UnreachableBusyTerminalException,
+      UnreachableSilentTerminalException;
 
-    protected abstract void receiveVideoCall(Terminal sender, Network context);
+    protected abstract void receiveVideoCall(Terminal sender, Network context)
+      throws UnsupportedCommunicationAtDestinationException,
+      UnreachableOffTerminalException, UnreachableBusyTerminalException,
+      UnreachableSilentTerminalException;
 
     protected void addToNotify(Client client) {
-        _clientsToNotify.add(client);
+        if (!_clientsToNotify.contains(client)) {
+            _clientsToNotify.add(client);
+        }
+    }
+
+    protected void notifyAllClients(Notification notification) {
+        Client client = null;
+        while ((client = _clientsToNotify.poll()) != null) {
+            client.notify(notification);
+        }
     }
 
     @Override
@@ -274,7 +333,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         @Serial
         private static final long serialVersionUID = 202210150058L;
 
-        public Terminal getTerminal() {
+        protected Terminal getTerminal() {
             return Terminal.this;
         }
 
@@ -302,6 +361,10 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
 
         protected abstract void turnOff()
           throws IllegalTerminalStatusException;
+
+        protected abstract void setOnBusy();
+
+        protected abstract void unBusy();
 
         protected abstract boolean canStartCommunication();
 

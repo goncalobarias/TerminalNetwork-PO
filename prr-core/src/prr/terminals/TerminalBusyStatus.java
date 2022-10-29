@@ -2,6 +2,9 @@ package prr.terminals;
 
 import java.io.Serial;
 
+import prr.exceptions.IllegalTerminalStatusException;
+import prr.notifications.BusyToIdleNotification;
+
 public class TerminalBusyStatus extends Terminal.Status {
 
     /** Serial number for serialization. */
@@ -22,18 +25,32 @@ public class TerminalBusyStatus extends Terminal.Status {
     }
 
     @Override
-    protected void setOnIdle() {
+    protected void setOnIdle() throws IllegalTerminalStatusException {
+        throw new IllegalTerminalStatusException("IDLE");
+    }
+
+    @Override
+    protected void setOnSilent() throws IllegalTerminalStatusException {
+        throw new IllegalTerminalStatusException("SILENCE");
+    }
+
+    @Override
+    protected void turnOff() throws IllegalTerminalStatusException {
+        throw new IllegalTerminalStatusException("OFF");
+    }
+
+    @Override
+    protected void setOnBusy() {
         // do nothing
     }
 
     @Override
-    protected void setOnSilent() {
-        // do nothing
-    }
-
-    @Override
-    protected void turnOff() {
-        // do nothing
+    protected void unBusy() {
+        // TODO: the previous status implementation does not work with this
+        getTerminal().notifyAllClients(
+            new BusyToIdleNotification(getTerminal())
+        );
+        updateStatus(_previousStatus);
     }
 
     @Override

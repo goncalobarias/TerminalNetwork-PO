@@ -16,7 +16,7 @@ public class TextCommunication extends Communication {
       Terminal terminalReceiver, Terminal terminalSender) {
         super(id, terminalReceiver, terminalSender, false);
         _message = message;
-        // TODO: instantly compute cost and propagate it
+        computePrice();
     }
 
     @Override
@@ -25,7 +25,7 @@ public class TextCommunication extends Communication {
     }
 
     @Override
-    public double getUnits() {
+    public int getUnits() {
         return _message.length();
     }
 

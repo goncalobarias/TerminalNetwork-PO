@@ -34,8 +34,14 @@ public class TerminalIdleStatus extends Terminal.Status {
         updateStatus(new TerminalOffStatus(getTerminal()));
     }
 
+    @Override
     protected void setOnBusy() {
         updateStatus(new TerminalBusyStatus(getTerminal(), this));
+    }
+
+    @Override
+    protected void unBusy() {
+        // do nothing
     }
 
     @Override
@@ -52,6 +58,5 @@ public class TerminalIdleStatus extends Terminal.Status {
     protected boolean canReceiveInteractiveCommunication() {
         return true;
     }
-
 
 }

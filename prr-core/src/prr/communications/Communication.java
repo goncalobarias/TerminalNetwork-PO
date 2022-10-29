@@ -27,7 +27,7 @@ public abstract class Communication implements Serializable {
         _isOngoing = isOngoing;
         _price = 0.0;
         _isPaid = false;
-        terminalSender.addCommunication(this);
+        terminalSender.receiveCommunication(this);
     }
 
     public abstract String getCommunicationType();
@@ -52,13 +52,13 @@ public abstract class Communication implements Serializable {
         return _terminalReceiver;
     }
 
-    public abstract double getUnits();
-
     public double getPrice() {
         return _price;
     }
 
-    public void setOngoing(boolean isOngoing) {
+    public abstract int getUnits();
+
+    public void setProgress(boolean isOngoing) {
         _isOngoing = isOngoing;
     }
 
@@ -70,8 +70,9 @@ public abstract class Communication implements Serializable {
         return _isPaid;
     }
 
-    public void computePrice() {
-        _price = 0.0; // TODO: update the method to actually compute the costs accordingly
+    protected double computePrice() {
+        // TODO: do stuff to compute cost and propagate it
+        return 0.0;
     }
 
     public String accept(CommunicationVisitor visitor) {

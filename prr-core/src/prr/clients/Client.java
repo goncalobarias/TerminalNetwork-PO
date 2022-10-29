@@ -108,6 +108,10 @@ public class Client implements Serializable {
         _receiveNotifications = notificationState;
     }
 
+    public void resetNumberOfConsecutiveCommunications() {
+        _level.resetNumberOfConsecutiveCommunications();
+    }
+
     public boolean hasNotificationsEnabled() {
         return _receiveNotifications;
     }
@@ -132,6 +136,10 @@ public class Client implements Serializable {
         _terminals.put(terminal.getTerminalId(), terminal);
     }
 
+    public void notify(Notification notification) {
+        _deliveryMethod.deliver(notification);
+    }
+
     public String accept(ClientVisitor visitor) {
         return visitor.visit(this);
     }
@@ -144,6 +152,7 @@ public class Client implements Serializable {
 
         @Override
         public void deliver(Notification notification) {
+            _notifications.add(notification);
         }
 
     }
@@ -206,11 +215,8 @@ public class Client implements Serializable {
             Client.this._level = level;
         }
 
-        protected void resetNumberOfConsecutiveTextCommunications() {
+        protected void resetNumberOfConsecutiveCommunications() {
             _numberOfConsecutiveTextCommunications = 0;
-        }
-
-        protected void resetNumberOfConsecutiveVideoCommunications() {
             _numberOfConsecutiveVideoCommunications = 0;
         }
 
@@ -219,11 +225,15 @@ public class Client implements Serializable {
         }
 
         protected void increaseNumberOfConsecutiveTextCommunications() {
-            _numberOfConsecutiveTextCommunications++;
+            _numberOfConsecutiveVideoCommunications = 0;
+            _numberOfConsecutiveTextCommunications =
+                _numberOfConsecutiveTextCommunications % 2 + 1;
         }
 
         protected void increaseNumberOfConsecutiveVideoCommunications() {
-            _numberOfConsecutiveVideoCommunications++;
+            _numberOfConsecutiveTextCommunications = 0;
+            _numberOfConsecutiveVideoCommunications =
+                _numberOfConsecutiveVideoCommunications % 5 + 1;
         }
 
         protected abstract void verifyLevelUpdateConditions();

@@ -2,6 +2,8 @@ package prr.terminals;
 
 import java.io.Serial;
 
+import prr.notifications.OffToIdleNotification;
+import prr.notifications.OffToSilentNotification;
 import prr.exceptions.IllegalTerminalStatusException;
 
 public class TerminalOffStatus extends Terminal.Status {
@@ -21,17 +23,33 @@ public class TerminalOffStatus extends Terminal.Status {
 
     @Override
     protected void setOnIdle() {
+        getTerminal().notifyAllClients(
+            new OffToIdleNotification(getTerminal())
+        );
         updateStatus(new TerminalIdleStatus(getTerminal()));
     }
 
     @Override
     protected void setOnSilent() {
+        getTerminal().notifyAllClients(
+            new OffToSilentNotification(getTerminal())
+        );
         updateStatus(new TerminalSilentStatus(getTerminal()));
     }
 
     @Override
     protected void turnOff() throws IllegalTerminalStatusException {
         throw new IllegalTerminalStatusException(getStatusType());
+    }
+
+    @Override
+    protected void setOnBusy() {
+        // do nothing
+    }
+
+    @Override
+    protected void unBusy() {
+        // do nothing
     }
 
     @Override

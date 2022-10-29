@@ -27,7 +27,6 @@ public class ClientPlatinumLevel extends Client.Level {
                 getDebts(), getNumberOfConsecutiveTextCommunications(),
                 getNumberOfConsecutiveVideoCommunications()));
         } else if (getNumberOfConsecutiveTextCommunications() == 2) {
-            resetNumberOfConsecutiveTextCommunications();
             updateLevel(new ClientGoldLevel(getClient(), getPayments(),
                 getDebts(), getNumberOfConsecutiveTextCommunications(),
                 getNumberOfConsecutiveVideoCommunications()));

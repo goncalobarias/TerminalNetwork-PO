@@ -10,25 +10,27 @@ public abstract class InteractiveCommunication extends Communication {
     @Serial
     private static final long serialVersionUID = 202210192344L;
 
-    private double _duration;
+    private int _duration;
 
     public InteractiveCommunication(int id, Terminal terminalReceiver,
       Terminal terminalSender) {
         super(id, terminalReceiver, terminalSender, true);
-        _duration = 0.0;
+        _duration = 0;
+        terminalSender.setOnBusy();
         terminalSender.setOngoingCommunication(this);
     }
 
     public abstract String getCommunicationType();
 
     @Override
-    public double getUnits() {
+    public int getUnits() {
         return _duration;
     }
 
-    public void stopCommunication() {
-        // TODO: do stuff to compute cost and propagate it
-        setOngoing(false);
+    public double stopCommunication() {
+        getTerminalSender().unBusy();
+        setProgress(false);
+        return computePrice();
     }
 
 }

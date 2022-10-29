@@ -4,9 +4,12 @@ import java.io.Serial;
 
 import prr.Network;
 import prr.clients.Client;
-import prr.communications.InteractiveCommunication;
 import prr.communications.VideoCommunication;
 import prr.exceptions.UnknownTerminalKeyException;
+import prr.exceptions.UnreachableBusyTerminalException;
+import prr.exceptions.UnreachableOffTerminalException;
+import prr.exceptions.UnreachableSilentTerminalException;
+import prr.exceptions.UnsupportedCommunicationAtDestinationException;
 
 public class FancyTerminal extends Terminal {
 
@@ -25,21 +28,35 @@ public class FancyTerminal extends Terminal {
 
     @Override
     public void makeVideoCall(String terminalReceiverId, Network context)
-      throws UnknownTerminalKeyException {
-        Terminal receiver = context.getTerminal(terminalReceiverId);
-        receiver.receiveVideoCall(this, context);
+      throws UnsupportedCommunicationAtDestinationException,
+      UnknownTerminalKeyException, UnreachableOffTerminalException,
+      UnreachableBusyTerminalException, UnreachableSilentTerminalException {
+        if (canStartCommunication()) {
+            Terminal receiver = context.getTerminal(terminalReceiverId);
+            receiver.receiveVideoCall(this, context);
+        }
     }
 
     @Override
-    protected void receiveVideoCall(Terminal sender, Network context) {
+    protected void receiveVideoCall(Terminal sender, Network context)
+      throws UnreachableOffTerminalException, UnreachableBusyTerminalException,
+      UnreachableSilentTerminalException {
         if (canReceiveInteractiveCommunication()) {
+            setOnBusy();
             int newId = context.getNextCommunicationId();
-            InteractiveCommunication communication =
+            VideoCommunication communication =
                 new VideoCommunication(newId, this, sender);
-            addCommunication(communication);
+            receiveCommunication(communication);
             setOngoingCommunication(communication);
         } else {
             addToNotify(sender.getOwner());
+            // TODO: fix this horrible mess of exceptions
+            switch (getStatusType()) {
+                case "BUSY" -> throw new UnreachableBusyTerminalException();
+                case "OFF" -> throw new UnreachableOffTerminalException();
+                case "SILENCE" -> throw new UnreachableSilentTerminalException();
+                default -> throw new UnreachableBusyTerminalException();
+            }
         }
     }
 
