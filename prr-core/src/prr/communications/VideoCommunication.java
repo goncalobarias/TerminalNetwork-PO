@@ -10,9 +10,9 @@ public class VideoCommunication extends InteractiveCommunication {
     @Serial
     private static final long serialVersionUID = 202210192345L;
 
-    public VideoCommunication(double duration, int id,
-      Terminal terminalReceiver, Terminal terminalSender) {
-        super(duration, id, terminalReceiver, terminalSender);
+    public VideoCommunication(int id, Terminal terminalReceiver,
+      Terminal terminalSender) {
+        super(id, terminalReceiver, terminalSender);
     }
 
     @Override

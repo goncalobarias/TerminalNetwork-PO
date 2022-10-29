@@ -84,7 +84,7 @@ public class Network implements Serializable {
      *
      * @return The next communication ID for a new communication
      */
-    private int getNextCommunicationId() {
+    public int getNextCommunicationId() {
         return _nextCommunicationId++;
     }
 

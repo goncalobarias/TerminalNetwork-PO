@@ -34,4 +34,24 @@ public class TerminalSilentStatus extends Terminal.Status {
         updateStatus(new TerminalOffStatus(getTerminal()));
     }
 
+    protected void setOnBusy() {
+        updateStatus(new TerminalBusyStatus(getTerminal(), this));
+    }
+
+    @Override
+    protected boolean canStartCommunication() {
+        return true;
+    }
+
+    @Override
+    protected boolean canReceiveTextCommunication() {
+        return true;
+    }
+
+    @Override
+    protected boolean canReceiveInteractiveCommunication() {
+        return false;
+    }
+
+
 }

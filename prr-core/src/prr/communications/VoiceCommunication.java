@@ -10,9 +10,9 @@ public class VoiceCommunication extends InteractiveCommunication {
     @Serial
     private static final long serialVersionUID = 202210192347L;
 
-    public VoiceCommunication(double duration, int id,
-      Terminal terminalReceiver, Terminal terminalSender) {
-        super(duration, id, terminalReceiver, terminalSender);
+    public VoiceCommunication(int id, Terminal terminalReceiver,
+      Terminal terminalSender) {
+        super(id, terminalReceiver, terminalSender);
     }
 
     @Override

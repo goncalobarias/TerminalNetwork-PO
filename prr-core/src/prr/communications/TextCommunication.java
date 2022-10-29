@@ -14,8 +14,9 @@ public class TextCommunication extends Communication {
 
     public TextCommunication(String message, int id,
       Terminal terminalReceiver, Terminal terminalSender) {
-        super(id, terminalReceiver, terminalSender);
+        super(id, terminalReceiver, terminalSender, false);
         _message = message;
+        // TODO: instantly compute cost and propagate it
     }
 
     @Override

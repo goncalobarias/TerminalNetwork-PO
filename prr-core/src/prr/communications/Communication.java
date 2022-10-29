@@ -20,13 +20,14 @@ public abstract class Communication implements Serializable {
     private boolean _isPaid;
 
     public Communication(int id, Terminal terminalReceiver,
-      Terminal terminalSender) {
+      Terminal terminalSender, boolean isOngoing) {
         _id = id;
         _terminalReceiver = terminalReceiver;
         _terminalSender = terminalSender;
-        _isOngoing = true;
+        _isOngoing = isOngoing;
         _price = 0.0;
         _isPaid = false;
+        terminalSender.addCommunication(this);
     }
 
     public abstract String getCommunicationType();
@@ -55,6 +56,10 @@ public abstract class Communication implements Serializable {
 
     public double getPrice() {
         return _price;
+    }
+
+    public void setOngoing(boolean isOngoing) {
+        _isOngoing = isOngoing;
     }
 
     public boolean isOngoing() {

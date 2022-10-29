@@ -12,10 +12,11 @@ public abstract class InteractiveCommunication extends Communication {
 
     private double _duration;
 
-    public InteractiveCommunication(double duration, int id,
-      Terminal terminalReceiver, Terminal terminalSender) {
-        super(id, terminalReceiver, terminalSender);
-        _duration = duration;
+    public InteractiveCommunication(int id, Terminal terminalReceiver,
+      Terminal terminalSender) {
+        super(id, terminalReceiver, terminalSender, true);
+        _duration = 0.0;
+        terminalSender.setOngoingCommunication(this);
     }
 
     public abstract String getCommunicationType();
@@ -23,6 +24,11 @@ public abstract class InteractiveCommunication extends Communication {
     @Override
     public double getUnits() {
         return _duration;
+    }
+
+    public void stopCommunication() {
+        // TODO: do stuff to compute cost and propagate it
+        setOngoing(false);
     }
 
 }

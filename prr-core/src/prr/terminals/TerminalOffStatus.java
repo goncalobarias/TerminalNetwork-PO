@@ -34,4 +34,19 @@ public class TerminalOffStatus extends Terminal.Status {
         throw new IllegalTerminalStatusException(getStatusType());
     }
 
+    @Override
+    protected boolean canStartCommunication() {
+        return false;
+    }
+
+    @Override
+    protected boolean canReceiveTextCommunication() {
+        return false;
+    }
+
+    @Override
+    protected boolean canReceiveInteractiveCommunication() {
+        return false;
+    }
+
 }
