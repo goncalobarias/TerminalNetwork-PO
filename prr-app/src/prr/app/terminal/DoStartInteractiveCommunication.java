@@ -2,6 +2,7 @@ package prr.app.terminal;
 
 import prr.Network;
 import prr.terminals.Terminal;
+import prr.exceptions.InvalidCommunicationException;
 import prr.exceptions.UnreachableBusyTerminalException;
 import prr.exceptions.UnreachableOffTerminalException;
 import prr.exceptions.UnreachableSilentTerminalException;
@@ -40,6 +41,8 @@ class DoStartInteractiveCommunication extends TerminalCommand {
             _display.popup(Message.unsupportedAtDestination(
                 terminalId, commType
             ));
+        } catch (InvalidCommunicationException e) {
+            // do nothing
         } catch (prr.exceptions.UnknownTerminalKeyException e) {
             throw new UnknownTerminalKeyException(e.getKey());
         } catch (UnreachableOffTerminalException e) {

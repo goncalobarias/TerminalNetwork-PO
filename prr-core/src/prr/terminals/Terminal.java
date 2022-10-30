@@ -1,6 +1,5 @@
 package prr.terminals;
 
-import java.util.Collection;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
@@ -19,6 +18,7 @@ import prr.communications.InteractiveCommunication;
 import prr.communications.VoiceCommunication;
 import prr.notifications.Notification;
 import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.InvalidCommunicationException;
 import prr.exceptions.InvalidFriendException;
 import prr.exceptions.NoOngoingCommunicationException;
 import prr.exceptions.UnknownTerminalKeyException;
@@ -206,30 +206,25 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         _terminalFriends.remove(terminalFriendId);
     }
 
-    public void receiveCommunication(Communication communication) {
+    public void addCommunication(Communication communication) {
         _communications.put(communication.getId(), communication);
     }
 
     public double endOngoingCommunication(int duration) {
-        double commPrice = 0.0;
+        double communicationPrice = 0.0;
         if (canEndCurrentCommunication()) {
-            // TODO: fix this horrible implementation (VERY IMPORTANT)
-            if (_ongoingCommunication.getCommunicationType().equals("VIDEO")) {
-                getOwner().increaseNumberOfConsecutiveVideoCommunications();
-            } else {
-                getOwner().resetNumberOfConsecutiveCommunications();
-            }
-            commPrice = _ongoingCommunication.stopCommunication();
-            _ongoingCommunication = null;
-            unBusy();
+            communicationPrice = _ongoingCommunication.stopCommunication();
             getOwner().verifyLevelUpdateConditions();
         }
-        return commPrice;
+        return communicationPrice;
     }
 
     public void sendSMS(String terminalReceiverId, Network context,
       String message) throws UnknownTerminalKeyException,
-      UnreachableOffTerminalException {
+      UnreachableOffTerminalException, InvalidCommunicationException {
+        if (terminalReceiverId.equals(getTerminalId())) {
+            throw new InvalidCommunicationException();
+        }
         if (canStartCommunication()) {
             Terminal receiver = context.getTerminal(terminalReceiverId);
             receiver.receiveSMS(this, context, message);
@@ -242,8 +237,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             int newId = context.getNextCommunicationId();
             TextCommunication communication =
                 new TextCommunication(newMessage, newId, this, sender);
-            receiveCommunication(communication);
-            getOwner().increaseNumberOfConsecutiveTextCommunications();
+            context.registerCommunication(communication);
             sender.getOwner().verifyLevelUpdateConditions();
         } else {
             addToNotify(sender.getOwner());
@@ -253,7 +247,11 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
 
     public void makeVoiceCall(String terminalReceiverId, Network context)
       throws UnknownTerminalKeyException, UnreachableOffTerminalException,
-      UnreachableBusyTerminalException, UnreachableSilentTerminalException {
+      UnreachableBusyTerminalException, UnreachableSilentTerminalException,
+      InvalidCommunicationException {
+        if (terminalReceiverId.equals(getTerminalId())) {
+            throw new InvalidCommunicationException();
+        }
         if (canStartCommunication()) {
             Terminal receiver = context.getTerminal(terminalReceiverId);
             receiver.receiveVoiceCall(this, context);
@@ -264,12 +262,10 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
       throws UnreachableOffTerminalException, UnreachableBusyTerminalException,
       UnreachableSilentTerminalException {
         if (canReceiveInteractiveCommunication()) {
-            setOnBusy();
             int newId = context.getNextCommunicationId();
             VoiceCommunication communication =
                 new VoiceCommunication(newId, this, sender);
-            receiveCommunication(communication);
-            setOngoingCommunication(communication);
+            context.registerCommunication(communication);
         } else {
             addToNotify(sender.getOwner());
             // TODO: fix this horrible mess of exceptions
@@ -286,7 +282,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
       Network context) throws UnsupportedCommunicationAtOriginException,
       UnsupportedCommunicationAtDestinationException, UnknownTerminalKeyException,
       UnreachableOffTerminalException, UnreachableBusyTerminalException,
-      UnreachableSilentTerminalException;
+      UnreachableSilentTerminalException, InvalidCommunicationException;
 
     protected abstract void receiveVideoCall(Terminal sender, Network context)
       throws UnsupportedCommunicationAtDestinationException,
@@ -303,6 +299,28 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         Client client = null;
         while ((client = _clientsToNotify.poll()) != null) {
             client.notify(notification);
+        }
+    }
+
+    public void performPayment(int communicationId, Network context)
+      throws InvalidCommunicationException {
+        Communication communication = context.getCommunication(communicationId);
+        if (!this.equals(communication.getTerminalSender()) ||
+          communication.isOngoing() || communication.isPaid()) {
+            throw new InvalidCommunicationException();
+        }
+        double price = communication.pay();
+        updateBalance(price);
+        _owner.updateBalance(price);
+        context.updateBalance(price);
+    }
+
+    public void updateBalance(double delta) {
+        if (delta < 0) {
+            _debts += (delta * -1);
+        } else {
+            _debts -= delta;
+            _payments += delta;
         }
     }
 

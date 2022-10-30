@@ -9,7 +9,7 @@ public class NotificationsAlreadyToggledException extends Exception {
 
     /** Class serial number. */
     @Serial
-    private static final long serialVersionUID = 202210140735L;
+    private static final long serialVersionUID = 202210231054L;
 
     /** The client's notification state. */
     private final boolean _notificationState;

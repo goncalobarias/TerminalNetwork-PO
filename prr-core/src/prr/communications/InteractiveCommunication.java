@@ -16,8 +16,6 @@ public abstract class InteractiveCommunication extends Communication {
       Terminal terminalSender) {
         super(id, terminalReceiver, terminalSender, true);
         _duration = 0;
-        terminalSender.setOnBusy();
-        terminalSender.setOngoingCommunication(this);
     }
 
     public abstract String getCommunicationType();
@@ -27,10 +25,16 @@ public abstract class InteractiveCommunication extends Communication {
         return _duration;
     }
 
-    public double stopCommunication() {
-        getTerminalSender().unBusy();
-        setProgress(false);
-        return computePrice();
+    @Override
+    public void estabilishCommunication() {
+        getTerminalSender().setOnBusy();
+        getTerminalSender().addCommunication(this);
+        getTerminalSender().setOngoingCommunication(this);
+        getTerminalReceiver().setOnBusy();
+        getTerminalReceiver().addCommunication(this);
+        getTerminalReceiver().setOngoingCommunication(this);
     }
+
+    public abstract double stopCommunication();
 
 }

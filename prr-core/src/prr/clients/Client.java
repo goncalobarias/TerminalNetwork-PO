@@ -140,6 +140,10 @@ public class Client implements Serializable {
         _deliveryMethod.deliver(notification);
     }
 
+    public void updateBalance(double delta) {
+        _level.updateBalance(delta);
+    }
+
     public String accept(ClientVisitor visitor) {
         return visitor.visit(this);
     }
@@ -222,6 +226,15 @@ public class Client implements Serializable {
 
         protected void setTariffPlan(TariffPlan plan) {
             _plan = plan;
+        }
+
+        public void updateBalance(double delta) {
+            if (delta < 0) {
+                _debts += (delta * -1);
+            } else {
+                _debts -= delta;
+                _payments += delta;
+            }
         }
 
         protected void increaseNumberOfConsecutiveTextCommunications() {

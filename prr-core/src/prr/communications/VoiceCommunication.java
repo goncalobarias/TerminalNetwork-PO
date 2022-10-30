@@ -20,4 +20,14 @@ public class VoiceCommunication extends InteractiveCommunication {
         return "VOICE";
     }
 
+    @Override
+    public double stopCommunication() {
+        setProgress(false);
+        getTerminalReceiver().setOngoingCommunication(null);
+        getTerminalReceiver().unBusy();
+        getTerminalSender().setOngoingCommunication(null);
+        getTerminalSender().unBusy();
+        return computePrice();
+    }
+
 }

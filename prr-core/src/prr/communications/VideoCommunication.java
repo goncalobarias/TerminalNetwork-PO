@@ -20,4 +20,17 @@ public class VideoCommunication extends InteractiveCommunication {
         return "VIDEO";
     }
 
+    @Override
+    public double stopCommunication() {
+        setProgress(false);
+        getTerminalReceiver().setOngoingCommunication(null);
+        getTerminalReceiver().unBusy();
+        getTerminalSender().setOngoingCommunication(null);
+        getTerminalSender().unBusy();
+        // TODO: fix this horrible implementation (VERY IMPORTANT)
+        getTerminalSender().getOwner()
+            .increaseNumberOfConsecutiveVideoCommunications();
+        return computePrice();
+    }
+
 }

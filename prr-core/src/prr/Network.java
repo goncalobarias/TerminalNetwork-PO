@@ -19,9 +19,10 @@ import prr.notifications.Notification;
 import prr.terminals.Terminal;
 import prr.terminals.BasicTerminal;
 import prr.terminals.FancyTerminal;
-import prr.exceptions.ImportFileException;
 import prr.exceptions.DuplicateClientKeyException;
 import prr.exceptions.DuplicateTerminalKeyException;
+import prr.exceptions.ImportFileException;
+import prr.exceptions.InvalidCommunicationException;
 import prr.exceptions.IllegalTerminalStatusException;
 import prr.exceptions.InvalidFriendException;
 import prr.exceptions.InvalidTerminalKeyException;
@@ -288,6 +289,39 @@ public class Network implements Serializable {
             .filter(t -> t.getBalance() > 0)
             .collect(Collectors.toList())
         );
+    }
+
+    /**
+     * Gets a communication by its key. Two communications are considered the
+     * same in the network if their keys are the same.
+     *
+     * @param id The key of the communication to get
+     * @return The requested {@link Communication}
+     * @throws UnknownCommunicationKeyException if the communication key is not
+     *                                          present in the network.
+     */
+    public Communication getCommunication(int id)
+      throws InvalidCommunicationException {
+        return fetchCommunication(id);
+    }
+
+    /**
+     * Checks if a communication is elicit to be fetched and retrieves it from
+     * the network by its key.
+     *
+     * @param id The key of the communication to fetch
+     * @return The {@link communication} with the given key that got fetched
+     *         from the network
+     * @throws UnknownCommunicationKeyException if the communication key is not
+     *                                          present in the network.
+     */
+    private Communication fetchCommunication(int id)
+      throws InvalidCommunicationException {
+        Communication communication = _communications.get(id);
+        if (communication == null) {
+            throw new InvalidCommunicationException();
+        }
+        return communication;
     }
 
     /**
@@ -627,6 +661,32 @@ public class Network implements Serializable {
             }
         }
         changed();
+    }
+
+    /**
+     * Registers the given communication on the network.
+     *
+     * @param communication New communication started by a terminal on the
+     *                      network.
+     */
+    public void registerCommunication(Communication communication) {
+        _communications.put(communication.getId(), communication);
+    }
+
+    /**
+     * Updates the network balance by a given value delta. If delta is negative
+     * it means there are new debts to assess, if it's positive it means there
+     * are new payments.
+     *
+     * @param delta How much value to change in the balance (may be negative)
+     */
+    public void updateBalance(double delta) {
+        if (delta < 0) {
+            _globalDebts += (delta * -1);
+        } else {
+            _globalDebts -= delta;
+            _globalPayments += delta;
+        }
     }
 
     /**

@@ -9,6 +9,6 @@ public class UnreachableOffTerminalException extends Exception {
 
     /** Class serial number. */
     @Serial
-    private static final long serialVersionUID = 202210241125L;
+    private static final long serialVersionUID = 202210291845L;
 
 }

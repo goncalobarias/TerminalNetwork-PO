@@ -29,4 +29,12 @@ public class TextCommunication extends Communication {
         return _message.length();
     }
 
+    @Override
+    public void estabilishCommunication() {
+        getTerminalSender().addCommunication(this);
+        getTerminalSender().getOwner()
+            .increaseNumberOfConsecutiveTextCommunications();
+        getTerminalReceiver().addCommunication(this);
+    }
+
 }

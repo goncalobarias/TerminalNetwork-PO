@@ -5,6 +5,7 @@ import java.io.Serial;
 import prr.Network;
 import prr.clients.Client;
 import prr.communications.VideoCommunication;
+import prr.exceptions.InvalidCommunicationException;
 import prr.exceptions.UnknownTerminalKeyException;
 import prr.exceptions.UnreachableBusyTerminalException;
 import prr.exceptions.UnreachableOffTerminalException;
@@ -30,7 +31,11 @@ public class FancyTerminal extends Terminal {
     public void makeVideoCall(String terminalReceiverId, Network context)
       throws UnsupportedCommunicationAtDestinationException,
       UnknownTerminalKeyException, UnreachableOffTerminalException,
-      UnreachableBusyTerminalException, UnreachableSilentTerminalException {
+      UnreachableBusyTerminalException, UnreachableSilentTerminalException,
+      InvalidCommunicationException {
+        if (terminalReceiverId.equals(getTerminalId())) {
+            throw new InvalidCommunicationException();
+        }
         if (canStartCommunication()) {
             Terminal receiver = context.getTerminal(terminalReceiverId);
             receiver.receiveVideoCall(this, context);
@@ -42,12 +47,10 @@ public class FancyTerminal extends Terminal {
       throws UnreachableOffTerminalException, UnreachableBusyTerminalException,
       UnreachableSilentTerminalException {
         if (canReceiveInteractiveCommunication()) {
-            setOnBusy();
             int newId = context.getNextCommunicationId();
             VideoCommunication communication =
                 new VideoCommunication(newId, this, sender);
-            receiveCommunication(communication);
-            setOngoingCommunication(communication);
+            context.registerCommunication(communication);
         } else {
             addToNotify(sender.getOwner());
             // TODO: fix this horrible mess of exceptions

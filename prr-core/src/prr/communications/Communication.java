@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.io.Serial;
 
 import prr.util.CommunicationVisitor;
+import prr.clients.Client;
+import prr.tariffs.TariffPlan;
 import prr.terminals.Terminal;
 
 public abstract class Communication implements Serializable {
@@ -11,7 +13,6 @@ public abstract class Communication implements Serializable {
     /** Serial number for serialization. */
     @Serial
     private static final long serialVersionUID = 202210150053L;
-
     private final int _id;
     private Terminal _terminalReceiver;
     private Terminal _terminalSender;
@@ -27,7 +28,7 @@ public abstract class Communication implements Serializable {
         _isOngoing = isOngoing;
         _price = 0.0;
         _isPaid = false;
-        terminalSender.receiveCommunication(this);
+        estabilishCommunication();
     }
 
     public abstract String getCommunicationType();
@@ -70,9 +71,20 @@ public abstract class Communication implements Serializable {
         return _isPaid;
     }
 
+    public abstract void estabilishCommunication();
+
+    // TODO: need to fix the calculation of the price
     protected double computePrice() {
-        // TODO: do stuff to compute cost and propagate it
-        return 0.0;
+        _price = 0.0;
+        if (getTerminalSender().isFriend(getTerminalReceiver())) {
+            _price *= 0.50;
+        }
+        return _price;
+    }
+
+    public double pay() {
+        _isPaid = true;
+        return _price;
     }
 
     public String accept(CommunicationVisitor visitor) {

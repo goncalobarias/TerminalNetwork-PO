@@ -2,6 +2,7 @@ package prr.app.terminal;
 
 import prr.Network;
 import prr.terminals.Terminal;
+import prr.exceptions.InvalidCommunicationException;
 import prr.exceptions.UnreachableOffTerminalException;
 import prr.app.exceptions.UnknownTerminalKeyException;
 import pt.tecnico.uilib.forms.Form;
@@ -23,6 +24,8 @@ class DoSendTextCommunication extends TerminalCommand {
         try {
             _receiver.sendSMS(terminalId, _network,
                 Form.requestString(Prompt.textMessage()));
+        } catch (InvalidCommunicationException e) {
+            // do nothing
         } catch (prr.exceptions.UnknownTerminalKeyException e) {
             throw new UnknownTerminalKeyException(e.getKey());
         } catch (UnreachableOffTerminalException e) {
