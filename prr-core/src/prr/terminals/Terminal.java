@@ -223,10 +223,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
 
     public void sendSMS(String terminalReceiverId, Network context,
       String message) throws UnknownTerminalKeyException,
-      UnreachableOffTerminalException, InvalidCommunicationException {
-        if (terminalReceiverId.equals(getTerminalId())) {
-            throw new InvalidCommunicationException();
-        }
+      UnreachableOffTerminalException {
         if (canStartCommunication()) {
             Terminal receiver = context.getTerminal(terminalReceiverId);
             receiver.receiveSMS(this, context, message);
@@ -292,7 +289,8 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
       UnreachableSilentTerminalException;
 
     protected void addToNotify(Client client) {
-        if (!_clientsToNotify.contains(client)) {
+        if (!_clientsToNotify.contains(client) &&
+          client.hasNotificationsEnabled()) {
             _clientsToNotify.add(client);
         }
     }
@@ -347,7 +345,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return visitor.visit(this);
     }
 
-    public abstract class Status implements Serializable {
+    public abstract class Status implements Serializable { // TODO: do visitors for the status (check test server discord for names)
 
         /** Serial number for serialization. */
         @Serial

@@ -64,7 +64,7 @@ public class Network implements Serializable {
     private String _currentEntry;
 
     /** Was the network changed since the last time it was saved or created? */
-    private boolean _changed;
+    private boolean _changed; // TODO: see if I set the network as changed everywhere
 
     /** Default constructor. */
     public Network() {

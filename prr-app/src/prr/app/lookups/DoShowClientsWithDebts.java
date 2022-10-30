@@ -20,7 +20,7 @@ class DoShowClientsWithDebts extends Command<Network> {
         RenderClient _renderer = new RenderClient();
         _receiver.getClientsWithDebts()
                 .stream()
-                .sorted(Client.DEBT_COMPARATOR)
+                .sorted(Client.DEBT_COMPARATOR) // TODO: make sure this doesn't break the core/app separation
                 .map(o -> o.accept(_renderer))
                 .forEach(_display::popup);
     }

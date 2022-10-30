@@ -249,6 +249,7 @@ public class Client implements Serializable {
                 _numberOfConsecutiveVideoCommunications % 5 + 1;
         }
 
+        // TODO: this needs to check if the client has just payed a communication or just changed a communication in order to do something
         protected abstract void verifyLevelUpdateConditions();
 
     }

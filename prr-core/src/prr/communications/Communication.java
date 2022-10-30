@@ -8,7 +8,7 @@ import prr.clients.Client;
 import prr.tariffs.TariffPlan;
 import prr.terminals.Terminal;
 
-public abstract class Communication implements Serializable {
+public abstract class Communication implements Serializable { // TODO: do visitors for the communication types (check test discord server for names)
 
     /** Serial number for serialization. */
     @Serial
@@ -77,7 +77,7 @@ public abstract class Communication implements Serializable {
     protected double computePrice() {
         _price = 0.0;
         if (getTerminalSender().isFriend(getTerminalReceiver())) {
-            _price *= 0.50;
+            _price *= 0.50; // TODO: make this only work for interactive communications
         }
         return _price;
     }
