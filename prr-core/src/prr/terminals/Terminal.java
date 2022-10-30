@@ -195,6 +195,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             throw new InvalidFriendException();
         }
         _terminalFriends.put(terminalFriendId, terminalFriend);
+        context.changed();
     }
 
     public void removeFriend(String terminalFriendId, Network context)
@@ -204,6 +205,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             throw new InvalidFriendException();
         }
         _terminalFriends.remove(terminalFriendId);
+        context.changed();
     }
 
     public void addCommunication(Communication communication) {

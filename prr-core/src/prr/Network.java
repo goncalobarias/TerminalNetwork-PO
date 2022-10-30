@@ -671,6 +671,7 @@ public class Network implements Serializable {
      */
     public void registerCommunication(Communication communication) {
         _communications.put(communication.getId(), communication);
+        changed();
     }
 
     /**
@@ -687,6 +688,7 @@ public class Network implements Serializable {
             _globalDebts -= delta;
             _globalPayments += delta;
         }
+        changed();
     }
 
     /**
@@ -706,6 +708,7 @@ public class Network implements Serializable {
             throw new NotificationsAlreadyToggledException(true);
         }
         client.setNotificationState(true);
+        changed();
     }
 
     /**
@@ -725,6 +728,7 @@ public class Network implements Serializable {
             throw new NotificationsAlreadyToggledException(false);
         }
         client.setNotificationState(false);
+        changed();
     }
 
 }
