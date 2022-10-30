@@ -57,7 +57,7 @@ public abstract class Communication implements Serializable { // TODO: do visito
         return _price;
     }
 
-    public abstract int getUnits();
+    public abstract int getUnits(); // TODO: check if this is really going to be an integer or double
 
     public void setProgress(boolean isOngoing) {
         _isOngoing = isOngoing;

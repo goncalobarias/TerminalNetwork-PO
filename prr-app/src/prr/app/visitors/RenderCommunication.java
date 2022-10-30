@@ -11,7 +11,7 @@ public class RenderCommunication implements CommunicationVisitor {
                 communication.getId() + "|" +
                 communication.getSenderId() + "|" +
                 communication.getReceiverId() + "|" +
-                Math.round(communication.getUnits()) + "|" +
+                communication.getUnits() + "|" +
                 Math.round(communication.getPrice()) + "|" +
                 (communication.isOngoing() ? "ONGOING" : "FINISHED");
     }
