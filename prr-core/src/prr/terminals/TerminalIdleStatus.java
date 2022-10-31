@@ -21,6 +21,21 @@ public class TerminalIdleStatus extends Terminal.Status {
     }
 
     @Override
+    protected boolean canStartCommunication() {
+        return true;
+    }
+
+    @Override
+    protected boolean canReceiveTextCommunication() {
+        return true;
+    }
+
+    @Override
+    protected boolean canReceiveInteractiveCommunication() {
+        return true;
+    }
+
+    @Override
     protected void setOnIdle() throws IllegalTerminalStatusException {
         throw new IllegalTerminalStatusException(getStatusType());
     }
@@ -48,18 +63,8 @@ public class TerminalIdleStatus extends Terminal.Status {
     }
 
     @Override
-    protected boolean canStartCommunication() {
-        return true;
-    }
-
-    @Override
-    protected boolean canReceiveTextCommunication() {
-        return true;
-    }
-
-    @Override
-    protected boolean canReceiveInteractiveCommunication() {
-        return true;
+    protected void sendException() {
+        // do nothing
     }
 
 }

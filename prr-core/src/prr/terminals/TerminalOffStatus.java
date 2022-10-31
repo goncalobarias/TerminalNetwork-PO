@@ -5,6 +5,7 @@ import java.io.Serial;
 import prr.notifications.OffToIdleNotification;
 import prr.notifications.OffToSilentNotification;
 import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.UnreachableOffTerminalException;
 
 public class TerminalOffStatus extends Terminal.Status {
 
@@ -19,6 +20,21 @@ public class TerminalOffStatus extends Terminal.Status {
     @Override
     protected String getStatusType() {
         return "OFF";
+    }
+
+    @Override
+    protected boolean canStartCommunication() {
+        return false;
+    }
+
+    @Override
+    protected boolean canReceiveTextCommunication() {
+        return false;
+    }
+
+    @Override
+    protected boolean canReceiveInteractiveCommunication() {
+        return false;
     }
 
     @Override
@@ -53,18 +69,8 @@ public class TerminalOffStatus extends Terminal.Status {
     }
 
     @Override
-    protected boolean canStartCommunication() {
-        return false;
-    }
-
-    @Override
-    protected boolean canReceiveTextCommunication() {
-        return false;
-    }
-
-    @Override
-    protected boolean canReceiveInteractiveCommunication() {
-        return false;
+    protected void sendException() throws UnreachableOffTerminalException {
+        throw new UnreachableOffTerminalException();
     }
 
 }

@@ -53,13 +53,7 @@ public class FancyTerminal extends Terminal {
             context.registerCommunication(communication);
         } else {
             addToNotify(sender.getOwner());
-            // TODO: fix this horrible mess of exceptions
-            switch (getStatusType()) {
-                case "BUSY" -> throw new UnreachableBusyTerminalException();
-                case "OFF" -> throw new UnreachableOffTerminalException();
-                case "SILENCE" -> throw new UnreachableSilentTerminalException();
-                default -> throw new UnreachableBusyTerminalException();
-            }
+            getStatus().sendException();
         }
     }
 

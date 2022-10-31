@@ -213,13 +213,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             network.registerCommunication(communication);
         } else {
             addToNotify(sender.getOwner());
-            // TODO: fix this horrible mess of exceptions
-            switch (getStatusType()) {
-                case "BUSY" -> throw new UnreachableBusyTerminalException();
-                case "OFF" -> throw new UnreachableOffTerminalException();
-                case "SILENCE" -> throw new UnreachableSilentTerminalException();
-                default -> throw new UnreachableBusyTerminalException();
-            }
+            _status.sendException();
         }
     }
 
@@ -380,6 +374,10 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         protected abstract void setOnBusy();
 
         protected abstract void unBusy();
+
+        protected abstract void sendException()
+          throws UnreachableOffTerminalException,
+          UnreachableBusyTerminalException, UnreachableSilentTerminalException;
 
     }
 

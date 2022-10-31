@@ -3,6 +3,7 @@ package prr.terminals;
 import java.io.Serial;
 
 import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.UnreachableBusyTerminalException;
 
 public class TerminalBusyStatus extends Terminal.Status {
 
@@ -21,6 +22,21 @@ public class TerminalBusyStatus extends Terminal.Status {
     @Override
     protected String getStatusType() {
         return "BUSY";
+    }
+
+    @Override
+    protected boolean canStartCommunication() {
+        return false;
+    }
+
+    @Override
+    protected boolean canReceiveTextCommunication() {
+        return true;
+    }
+
+    @Override
+    protected boolean canReceiveInteractiveCommunication() {
+        return false;
     }
 
     @Override
@@ -50,18 +66,8 @@ public class TerminalBusyStatus extends Terminal.Status {
     }
 
     @Override
-    protected boolean canStartCommunication() {
-        return false;
-    }
-
-    @Override
-    protected boolean canReceiveTextCommunication() {
-        return true;
-    }
-
-    @Override
-    protected boolean canReceiveInteractiveCommunication() {
-        return false;
+    protected void sendException() throws UnreachableBusyTerminalException {
+        throw new UnreachableBusyTerminalException();
     }
 
 }

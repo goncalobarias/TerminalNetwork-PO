@@ -4,6 +4,7 @@ import java.io.Serial;
 
 import prr.notifications.SilentToIdleNotification;
 import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.UnreachableSilentTerminalException;
 
 public class TerminalSilentStatus extends Terminal.Status {
 
@@ -18,6 +19,21 @@ public class TerminalSilentStatus extends Terminal.Status {
     @Override
     protected String getStatusType() {
         return "SILENCE";
+    }
+
+    @Override
+    protected boolean canStartCommunication() {
+        return true;
+    }
+
+    @Override
+    protected boolean canReceiveTextCommunication() {
+        return true;
+    }
+
+    @Override
+    protected boolean canReceiveInteractiveCommunication() {
+        return false;
     }
 
     @Override
@@ -49,18 +65,8 @@ public class TerminalSilentStatus extends Terminal.Status {
     }
 
     @Override
-    protected boolean canStartCommunication() {
-        return true;
-    }
-
-    @Override
-    protected boolean canReceiveTextCommunication() {
-        return true;
-    }
-
-    @Override
-    protected boolean canReceiveInteractiveCommunication() {
-        return false;
+    protected void sendException() throws UnreachableSilentTerminalException {
+        throw new UnreachableSilentTerminalException();
     }
 
 }
