@@ -96,12 +96,17 @@ public class Client implements Serializable {
         return _level.getLevelType();
     }
 
+    public boolean hasNotificationsEnabled() {
+        return _receiveNotifications;
+    }
+
     public void setNotificationState(boolean notificationState) {
         _receiveNotifications = notificationState;
     }
 
-    public boolean hasNotificationsEnabled() {
-        return _receiveNotifications;
+    public void setNotificationDeliveryMethod(
+      NotificationDeliveryMethod deliveryMethod) {
+        _deliveryMethod = deliveryMethod;
     }
 
     public Collection<Notification> readNotifications() {
