@@ -22,13 +22,8 @@ public class VoiceCommunication extends InteractiveCommunication {
     }
 
     @Override
-    public double stopCommunication(int duration) {
-        setProgress(false);
-        getTerminalReceiver().setOngoingCommunication(null);
-        getTerminalReceiver().unBusy();
-        getTerminalSender().setOngoingCommunication(null);
-        getTerminalSender().unBusy();
-        setUnits(duration);
+    public double finishCommunication(int duration) {
+        finishInteractiveCommunication(duration);
         return computePrice();
     }
 

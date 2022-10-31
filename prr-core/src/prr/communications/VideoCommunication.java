@@ -22,16 +22,10 @@ public class VideoCommunication extends InteractiveCommunication {
     }
 
     @Override
-    public double stopCommunication(int duration) {
-        setProgress(false);
-        getTerminalReceiver().setOngoingCommunication(null);
-        getTerminalReceiver().unBusy();
-        getTerminalSender().setOngoingCommunication(null);
-        getTerminalSender().unBusy();
-        // TODO: fix this horrible implementation (VERY IMPORTANT)
+    public double finishCommunication(int duration) {
+        finishInteractiveCommunication(duration);
         getTerminalSender().getOwner()
             .increaseNumberOfConsecutiveVideoCommunications();
-        setUnits(duration);
         return computePrice();
     }
 

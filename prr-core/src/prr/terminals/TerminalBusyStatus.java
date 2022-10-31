@@ -2,8 +2,8 @@ package prr.terminals;
 
 import java.io.Serial;
 
-import prr.exceptions.IllegalTerminalStatusException;
 import prr.notifications.BusyToIdleNotification;
+import prr.exceptions.IllegalTerminalStatusException;
 
 public class TerminalBusyStatus extends Terminal.Status {
 

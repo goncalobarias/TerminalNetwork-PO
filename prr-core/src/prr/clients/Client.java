@@ -11,11 +11,11 @@ import java.io.Serial;
 
 import prr.util.ClientVisitor;
 import prr.util.NaturalTextComparator;
-import prr.notifications.NotificationDeliveryMethod;
 import prr.communications.TextCommunication;
-import prr.communications.VoiceCommunication;
 import prr.communications.VideoCommunication;
+import prr.communications.VoiceCommunication;
 import prr.notifications.Notification;
+import prr.notifications.NotificationDeliveryMethod;
 import prr.tariffs.BasePlan;
 import prr.tariffs.TariffPlan;
 import prr.terminals.Terminal;
@@ -58,7 +58,7 @@ public class Client implements Serializable {
         _name = name;
         _taxId = taxId;
         _terminals = new HashMap<String, Terminal>(); // TODO: fix this data structure to a map
-        _level = new ClientNormalLevel(this, 0.0, 0.0, 0, 0);
+        _level = new ClientNormalLevel(this, 0D, 0D, 0, 0, new BasePlan());
         _receiveNotifications = true;
         _notifications = new LinkedList<Notification>();
         _deliveryMethod = new DefaultDeliveryMethod();
@@ -80,12 +80,39 @@ public class Client implements Serializable {
         return _terminals.size();
     }
 
-    public String getLevelType() {
-        return _level.getLevelType();
+    public boolean isOwnerOf(Terminal terminal) {
+        return _terminals.containsKey(terminal.getTerminalId());
+    }
+
+    public void addTerminal(Terminal terminal) {
+        _terminals.put(terminal.getTerminalId(), terminal);
     }
 
     public Client.Level getLevel() {
         return _level;
+    }
+
+    public String getLevelType() {
+        return _level.getLevelType();
+    }
+
+    public void setNotificationState(boolean notificationState) {
+        _receiveNotifications = notificationState;
+    }
+
+    public boolean hasNotificationsEnabled() {
+        return _receiveNotifications;
+    }
+
+    public Collection<Notification> readNotifications() {
+        Collection<Notification> notifications =
+            new LinkedList<>(_notifications);
+        _notifications.clear();
+        return notifications;
+    }
+
+    public void notify(Notification notification) {
+        _deliveryMethod.deliver(notification);
     }
 
     public double getPayments() {
@@ -96,31 +123,12 @@ public class Client implements Serializable {
         return _level.getDebts();
     }
 
-    public Collection<Notification> readNotifications() {
-        Collection<Notification> notifications =
-            new LinkedList<>(_notifications);
-        _notifications.clear();
-        return notifications;
-    }
-
-    public void setTariffPlan(TariffPlan plan) {
-        _level.setTariffPlan(plan);
-    }
-
-    public void setNotificationState(boolean notificationState) {
-        _receiveNotifications = notificationState;
+    public void updateBalance(double delta) {
+        _level.updateBalance(delta);
     }
 
     public void resetNumberOfConsecutiveCommunications() {
         _level.resetNumberOfConsecutiveCommunications();
-    }
-
-    public boolean hasNotificationsEnabled() {
-        return _receiveNotifications;
-    }
-
-    public boolean isOwnerOf(Terminal terminal) {
-        return _terminals.containsKey(terminal.getTerminalId());
     }
 
     public void increaseNumberOfConsecutiveTextCommunications() {
@@ -131,20 +139,13 @@ public class Client implements Serializable {
         _level.increaseNumberOfConsecutiveVideoCommunications();
     }
 
+    // TODO: add tariff plans to the network
+    public void setTariffPlan(TariffPlan plan) {
+        _level.setTariffPlan(plan);
+    }
+
     public void verifyLevelUpdateConditions() {
         _level.verifyLevelUpdateConditions();
-    }
-
-    public void addTerminal(Terminal terminal) {
-        _terminals.put(terminal.getTerminalId(), terminal);
-    }
-
-    public void notify(Notification notification) {
-        _deliveryMethod.deliver(notification);
-    }
-
-    public void updateBalance(double delta) {
-        _level.updateBalance(delta);
     }
 
     public String accept(ClientVisitor visitor) {
@@ -178,18 +179,22 @@ public class Client implements Serializable {
 
         public Level(double payments, double debts,
           int numberOfConsecutiveTextCommunications,
-          int numberOfConsecutiveVideoCommunications) {
+          int numberOfConsecutiveVideoCommunications, TariffPlan plan) {
             _payments = payments;
             _debts = debts;
             _numberOfConsecutiveTextCommunications =
                 numberOfConsecutiveTextCommunications;
             _numberOfConsecutiveVideoCommunications =
                 numberOfConsecutiveVideoCommunications;
-            _plan = new BasePlan();
+            _plan = plan;
         }
 
         protected Client getClient() {
             return Client.this;
+        }
+
+        protected void updateLevel(Level level) {
+            Client.this._level = level;
         }
 
         protected abstract String getLevelType();
@@ -206,6 +211,15 @@ public class Client implements Serializable {
             return getPayments() - getDebts();
         }
 
+        public void updateBalance(double delta) {
+            if (delta < 0) {
+                _debts += (delta * -1);
+            } else {
+                _debts -= delta;
+                _payments += delta;
+            }
+        }
+
         protected int getNumberOfConsecutiveTextCommunications() {
             return _numberOfConsecutiveTextCommunications;
         }
@@ -214,30 +228,9 @@ public class Client implements Serializable {
             return _numberOfConsecutiveVideoCommunications;
         }
 
-        protected TariffPlan getTariffPlan() {
-            return _plan;
-        }
-
-        protected void updateLevel(Level level) {
-            Client.this._level = level;
-        }
-
         protected void resetNumberOfConsecutiveCommunications() {
             _numberOfConsecutiveTextCommunications = 0;
             _numberOfConsecutiveVideoCommunications = 0;
-        }
-
-        protected void setTariffPlan(TariffPlan plan) {
-            _plan = plan;
-        }
-
-        public void updateBalance(double delta) {
-            if (delta < 0) {
-                _debts += (delta * -1);
-            } else {
-                _debts -= delta;
-                _payments += delta;
-            }
         }
 
         protected void increaseNumberOfConsecutiveTextCommunications() {
@@ -252,14 +245,22 @@ public class Client implements Serializable {
                 _numberOfConsecutiveVideoCommunications % 5 + 1;
         }
 
-        // TODO: this needs to check if the client has just payed a communication or just changed a communication in order to do something
-        protected abstract void verifyLevelUpdateConditions();
+        protected TariffPlan getTariffPlan() {
+            return _plan;
+        }
+
+        protected void setTariffPlan(TariffPlan plan) {
+            _plan = plan;
+        }
 
         public abstract double computePrice(TextCommunication communication);
 
         public abstract double computePrice(VoiceCommunication communication);
 
         public abstract double computePrice(VideoCommunication communication);
+
+        // TODO: this needs to check if the client has just payed a communication or just changed a communication in order to do something
+        protected abstract void verifyLevelUpdateConditions();
 
     }
 

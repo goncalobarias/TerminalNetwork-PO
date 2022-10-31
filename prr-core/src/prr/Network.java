@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.Serializable;
@@ -16,9 +15,9 @@ import prr.util.NaturalTextComparator;
 import prr.clients.Client;
 import prr.communications.Communication;
 import prr.notifications.Notification;
-import prr.terminals.Terminal;
 import prr.terminals.BasicTerminal;
 import prr.terminals.FancyTerminal;
+import prr.terminals.Terminal;
 import prr.exceptions.DuplicateClientKeyException;
 import prr.exceptions.DuplicateTerminalKeyException;
 import prr.exceptions.ImportFileException;
@@ -54,12 +53,6 @@ public class Network implements Serializable {
     /** Contains the ID for the next communication created by the network. */
     private int _nextCommunicationId;
 
-    /** Contains the total value of the payments performed in the network. */
-    private double _globalPayments;
-
-    /** Contains the total value of the acquired debts in the network. */
-    private double _globalDebts;
-
     /** Stores the current entry from the file that is being parsed. */
     private String _currentEntry;
 
@@ -72,21 +65,8 @@ public class Network implements Serializable {
         _terminals = new TreeMap<String, Terminal>();
         _communications = new TreeMap<Integer, Communication>();
         _nextCommunicationId = 1;
-        _globalPayments = 0.0;
-        _globalDebts = 0.0;
         _currentEntry = "";
         _changed = false;
-    }
-
-    /**
-     * Obtains a new communication ID and increases its value once more. Since
-     * every communication requires an unique ID we will always get a new value
-     * on each call of this method.
-     *
-     * @return The next communication ID for a new communication
-     */
-    public int getNextCommunicationId() {
-        return _nextCommunicationId++;
     }
 
     /**
@@ -109,6 +89,37 @@ public class Network implements Serializable {
         return _clients.values().stream()
                 .mapToDouble(c -> c.getDebts())
                 .sum();
+    }
+
+    /**
+     * Gets a client by its key. Two clients are considered the same in the
+     * network if their keyss are the same, or only differ by their case.
+     *
+     * @param id The key of the client to get
+     * @return The requested {@link Client}
+     * @throws UnknownClientKeyException if the client key is not present in the
+     *                                   network.
+     */
+    public Client getClient(String id) throws UnknownClientKeyException {
+        return fetchClient(id);
+    }
+
+    /**
+     * Checks if a client is elicit to be fetched and retrieves it from the
+     * network by its key.
+     *
+     * @param id The key of the client to fetch
+     * @return The {@link Client} with the given key that got fetched from the
+     *         network
+     * @throws UnknownClientKeyException if the client if is not present in the
+     *                                   network.
+     */
+    private Client fetchClient(String id) throws UnknownClientKeyException {
+        Client client = _clients.get(id);
+        if (client == null) {
+            throw new UnknownClientKeyException(id);
+        }
+        return client;
     }
 
     /**
@@ -153,37 +164,6 @@ public class Network implements Serializable {
     }
 
     /**
-     * Gets a client by its key. Two clients are considered the same in the
-     * network if their keyss are the same, or only differ by their case.
-     *
-     * @param id The key of the client to get
-     * @return The requested {@link Client}
-     * @throws UnknownClientKeyException if the client key is not present in the
-     *                                   network.
-     */
-    public Client getClient(String id) throws UnknownClientKeyException {
-        return fetchClient(id);
-    }
-
-    /**
-     * Checks if a client is elicit to be fetched and retrieves it from the
-     * network by its key.
-     *
-     * @param id The key of the client to fetch
-     * @return The {@link Client} with the given key that got fetched from the
-     *         network
-     * @throws UnknownClientKeyException if the client if is not present in the
-     *                                   network.
-     */
-    private Client fetchClient(String id) throws UnknownClientKeyException {
-        Client client = _clients.get(id);
-        if (client == null) {
-            throw new UnknownClientKeyException(id);
-        }
-        return client;
-    }
-
-    /**
      * Gets all the clients associated to the network, sorted by their
      * case-insensitive key.
      *
@@ -203,7 +183,7 @@ public class Network implements Serializable {
     public Collection<Client> getClientsWithoutDebts() {
         return Collections.unmodifiableCollection(
             _clients.values().stream()
-            .filter(c -> c.getDebts() == 0.0)
+            .filter(c -> c.getDebts() == 0D)
             .collect(Collectors.toList())
         );
     }
@@ -218,9 +198,49 @@ public class Network implements Serializable {
     public Collection<Client> getClientsWithDebts() {
         return Collections.unmodifiableCollection(
             _clients.values().stream()
-            .filter(c -> c.getDebts() > 0.0)
+            .filter(c -> c.getDebts() > 0D)
             .collect(Collectors.toList())
         );
+    }
+
+    /**
+     * Enables the given client's reception of failed contacts.
+     *
+     * @param clientId The key of the client to turn notifications on
+     * @throws UnknownClientKeyException            if there exists no client
+     *                                              with the given key in the
+     *                                              network
+     * @throws NotificationsAlreadyToggledException if the client already has
+     *                                              notifications turned on
+     */
+    public void enableClientNotifications(String clientId)
+      throws UnknownClientKeyException, NotificationsAlreadyToggledException {
+        final Client client = getClient(clientId);
+        if (client.hasNotificationsEnabled()) {
+            throw new NotificationsAlreadyToggledException(true);
+        }
+        client.setNotificationState(true);
+        changed();
+    }
+
+    /**
+     * Disables the given client's reception of failed contacts.
+     *
+     * @param clientId The key of the client to turn notifications on
+     * @throws UnknownClientKeyException            if there exists no client
+     *                                              with the given key in the
+     *                                              network
+     * @throws NotificationsAlreadyToggledException if the client already has
+     *                                              notifications turned on
+     */
+    public void disableClientNotifications(String clientId)
+      throws UnknownClientKeyException, NotificationsAlreadyToggledException {
+        final Client client = getClient(clientId);
+        if (!client.hasNotificationsEnabled()) {
+            throw new NotificationsAlreadyToggledException(false);
+        }
+        client.setNotificationState(false);
+        changed();
     }
 
     /**
@@ -293,6 +313,17 @@ public class Network implements Serializable {
             .filter(t -> t.getBalance() > 0)
             .collect(Collectors.toList())
         );
+    }
+
+    /**
+     * Obtains a new communication ID and increases its value once more. Since
+     * every communication requires an unique ID we will always get a new value
+     * on each call of this method.
+     *
+     * @return The next communication ID for a new communication
+     */
+    public int getNextCommunicationId() {
+        return _nextCommunicationId++;
     }
 
     /**
@@ -673,46 +704,6 @@ public class Network implements Serializable {
      */
     public void registerCommunication(Communication communication) {
         _communications.put(communication.getId(), communication);
-        changed();
-    }
-
-    /**
-     * Enables the given client's reception of failed contacts.
-     *
-     * @param clientId The key of the client to turn notifications on
-     * @throws UnknownClientKeyException            if there exists no client
-     *                                              with the given key in the
-     *                                              network
-     * @throws NotificationsAlreadyToggledException if the client already has
-     *                                              notifications turned on
-     */
-    public void enableClientNotifications(String clientId)
-      throws UnknownClientKeyException, NotificationsAlreadyToggledException {
-        final Client client = getClient(clientId);
-        if (client.hasNotificationsEnabled()) {
-            throw new NotificationsAlreadyToggledException(true);
-        }
-        client.setNotificationState(true);
-        changed();
-    }
-
-    /**
-     * Disables the given client's reception of failed contacts.
-     *
-     * @param clientId The key of the client to turn notifications on
-     * @throws UnknownClientKeyException            if there exists no client
-     *                                              with the given key in the
-     *                                              network
-     * @throws NotificationsAlreadyToggledException if the client already has
-     *                                              notifications turned on
-     */
-    public void disableClientNotifications(String clientId)
-      throws UnknownClientKeyException, NotificationsAlreadyToggledException {
-        final Client client = getClient(clientId);
-        if (!client.hasNotificationsEnabled()) {
-            throw new NotificationsAlreadyToggledException(false);
-        }
-        client.setNotificationState(false);
         changed();
     }
 

@@ -6,7 +6,6 @@ import java.util.Map;
 import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import java.io.Serializable;
 import java.io.Serial;
 
@@ -51,8 +50,8 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
     public Terminal(String id, Client owner) {
         _id = id;
         _owner = owner;
-        _payments = 0.0;
-        _debts = 0.0;
+        _payments = 0D;
+        _debts = 0D;
         _ongoingCommunication = null;
         _communications = new HashMap<Integer, Communication>();
         _terminalFriends = new TreeMap<String, Terminal>();
@@ -87,6 +86,27 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return getPayments() - getDebts();
     }
 
+    public void updateBalance(double delta) {
+        if (delta < 0) {
+            _debts += (delta * -1);
+        } else {
+            _debts -= delta;
+            _payments += delta;
+        }
+        _owner.updateBalance(delta);
+    }
+
+    public void performPayment(int communicationId, Network context)
+      throws InvalidCommunicationException {
+        Communication communication = context.getCommunication(communicationId);
+        if (!this.equals(communication.getTerminalSender()) ||
+          communication.isOngoing() || communication.isPaid()) {
+            throw new InvalidCommunicationException();
+        }
+        double price = communication.pay();
+        updateBalance(price);
+    }
+
     public Communication getOngoingCommunication()
       throws NoOngoingCommunicationException {
         if (_ongoingCommunication == null) {
@@ -95,55 +115,9 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return _ongoingCommunication;
     }
 
-    public String getFriendsIds() {
-        return _terminalFriends.keySet()
-                                .stream()
-                                .collect(Collectors.joining(","));
-    }
-
-    public String getStatusType() {
-        return _status.getStatusType();
-    }
-
-    public Terminal.Status getStatus() {
-        return _status;
-    }
-
-    public void setStatus(String status) throws IllegalTerminalStatusException {
-        _status.setStatus(status);
-    }
-
-    public void setOnIdle() throws IllegalTerminalStatusException {
-        _status.setOnIdle();
-    }
-
-    public void setOnSilent() throws IllegalTerminalStatusException {
-        _status.setOnSilent();
-    }
-
-    public void turnOff() throws IllegalTerminalStatusException {
-        _status.turnOff();
-    }
-
-    public void setOnBusy() {
-        _status.setOnBusy();
-    }
-
-    public void unBusy() {
-        _status.unBusy();
-    }
-
     public void setOngoingCommunication(
       InteractiveCommunication communication) {
         _ongoingCommunication = communication;
-    }
-
-    public boolean hasFriends() {
-        return !_terminalFriends.isEmpty();
-    }
-
-    public boolean isFriend(Terminal terminal) {
-        return _terminalFriends.containsKey(terminal.getTerminalId());
     }
 
     public boolean isUnused() {
@@ -178,36 +152,15 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return _status.canReceiveInteractiveCommunication();
     }
 
-    public void addFriend(String terminalFriendId, Network context)
-      throws UnknownTerminalKeyException, InvalidFriendException {
-        Terminal terminalFriend = context.getTerminal(terminalFriendId);
-        if (this.equals(terminalFriend) ||
-          this.isFriend(terminalFriend)) {
-            throw new InvalidFriendException();
-        }
-        _terminalFriends.put(terminalFriendId, terminalFriend);
-        context.changed();
-    }
-
-    public void removeFriend(String terminalFriendId, Network context)
-      throws UnknownTerminalKeyException, InvalidFriendException {
-        Terminal terminalFriend = context.getTerminal(terminalFriendId);
-        if (!this.isFriend(terminalFriend)) {
-            throw new InvalidFriendException();
-        }
-        _terminalFriends.remove(terminalFriendId);
-        context.changed();
-    }
-
     public void addCommunication(Communication communication) {
         _communications.put(communication.getId(), communication);
     }
 
     public double endOngoingCommunication(int duration) {
-        double communicationPrice = 0.0;
+        double communicationPrice = 0D;
         if (canEndCurrentCommunication()) {
             communicationPrice =
-                _ongoingCommunication.stopCommunication(duration);
+                _ongoingCommunication.finishCommunication(duration);
             getOwner().verifyLevelUpdateConditions();
         }
         return communicationPrice;
@@ -294,25 +247,71 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         }
     }
 
-    public void performPayment(int communicationId, Network context)
-      throws InvalidCommunicationException {
-        Communication communication = context.getCommunication(communicationId);
-        if (!this.equals(communication.getTerminalSender()) ||
-          communication.isOngoing() || communication.isPaid()) {
-            throw new InvalidCommunicationException();
-        }
-        double price = communication.pay();
-        updateBalance(price);
+    public String getFriendsIds() {
+        return _terminalFriends.keySet()
+                                .stream()
+                                .collect(Collectors.joining(","));
     }
 
-    public void updateBalance(double delta) {
-        if (delta < 0) {
-            _debts += (delta * -1);
-        } else {
-            _debts -= delta;
-            _payments += delta;
+    public boolean hasFriends() {
+        return !_terminalFriends.isEmpty();
+    }
+
+    public boolean isFriend(Terminal terminal) {
+        return _terminalFriends.containsKey(terminal.getTerminalId());
+    }
+
+    public void addFriend(String terminalFriendId, Network context)
+      throws UnknownTerminalKeyException, InvalidFriendException {
+        Terminal terminalFriend = context.getTerminal(terminalFriendId);
+        if (this.equals(terminalFriend) ||
+          this.isFriend(terminalFriend)) {
+            throw new InvalidFriendException();
         }
-        _owner.updateBalance(delta);
+        _terminalFriends.put(terminalFriendId, terminalFriend);
+        context.changed();
+    }
+
+    public void removeFriend(String terminalFriendId, Network context)
+      throws UnknownTerminalKeyException, InvalidFriendException {
+        Terminal terminalFriend = context.getTerminal(terminalFriendId);
+        if (!this.isFriend(terminalFriend)) {
+            throw new InvalidFriendException();
+        }
+        _terminalFriends.remove(terminalFriendId);
+        context.changed();
+    }
+
+    public Terminal.Status getStatus() {
+        return _status;
+    }
+
+    public String getStatusType() {
+        return _status.getStatusType();
+    }
+
+    public void setStatus(String status) throws IllegalTerminalStatusException {
+        _status.setStatus(status);
+    }
+
+    public void setOnIdle() throws IllegalTerminalStatusException {
+        _status.setOnIdle();
+    }
+
+    public void setOnSilent() throws IllegalTerminalStatusException {
+        _status.setOnSilent();
+    }
+
+    public void turnOff() throws IllegalTerminalStatusException {
+        _status.turnOff();
+    }
+
+    public void setOnBusy() {
+        _status.setOnBusy();
+    }
+
+    public void unBusy() {
+        _status.unBusy();
     }
 
     @Override
@@ -346,7 +345,9 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             return Terminal.this;
         }
 
-        protected abstract String getStatusType();
+        protected void updateStatus(Status status) {
+            Terminal.this._status = status;
+        }
 
         protected void setStatus(String status)
           throws IllegalTerminalStatusException {
@@ -358,9 +359,13 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             };
         }
 
-        protected void updateStatus(Status status) {
-            Terminal.this._status = status;
-        }
+        protected abstract String getStatusType();
+
+        protected abstract boolean canStartCommunication();
+
+        protected abstract boolean canReceiveTextCommunication();
+
+        protected abstract boolean canReceiveInteractiveCommunication();
 
         protected abstract void setOnIdle()
           throws IllegalTerminalStatusException;
@@ -374,12 +379,6 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         protected abstract void setOnBusy();
 
         protected abstract void unBusy();
-
-        protected abstract boolean canStartCommunication();
-
-        protected abstract boolean canReceiveTextCommunication();
-
-        protected abstract boolean canReceiveInteractiveCommunication();
 
     }
 

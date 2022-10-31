@@ -2,6 +2,7 @@ package prr.communications;
 
 import java.io.Serializable;
 import java.io.Serial;
+
 import prr.util.CommunicationVisitor;
 import prr.terminals.Terminal;
 
@@ -24,7 +25,7 @@ public abstract class Communication implements Serializable { // TODO: do visito
         _terminalReceiver = terminalReceiver;
         _terminalSender = terminalSender;
         _isOngoing = isOngoing;
-        _price = 0.0;
+        _price = 0D;
         _isPaid = false;
         estabilishCommunication();
     }
@@ -35,14 +36,6 @@ public abstract class Communication implements Serializable { // TODO: do visito
         return _id;
     }
 
-    public String getSenderId() {
-        return _terminalSender.getTerminalId();
-    }
-
-    public Terminal getTerminalSender() {
-        return _terminalSender;
-    }
-
     public String getReceiverId() {
         return _terminalReceiver.getTerminalId();
     }
@@ -51,22 +44,30 @@ public abstract class Communication implements Serializable { // TODO: do visito
         return _terminalReceiver;
     }
 
-    public double getPrice() {
-        return _price;
+    public String getSenderId() {
+        return _terminalSender.getTerminalId();
     }
 
-    public abstract int getUnits();
+    public Terminal getTerminalSender() {
+        return _terminalSender;
+    }
+
+    public boolean isOngoing() {
+        return _isOngoing;
+    }
 
     public void setProgress(boolean isOngoing) {
         _isOngoing = isOngoing;
     }
 
-    public void setPrice(double price) {
-        _price = price;
+    public abstract int getUnits();
+
+    public double getPrice() {
+        return _price;
     }
 
-    public boolean isOngoing() {
-        return _isOngoing;
+    public void setPrice(double price) {
+        _price = price;
     }
 
     public boolean isPaid() {

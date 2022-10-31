@@ -3,8 +3,9 @@ package prr.clients;
 import java.io.Serial;
 
 import prr.communications.TextCommunication;
-import prr.communications.VoiceCommunication;
 import prr.communications.VideoCommunication;
+import prr.communications.VoiceCommunication;
+import prr.tariffs.TariffPlan;
 
 public class ClientPlatinumLevel extends Client.Level {
 
@@ -14,9 +15,9 @@ public class ClientPlatinumLevel extends Client.Level {
 
     public ClientPlatinumLevel(Client client, double payments, double debts,
       int numberOfConsecutiveTextCommunications,
-      int numberOfConsecutiveVideoCommunications) {
+      int numberOfConsecutiveVideoCommunications, TariffPlan plan) {
         client.super(payments, debts, numberOfConsecutiveTextCommunications,
-                    numberOfConsecutiveVideoCommunications);
+                    numberOfConsecutiveVideoCommunications, plan);
     }
 
     @Override
@@ -24,30 +25,31 @@ public class ClientPlatinumLevel extends Client.Level {
         return "PLATINUM";
     }
 
+    @Override
     public double computePrice(TextCommunication communication) {
         return getTariffPlan().computePrice(this, communication);
     }
 
+    @Override
     public double computePrice(VoiceCommunication communication) {
         return getTariffPlan().computePrice(this, communication);
     }
 
+    @Override
     public double computePrice(VideoCommunication communication) {
         return getTariffPlan().computePrice(this, communication);
     }
 
-
-
     @Override
     protected void verifyLevelUpdateConditions() {
-        if (getBalance() < 0.0) {
+        if (getBalance() < 0D) {
             updateLevel(new ClientNormalLevel(getClient(), getPayments(),
                 getDebts(), getNumberOfConsecutiveTextCommunications(),
-                getNumberOfConsecutiveVideoCommunications()));
+                getNumberOfConsecutiveVideoCommunications(), getTariffPlan()));
         } else if (getNumberOfConsecutiveTextCommunications() == 2) {
             updateLevel(new ClientGoldLevel(getClient(), getPayments(),
                 getDebts(), getNumberOfConsecutiveTextCommunications(),
-                getNumberOfConsecutiveVideoCommunications()));
+                getNumberOfConsecutiveVideoCommunications(), getTariffPlan()));
         }
     }
 

@@ -18,8 +18,6 @@ public abstract class InteractiveCommunication extends Communication {
         _duration = 0;
     }
 
-    public abstract String getCommunicationType();
-
     @Override
     public int getUnits() {
         return _duration;
@@ -39,6 +37,15 @@ public abstract class InteractiveCommunication extends Communication {
         getTerminalReceiver().setOngoingCommunication(this);
     }
 
-    public abstract double stopCommunication(int duration);
+    public void finishInteractiveCommunication(int duration) {
+        setProgress(false);
+        getTerminalReceiver().setOngoingCommunication(null);
+        getTerminalReceiver().unBusy();
+        getTerminalSender().setOngoingCommunication(null);
+        getTerminalSender().unBusy();
+        setUnits(duration);
+    }
+
+    public abstract double finishCommunication(int duration);
 
 }
