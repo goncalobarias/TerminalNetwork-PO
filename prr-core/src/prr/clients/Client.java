@@ -12,6 +12,9 @@ import java.io.Serial;
 import prr.util.ClientVisitor;
 import prr.util.NaturalTextComparator;
 import prr.notifications.NotificationDeliveryMethod;
+import prr.communications.TextCommunication;
+import prr.communications.VoiceCommunication;
+import prr.communications.VideoCommunication;
 import prr.notifications.Notification;
 import prr.tariffs.BasePlan;
 import prr.tariffs.TariffPlan;
@@ -81,16 +84,16 @@ public class Client implements Serializable {
         return _level.getLevelType();
     }
 
+    public Client.Level getLevel() {
+        return _level;
+    }
+
     public double getPayments() {
         return _level.getPayments();
     }
 
     public double getDebts() {
         return _level.getDebts();
-    }
-
-    public TariffPlan getTariffPlan() {
-        return _level.getTariffPlan();
     }
 
     public Collection<Notification> readNotifications() {
@@ -251,6 +254,12 @@ public class Client implements Serializable {
 
         // TODO: this needs to check if the client has just payed a communication or just changed a communication in order to do something
         protected abstract void verifyLevelUpdateConditions();
+
+        public abstract double computePrice(TextCommunication communication);
+
+        public abstract double computePrice(VoiceCommunication communication);
+
+        public abstract double computePrice(VideoCommunication communication);
 
     }
 

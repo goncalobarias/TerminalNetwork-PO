@@ -2,6 +2,7 @@ package prr.communications;
 
 import java.io.Serial;
 
+import prr.clients.Client;
 import prr.terminals.Terminal;
 
 public class VoiceCommunication extends InteractiveCommunication {
@@ -21,13 +22,25 @@ public class VoiceCommunication extends InteractiveCommunication {
     }
 
     @Override
-    public double stopCommunication() {
+    public double stopCommunication(int duration) {
         setProgress(false);
         getTerminalReceiver().setOngoingCommunication(null);
         getTerminalReceiver().unBusy();
         getTerminalSender().setOngoingCommunication(null);
         getTerminalSender().unBusy();
+        setUnits(duration);
         return computePrice();
+    }
+
+    protected double computePrice() {
+        Client client = getTerminalSender().getOwner();
+        double price = client.getLevel().computePrice(this);
+        if (getTerminalSender().isFriend(getTerminalReceiver())) {
+            price *= 0.50;
+        }
+        setPrice(price);
+        getTerminalSender().updateBalance(price * -1);
+        return price;
     }
 
 }

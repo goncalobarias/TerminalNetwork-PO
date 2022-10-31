@@ -2,6 +2,10 @@ package prr.clients;
 
 import java.io.Serial;
 
+import prr.communications.TextCommunication;
+import prr.communications.VoiceCommunication;
+import prr.communications.VideoCommunication;
+
 public class ClientGoldLevel extends Client.Level {
 
     /** Serial number for serialization. */
@@ -18,6 +22,18 @@ public class ClientGoldLevel extends Client.Level {
     @Override
     protected String getLevelType() {
         return "GOLD";
+    }
+
+    public double computePrice(TextCommunication communication) {
+        return getTariffPlan().computePrice(this, communication);
+    }
+
+    public double computePrice(VoiceCommunication communication) {
+        return getTariffPlan().computePrice(this, communication);
+    }
+
+    public double computePrice(VideoCommunication communication) {
+        return getTariffPlan().computePrice(this, communication);
     }
 
     @Override

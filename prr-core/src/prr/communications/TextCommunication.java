@@ -2,6 +2,7 @@ package prr.communications;
 
 import java.io.Serial;
 
+import prr.clients.Client;
 import prr.terminals.Terminal;
 
 public class TextCommunication extends Communication {
@@ -35,6 +36,14 @@ public class TextCommunication extends Communication {
         getTerminalSender().getOwner()
             .increaseNumberOfConsecutiveTextCommunications();
         getTerminalReceiver().addCommunication(this);
+    }
+
+    protected double computePrice() {
+        Client client = getTerminalSender().getOwner();
+        double price = client.getLevel().computePrice(this);
+        setPrice(price);
+        getTerminalSender().updateBalance(price * -1);
+        return price;
     }
 
 }

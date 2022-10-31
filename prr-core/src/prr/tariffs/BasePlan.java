@@ -33,15 +33,16 @@ public class BasePlan extends TariffPlan {
 
     public double computePrice(ClientNormalLevel level,
       VoiceCommunication communication) {
-        return 20.0;
+        return 20.0 * communication.getUnits();
     }
 
     public double computePrice(ClientNormalLevel level,
       VideoCommunication communication) {
-        return 30.0;
+        return 30.0 * communication.getUnits();
     }
 
-    public double computePrice(ClientGoldLevel level, TextCommunication communication) {
+    public double computePrice(ClientGoldLevel level,
+      TextCommunication communication) {
         double price = 0.0;
         int units = communication.getUnits();
 
@@ -58,15 +59,16 @@ public class BasePlan extends TariffPlan {
 
     public double computePrice(ClientGoldLevel level,
       VoiceCommunication communication) {
-        return 10.0;
+        return 10.0 * communication.getUnits();
     }
 
     public double computePrice(ClientGoldLevel level,
       VideoCommunication communication) {
-        return 20.0;
+        return 20.0 * communication.getUnits();
     }
 
-    public double computePrice(ClientPlatinumLevel level, TextCommunication communication) {
+    public double computePrice(ClientPlatinumLevel level,
+      TextCommunication communication) {
         double price = 0.0;
         int units = communication.getUnits();
 
@@ -83,12 +85,12 @@ public class BasePlan extends TariffPlan {
 
     public double computePrice(ClientPlatinumLevel level,
       VoiceCommunication communication) {
-        return 10.0;
+        return 10.0 * communication.getUnits();
     }
 
     public double computePrice(ClientPlatinumLevel level,
       VideoCommunication communication) {
-        return 10.0;
+        return 10.0 * communication.getUnits();
     }
 
 }

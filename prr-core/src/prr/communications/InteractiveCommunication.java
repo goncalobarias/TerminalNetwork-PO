@@ -25,6 +25,10 @@ public abstract class InteractiveCommunication extends Communication {
         return _duration;
     }
 
+    public void setUnits(int duration) {
+        _duration = duration;
+    }
+
     @Override
     public void estabilishCommunication() {
         getTerminalSender().setOnBusy();
@@ -35,6 +39,6 @@ public abstract class InteractiveCommunication extends Communication {
         getTerminalReceiver().setOngoingCommunication(this);
     }
 
-    public abstract double stopCommunication();
+    public abstract double stopCommunication(int duration);
 
 }

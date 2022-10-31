@@ -2,10 +2,7 @@ package prr.communications;
 
 import java.io.Serializable;
 import java.io.Serial;
-
 import prr.util.CommunicationVisitor;
-import prr.clients.Client;
-import prr.tariffs.TariffPlan;
 import prr.terminals.Terminal;
 
 public abstract class Communication implements Serializable { // TODO: do visitors for the communication types (check test discord server for names)
@@ -13,6 +10,7 @@ public abstract class Communication implements Serializable { // TODO: do visito
     /** Serial number for serialization. */
     @Serial
     private static final long serialVersionUID = 202210150053L;
+
     private final int _id;
     private Terminal _terminalReceiver;
     private Terminal _terminalSender;
@@ -57,10 +55,14 @@ public abstract class Communication implements Serializable { // TODO: do visito
         return _price;
     }
 
-    public abstract int getUnits(); // TODO: check if this is really going to be an integer or double
+    public abstract int getUnits();
 
     public void setProgress(boolean isOngoing) {
         _isOngoing = isOngoing;
+    }
+
+    public void setPrice(double price) {
+        _price = price;
     }
 
     public boolean isOngoing() {
@@ -72,15 +74,6 @@ public abstract class Communication implements Serializable { // TODO: do visito
     }
 
     public abstract void estabilishCommunication();
-
-    // TODO: need to fix the calculation of the price
-    protected double computePrice() {
-        _price = 0.0;
-        if (getTerminalSender().isFriend(getTerminalReceiver())) {
-            _price *= 0.50; // TODO: make this only work for interactive communications
-        }
-        return _price;
-    }
 
     public double pay() {
         _isPaid = true;

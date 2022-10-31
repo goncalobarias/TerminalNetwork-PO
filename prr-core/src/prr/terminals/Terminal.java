@@ -3,6 +3,7 @@ package prr.terminals;
 import java.util.Queue;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.HashMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -53,7 +54,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         _payments = 0.0;
         _debts = 0.0;
         _ongoingCommunication = null;
-        _communications = new TreeMap<Integer, Communication>();
+        _communications = new HashMap<Integer, Communication>();
         _terminalFriends = new TreeMap<String, Terminal>();
         _status = new TerminalIdleStatus(this);
         _clientsToNotify = new LinkedList<Client>();
@@ -92,16 +93,6 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             throw new NoOngoingCommunicationException();
         }
         return _ongoingCommunication;
-    }
-
-    public Stream<Communication> getMadeCommunications() {
-        return _communications.values().stream()
-                .filter(comm -> this.equals(comm.getTerminalSender()));
-    }
-
-    public Stream<Communication> getReceivedCommunications() {
-        return _communications.values().stream()
-                .filter(comm -> this.equals(comm.getTerminalReceiver()));
     }
 
     public String getFriendsIds() {
@@ -215,7 +206,8 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
     public double endOngoingCommunication(int duration) {
         double communicationPrice = 0.0;
         if (canEndCurrentCommunication()) {
-            communicationPrice = _ongoingCommunication.stopCommunication();
+            communicationPrice =
+                _ongoingCommunication.stopCommunication(duration);
             getOwner().verifyLevelUpdateConditions();
         }
         return communicationPrice;
@@ -311,8 +303,6 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         }
         double price = communication.pay();
         updateBalance(price);
-        _owner.updateBalance(price);
-        context.updateBalance(price);
     }
 
     public void updateBalance(double delta) {
@@ -322,6 +312,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             _debts -= delta;
             _payments += delta;
         }
+        _owner.updateBalance(delta);
     }
 
     @Override

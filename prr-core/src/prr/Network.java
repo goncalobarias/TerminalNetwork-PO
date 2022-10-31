@@ -95,7 +95,9 @@ public class Network implements Serializable {
      * @return the global payments
      */
     public double getGlobalPayments() {
-        return _globalPayments;
+        return _clients.values().stream()
+                .mapToDouble(c -> c.getPayments())
+                .sum();
     }
 
     /**
@@ -104,7 +106,9 @@ public class Network implements Serializable {
      * @return the global debts
      */
     public double getGlobalDebts() {
-        return _globalDebts;
+        return _clients.values().stream()
+                .mapToDouble(c -> c.getDebts())
+                .sum();
     }
 
     /**
@@ -352,9 +356,8 @@ public class Network implements Serializable {
         final Client client = getClient(clientId);
 
         return Collections.unmodifiableCollection(
-            _terminals.values().stream()
-            .filter(term -> client.isOwnerOf(term))
-            .flatMap(Terminal::getMadeCommunications)
+            _communications.values().stream()
+            .filter(c -> client.isOwnerOf(c.getTerminalSender()))
             .collect(Collectors.toList())
         );
     }
@@ -374,9 +377,8 @@ public class Network implements Serializable {
         final Client client = getClient(clientId);
 
         return Collections.unmodifiableCollection(
-            _terminals.values().stream()
-            .filter(term -> client.isOwnerOf(term))
-            .flatMap(Terminal::getReceivedCommunications)
+            _communications.values().stream()
+            .filter(c -> client.isOwnerOf(c.getTerminalReceiver()))
             .collect(Collectors.toList())
         );
     }
@@ -671,23 +673,6 @@ public class Network implements Serializable {
      */
     public void registerCommunication(Communication communication) {
         _communications.put(communication.getId(), communication);
-        changed();
-    }
-
-    /**
-     * Updates the network balance by a given value delta. If delta is negative
-     * it means there are new debts to assess, if it's positive it means there
-     * are new payments.
-     *
-     * @param delta How much value to change in the balance (may be negative)
-     */
-    public void updateBalance(double delta) {
-        if (delta < 0) {
-            _globalDebts += (delta * -1);
-        } else {
-            _globalDebts -= delta;
-            _globalPayments += delta;
-        }
         changed();
     }
 
