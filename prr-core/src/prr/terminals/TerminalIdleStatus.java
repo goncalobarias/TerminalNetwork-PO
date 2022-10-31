@@ -2,6 +2,7 @@ package prr.terminals;
 
 import java.io.Serial;
 
+import prr.notifications.BusyToIdleNotification;
 import prr.exceptions.IllegalTerminalStatusException;
 
 public class TerminalIdleStatus extends Terminal.Status {
@@ -41,7 +42,9 @@ public class TerminalIdleStatus extends Terminal.Status {
 
     @Override
     protected void unBusy() {
-        // do nothing
+        getTerminal().notifyAllClients(
+            new BusyToIdleNotification(getTerminal())
+        );
     }
 
     @Override

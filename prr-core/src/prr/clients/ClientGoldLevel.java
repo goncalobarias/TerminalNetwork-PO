@@ -41,7 +41,10 @@ public class ClientGoldLevel extends Client.Level {
     }
 
     @Override
-    protected void verifyLevelUpdateConditions() {
+    protected void verifyLevelUpdateConditions(boolean hasPayed) {
+        if (hasPayed) {
+            return;
+        }
         if (getBalance() < 0D) {
             updateLevel(new ClientNormalLevel(getClient(), getPayments(),
                 getDebts(), getNumberOfConsecutiveTextCommunications(),

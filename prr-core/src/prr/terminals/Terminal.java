@@ -96,15 +96,16 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         _owner.updateBalance(delta);
     }
 
-    public void performPayment(int communicationId, Network context)
+    public void performPayment(int communicationId, Network network)
       throws InvalidCommunicationException {
-        Communication communication = context.getCommunication(communicationId);
+        Communication communication = network.getCommunication(communicationId);
         if (!this.equals(communication.getTerminalSender()) ||
           communication.isOngoing() || communication.isPaid()) {
             throw new InvalidCommunicationException();
         }
         double price = communication.pay();
         updateBalance(price);
+        getOwner().verifyLevelUpdateConditions(true);
     }
 
     public Communication getOngoingCommunication()
@@ -141,7 +142,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
      * @return true if this terminal is neither off neither busy, false otherwise.
      **/
     public boolean canStartCommunication() {
-	    return _status.canStartCommunication();
+        return _status.canStartCommunication();
     }
 
     protected boolean canReceiveTextCommunication() {
@@ -161,35 +162,35 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         if (canEndCurrentCommunication()) {
             communicationPrice =
                 _ongoingCommunication.finishCommunication(duration);
-            getOwner().verifyLevelUpdateConditions();
+            getOwner().verifyLevelUpdateConditions(false);
         }
         return communicationPrice;
     }
 
-    public void sendSMS(String terminalReceiverId, Network context,
+    public void sendSMS(String terminalReceiverId, Network network,
       String message) throws UnknownTerminalKeyException,
       UnreachableOffTerminalException {
         if (canStartCommunication()) {
-            Terminal receiver = context.getTerminal(terminalReceiverId);
-            receiver.receiveSMS(this, context, message);
+            Terminal receiver = network.getTerminal(terminalReceiverId);
+            receiver.receiveSMS(this, network, message);
         }
     }
 
-    private void receiveSMS(Terminal sender, Network context,
+    private void receiveSMS(Terminal sender, Network network,
       String newMessage) throws UnreachableOffTerminalException {
         if (canReceiveTextCommunication()) {
-            int newId = context.getNextCommunicationId();
+            int newId = network.getNextCommunicationId();
             TextCommunication communication =
                 new TextCommunication(newMessage, newId, this, sender);
-            context.registerCommunication(communication);
-            sender.getOwner().verifyLevelUpdateConditions();
+            network.registerCommunication(communication);
+            sender.getOwner().verifyLevelUpdateConditions(false);
         } else {
             addToNotify(sender.getOwner());
             throw new UnreachableOffTerminalException();
         }
     }
 
-    public void makeVoiceCall(String terminalReceiverId, Network context)
+    public void makeVoiceCall(String terminalReceiverId, Network network)
       throws UnknownTerminalKeyException, UnreachableOffTerminalException,
       UnreachableBusyTerminalException, UnreachableSilentTerminalException,
       InvalidCommunicationException {
@@ -197,19 +198,19 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
             throw new InvalidCommunicationException();
         }
         if (canStartCommunication()) {
-            Terminal receiver = context.getTerminal(terminalReceiverId);
-            receiver.receiveVoiceCall(this, context);
+            Terminal receiver = network.getTerminal(terminalReceiverId);
+            receiver.receiveVoiceCall(this, network);
         }
     }
 
-    private void receiveVoiceCall(Terminal sender, Network context)
+    private void receiveVoiceCall(Terminal sender, Network network)
       throws UnreachableOffTerminalException, UnreachableBusyTerminalException,
       UnreachableSilentTerminalException {
         if (canReceiveInteractiveCommunication()) {
-            int newId = context.getNextCommunicationId();
+            int newId = network.getNextCommunicationId();
             VoiceCommunication communication =
                 new VoiceCommunication(newId, this, sender);
-            context.registerCommunication(communication);
+            network.registerCommunication(communication);
         } else {
             addToNotify(sender.getOwner());
             // TODO: fix this horrible mess of exceptions
@@ -223,12 +224,12 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
     }
 
     public abstract void makeVideoCall(String terminalReceiverId,
-      Network context) throws UnsupportedCommunicationAtOriginException,
+      Network network) throws UnsupportedCommunicationAtOriginException,
       UnsupportedCommunicationAtDestinationException, UnknownTerminalKeyException,
       UnreachableOffTerminalException, UnreachableBusyTerminalException,
       UnreachableSilentTerminalException, InvalidCommunicationException;
 
-    protected abstract void receiveVideoCall(Terminal sender, Network context)
+    protected abstract void receiveVideoCall(Terminal sender, Network network)
       throws UnsupportedCommunicationAtDestinationException,
       UnreachableOffTerminalException, UnreachableBusyTerminalException,
       UnreachableSilentTerminalException;
@@ -261,25 +262,25 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return _terminalFriends.containsKey(terminal.getTerminalId());
     }
 
-    public void addFriend(String terminalFriendId, Network context)
+    public void addFriend(String terminalFriendId, Network network)
       throws UnknownTerminalKeyException, InvalidFriendException {
-        Terminal terminalFriend = context.getTerminal(terminalFriendId);
+        Terminal terminalFriend = network.getTerminal(terminalFriendId);
         if (this.equals(terminalFriend) ||
           this.isFriend(terminalFriend)) {
             throw new InvalidFriendException();
         }
         _terminalFriends.put(terminalFriendId, terminalFriend);
-        context.changed();
+        network.changed();
     }
 
-    public void removeFriend(String terminalFriendId, Network context)
+    public void removeFriend(String terminalFriendId, Network network)
       throws UnknownTerminalKeyException, InvalidFriendException {
-        Terminal terminalFriend = context.getTerminal(terminalFriendId);
+        Terminal terminalFriend = network.getTerminal(terminalFriendId);
         if (!this.isFriend(terminalFriend)) {
             throw new InvalidFriendException();
         }
         _terminalFriends.remove(terminalFriendId);
-        context.changed();
+        network.changed();
     }
 
     public Terminal.Status getStatus() {

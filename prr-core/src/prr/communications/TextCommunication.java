@@ -40,7 +40,10 @@ public class TextCommunication extends Communication {
 
     protected double computePrice() {
         Client client = getTerminalSender().getOwner();
+        boolean areFriends =
+            getTerminalSender().isFriend(getTerminalReceiver());
         double price = client.getLevel().computePrice(this);
+        client.getTariffPlan().setFriendship(areFriends);
         setPrice(price);
         getTerminalSender().updateBalance(price * -1);
         return price;

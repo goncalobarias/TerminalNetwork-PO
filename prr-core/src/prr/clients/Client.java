@@ -139,13 +139,16 @@ public class Client implements Serializable {
         _level.increaseNumberOfConsecutiveVideoCommunications();
     }
 
-    // TODO: add tariff plans to the network
+    public TariffPlan getTariffPlan() {
+        return _level.getTariffPlan();
+    }
+
     public void setTariffPlan(TariffPlan plan) {
         _level.setTariffPlan(plan);
     }
 
-    public void verifyLevelUpdateConditions() {
-        _level.verifyLevelUpdateConditions();
+    public void verifyLevelUpdateConditions(boolean hasPayed) {
+        _level.verifyLevelUpdateConditions(hasPayed);
     }
 
     public String accept(ClientVisitor visitor) {
@@ -259,8 +262,7 @@ public class Client implements Serializable {
 
         public abstract double computePrice(VideoCommunication communication);
 
-        // TODO: this needs to check if the client has just payed a communication or just changed a communication in order to do something
-        protected abstract void verifyLevelUpdateConditions();
+        protected abstract void verifyLevelUpdateConditions(boolean hasPayed);
 
     }
 

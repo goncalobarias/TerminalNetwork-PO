@@ -41,7 +41,10 @@ public class ClientNormalLevel extends Client.Level {
     }
 
     @Override
-    protected void verifyLevelUpdateConditions() {
+    protected void verifyLevelUpdateConditions(boolean hasPayed) {
+        if (!hasPayed) {
+            return;
+        }
         if (getBalance() > 500D) {
             updateLevel(new ClientGoldLevel(getClient(), getPayments(),
                 getDebts(), getNumberOfConsecutiveTextCommunications(),

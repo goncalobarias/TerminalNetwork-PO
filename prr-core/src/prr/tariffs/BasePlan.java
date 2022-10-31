@@ -31,16 +31,19 @@ public class BasePlan extends TariffPlan {
         return price;
     }
 
+    @Override
     public double computePrice(ClientNormalLevel level,
       VoiceCommunication communication) {
-        return 20D * communication.getUnits();
+        return 20D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
     }
 
+    @Override
     public double computePrice(ClientNormalLevel level,
       VideoCommunication communication) {
-        return 30D * communication.getUnits();
+        return 30D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
     }
 
+    @Override
     public double computePrice(ClientGoldLevel level,
       TextCommunication communication) {
         double price = 0D;
@@ -57,16 +60,19 @@ public class BasePlan extends TariffPlan {
         return price;
     }
 
+    @Override
     public double computePrice(ClientGoldLevel level,
       VoiceCommunication communication) {
-        return 10D * communication.getUnits();
+        return 10D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
     }
 
+    @Override
     public double computePrice(ClientGoldLevel level,
       VideoCommunication communication) {
-        return 20D * communication.getUnits();
+        return 20D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
     }
 
+    @Override
     public double computePrice(ClientPlatinumLevel level,
       TextCommunication communication) {
         double price = 0D;
@@ -83,14 +89,16 @@ public class BasePlan extends TariffPlan {
         return price;
     }
 
+    @Override
     public double computePrice(ClientPlatinumLevel level,
       VoiceCommunication communication) {
-        return 10D * communication.getUnits();
+        return 10D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
     }
 
+    @Override
     public double computePrice(ClientPlatinumLevel level,
       VideoCommunication communication) {
-        return 10D * communication.getUnits();
+        return 10D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
     }
 
 }
