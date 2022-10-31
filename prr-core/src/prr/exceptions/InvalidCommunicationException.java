@@ -3,8 +3,10 @@ package prr.exceptions;
 import java.io.Serial;
 
 /**
- * Given terminal is trying to pay for a communication that is not finished, or
- * has not been initiated by itself, or has already been paid for.
+ * Given terminal doesn't have an ongoing communication or is trying to pay for
+ * a communication that is not finished, or has not been initiated by itself,
+ * or has already been paid for. Given terminal doesn't have an ongoing
+ * communication.
  */
 public class InvalidCommunicationException extends Exception {
 

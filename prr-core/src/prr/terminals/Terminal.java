@@ -20,7 +20,6 @@ import prr.notifications.Notification;
 import prr.exceptions.IllegalTerminalStatusException;
 import prr.exceptions.InvalidCommunicationException;
 import prr.exceptions.InvalidFriendException;
-import prr.exceptions.NoOngoingCommunicationException;
 import prr.exceptions.UnknownTerminalKeyException;
 import prr.exceptions.UnreachableBusyTerminalException;
 import prr.exceptions.UnreachableOffTerminalException;
@@ -109,9 +108,9 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
     }
 
     public Communication getOngoingCommunication()
-      throws NoOngoingCommunicationException {
+      throws InvalidCommunicationException {
         if (_ongoingCommunication == null) {
-            throw new NoOngoingCommunicationException();
+            throw new InvalidCommunicationException();
         }
         return _ongoingCommunication;
     }

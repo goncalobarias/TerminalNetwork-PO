@@ -3,7 +3,7 @@ package prr.app.terminal;
 import prr.Network;
 import prr.app.visitors.RenderCommunication;
 import prr.terminals.Terminal;
-import prr.exceptions.NoOngoingCommunicationException;
+import prr.exceptions.InvalidCommunicationException;
 import pt.tecnico.uilib.menus.CommandException;
 
 /**
@@ -21,7 +21,7 @@ class DoShowOngoingCommunication extends TerminalCommand {
             RenderCommunication renderer = new RenderCommunication();
             _display.popup(_receiver.getOngoingCommunication()
                                     .accept(renderer));
-        } catch (NoOngoingCommunicationException e) {
+        } catch (InvalidCommunicationException e) {
             _display.popup(Message.noOngoingCommunication());
         }
     }
