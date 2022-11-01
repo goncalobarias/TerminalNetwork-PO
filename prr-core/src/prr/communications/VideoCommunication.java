@@ -34,8 +34,8 @@ public class VideoCommunication extends InteractiveCommunication {
         Client client = getTerminalSender().getOwner();
         boolean areFriends =
             getTerminalSender().isFriend(getTerminalReceiver());
-        double price = client.getLevel().computePrice(this);
         client.getTariffPlan().setFriendship(areFriends);
+        double price = client.getLevel().computePrice(this);
         setPrice(price);
         getTerminalSender().updateBalance(price * -1);
         return price;

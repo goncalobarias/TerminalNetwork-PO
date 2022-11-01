@@ -3,6 +3,7 @@ package prr.app.terminal;
 import prr.Network;
 import prr.terminals.Terminal;
 import prr.exceptions.IllegalTerminalStatusException;
+import prr.exceptions.UnreachableBusyTerminalException;
 import pt.tecnico.uilib.menus.CommandException;
 
 /**
@@ -20,6 +21,8 @@ class DoTurnOnTerminal extends TerminalCommand {
             _receiver.setOnIdle();
         } catch (IllegalTerminalStatusException e) {
             _display.popup(Message.alreadyOn());
+        } catch (UnreachableBusyTerminalException e) {
+            // do nothing
         }
     }
 

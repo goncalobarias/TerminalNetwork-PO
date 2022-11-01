@@ -1,18 +1,20 @@
 package prr.util;
 
+import java.io.Serializable;
+
 import prr.clients.Client;
 import prr.communications.Communication;
 import prr.notifications.Notification;
 import prr.terminals.Terminal;
 
-public interface Visitor {
+public abstract class Visitor implements Serializable {
 
-    String visit(Client client);
+    public abstract String visit(Client client);
 
-    String visit(Communication communication);
+    public abstract String visit(Communication communication);
 
-    String visit(Notification notification);
+    public abstract String visit(Notification notification);
 
-    String visit(Terminal terminal);
+    public abstract String visit(Terminal terminal);
 
 }

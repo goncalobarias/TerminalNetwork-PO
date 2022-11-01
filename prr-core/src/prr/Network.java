@@ -144,7 +144,7 @@ public class Network implements Serializable {
      */
     public double getClientDebts(String id) throws UnknownClientKeyException {
         final Client client = getClient(id);
-        return client.getPayments();
+        return client.getDebts();
     }
 
     /**

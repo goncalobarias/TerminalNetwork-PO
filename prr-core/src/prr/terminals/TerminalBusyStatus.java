@@ -3,7 +3,6 @@ package prr.terminals;
 import java.io.Serial;
 
 import prr.clients.Client;
-import prr.exceptions.IllegalTerminalStatusException;
 import prr.exceptions.UnreachableBusyTerminalException;
 
 public class TerminalBusyStatus extends Terminal.Status {
@@ -43,18 +42,18 @@ public class TerminalBusyStatus extends Terminal.Status {
     }
 
     @Override
-    protected void setOnIdle() throws IllegalTerminalStatusException {
-        throw new IllegalTerminalStatusException("IDLE");
+    protected void setOnIdle() throws UnreachableBusyTerminalException {
+        throw new UnreachableBusyTerminalException();
     }
 
     @Override
-    protected void setOnSilent() throws IllegalTerminalStatusException {
-        throw new IllegalTerminalStatusException("SILENCE");
+    protected void setOnSilent() throws UnreachableBusyTerminalException {
+        throw new UnreachableBusyTerminalException();
     }
 
     @Override
-    protected void turnOff() throws IllegalTerminalStatusException {
-        throw new IllegalTerminalStatusException("OFF");
+    protected void turnOff() throws UnreachableBusyTerminalException {
+        throw new UnreachableBusyTerminalException();
     }
 
     @Override

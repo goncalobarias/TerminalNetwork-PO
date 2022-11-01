@@ -6,7 +6,7 @@ import prr.communications.Communication;
 import prr.notifications.Notification;
 import prr.terminals.Terminal;
 
-public class ToStringer implements Visitor {
+public class ToStringer extends Visitor {
 
     @Override
     public String visit(Client client) {

@@ -285,15 +285,18 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
         _status.setStatus(status);
     }
 
-    public void setOnIdle() throws IllegalTerminalStatusException {
+    public void setOnIdle() throws IllegalTerminalStatusException,
+      UnreachableBusyTerminalException {
         _status.setOnIdle();
     }
 
-    public void setOnSilent() throws IllegalTerminalStatusException {
+    public void setOnSilent() throws IllegalTerminalStatusException,
+      UnreachableBusyTerminalException {
         _status.setOnSilent();
     }
 
-    public void turnOff() throws IllegalTerminalStatusException {
+    public void turnOff() throws IllegalTerminalStatusException,
+      UnreachableBusyTerminalException {
         _status.turnOff();
     }
 
@@ -362,13 +365,16 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
           UnreachableBusyTerminalException, UnreachableSilentTerminalException;
 
         protected abstract void setOnIdle()
-          throws IllegalTerminalStatusException;
+          throws IllegalTerminalStatusException,
+          UnreachableBusyTerminalException;
 
         protected abstract void setOnSilent()
-          throws IllegalTerminalStatusException;
+          throws IllegalTerminalStatusException,
+          UnreachableBusyTerminalException;
 
         protected abstract void turnOff()
-          throws IllegalTerminalStatusException;
+          throws IllegalTerminalStatusException,
+          UnreachableBusyTerminalException;
 
         protected abstract void setOnBusy();
 
