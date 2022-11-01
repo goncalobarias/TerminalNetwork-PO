@@ -276,7 +276,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         network.changed();
     }
 
-    public Terminal.Status getStatus() {
+    protected Terminal.Status getStatus() {
         return _status;
     }
 

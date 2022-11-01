@@ -31,7 +31,7 @@ public class TextCommunication extends Communication {
     }
 
     @Override
-    public void estabilishCommunication() {
+    protected void estabilishCommunication() {
         getTerminalSender().addCommunication(this);
         getTerminalSender().getOwner()
             .increaseNumberOfConsecutiveTextCommunications();

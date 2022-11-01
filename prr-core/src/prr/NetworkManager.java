@@ -28,7 +28,7 @@ public class NetworkManager {
     /** Default constructor. */
     public NetworkManager() {
         _network = new Network();
-        _filename = "";
+        _filename = null;
     }
 
     /** @return The current network */
@@ -69,7 +69,7 @@ public class NetworkManager {
      */
     public void save() throws MissingFileAssociationException,
       FileNotFoundException, IOException {
-        if (_filename == null || _filename.equals("")) {
+        if (_filename == null) {
             throw new MissingFileAssociationException();
         }
 

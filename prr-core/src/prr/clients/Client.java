@@ -219,7 +219,7 @@ public class Client implements Serializable {
             return getPayments() - getDebts();
         }
 
-        public void updateBalance(double delta) {
+        private void updateBalance(double delta) {
             if (delta < 0) {
                 _debts += (delta * -1);
             } else {
@@ -236,18 +236,18 @@ public class Client implements Serializable {
             return _numberOfConsecutiveVideoCommunications;
         }
 
-        protected void resetNumberOfConsecutiveCommunications() {
+        private void resetNumberOfConsecutiveCommunications() {
             _numberOfConsecutiveTextCommunications = 0;
             _numberOfConsecutiveVideoCommunications = 0;
         }
 
-        protected void increaseNumberOfConsecutiveTextCommunications() {
+        private void increaseNumberOfConsecutiveTextCommunications() {
             _numberOfConsecutiveVideoCommunications = 0;
             _numberOfConsecutiveTextCommunications =
                 _numberOfConsecutiveTextCommunications % 2 + 1;
         }
 
-        protected void increaseNumberOfConsecutiveVideoCommunications() {
+        private void increaseNumberOfConsecutiveVideoCommunications() {
             _numberOfConsecutiveTextCommunications = 0;
             _numberOfConsecutiveVideoCommunications =
                 _numberOfConsecutiveVideoCommunications % 5 + 1;
@@ -257,7 +257,7 @@ public class Client implements Serializable {
             return _plan;
         }
 
-        protected void setTariffPlan(TariffPlan plan) {
+        private void setTariffPlan(TariffPlan plan) {
             _plan = plan;
         }
 

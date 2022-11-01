@@ -18,7 +18,7 @@ public abstract class TariffPlan implements Serializable {
 
     private boolean _areFriends;
 
-    public boolean areFriends() {
+    protected boolean areFriends() {
         return _areFriends;
     }
 

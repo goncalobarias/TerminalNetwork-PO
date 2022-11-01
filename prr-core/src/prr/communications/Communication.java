@@ -56,7 +56,7 @@ public abstract class Communication implements Serializable { // TODO: do visito
         return _isOngoing;
     }
 
-    public void setProgress(boolean isOngoing) {
+    protected void setProgress(boolean isOngoing) {
         _isOngoing = isOngoing;
     }
 
@@ -66,7 +66,7 @@ public abstract class Communication implements Serializable { // TODO: do visito
         return _price;
     }
 
-    public void setPrice(double price) {
+    protected void setPrice(double price) {
         _price = price;
     }
 
@@ -74,7 +74,7 @@ public abstract class Communication implements Serializable { // TODO: do visito
         return _isPaid;
     }
 
-    public abstract void estabilishCommunication();
+    protected abstract void estabilishCommunication();
 
     public double pay() {
         _isPaid = true;

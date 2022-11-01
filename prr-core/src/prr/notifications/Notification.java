@@ -20,13 +20,8 @@ public abstract class Notification implements Serializable {
 
     public abstract String getNotificationType();
 
-    public Terminal getNotifyingTerminal() {
-        return _notifyingTerminal;
-    }
-
     public String getNotifyingTerminalId() {
-        final Terminal notifyingTerminal = getNotifyingTerminal();
-        return notifyingTerminal.getTerminalId();
+        return _notifyingTerminal.getTerminalId();
     }
 
     public String accept(NotificationVisitor visitor) {

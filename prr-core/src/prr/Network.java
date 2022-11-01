@@ -66,7 +66,7 @@ public class Network implements Serializable {
         _communications = new TreeMap<Integer, Communication>();
         _nextCommunicationId = 1;
         _currentEntry = "";
-        _changed = false;
+        _changed = true;
     }
 
     /**
@@ -472,7 +472,7 @@ public class Network implements Serializable {
      *                                     the same key in the network
      *                                     (case-insensitive)
      */
-    public void assertNewClient(String id)
+    private void assertNewClient(String id)
       throws DuplicateClientKeyException {
         if (_clients.containsKey(id)) {
             throw new DuplicateClientKeyException(id);
@@ -490,8 +490,8 @@ public class Network implements Serializable {
      * @throws DuplicateTerminalKeyException if there already exists a terminal
      *                                       with the same key in the network
      */
-    public void assertNewTerminal(String id) throws InvalidTerminalKeyException,
-      DuplicateTerminalKeyException {
+    private void assertNewTerminal(String id)
+      throws InvalidTerminalKeyException, DuplicateTerminalKeyException {
         String validTerminalIdRegex = "^\\d{6}$";
         if (!id.matches(validTerminalIdRegex)) {
             throw new InvalidTerminalKeyException(id);
