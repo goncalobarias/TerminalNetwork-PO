@@ -146,12 +146,15 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
         return _status.canStartCommunication();
     }
 
-    protected boolean canReceiveTextCommunication() {
-        return _status.canReceiveTextCommunication();
+    protected void assertTextCommunicationReception(Client clientToNotify)
+      throws UnreachableOffTerminalException {
+        _status.assertTextCommunicationReception(clientToNotify);
     }
 
-    protected boolean canReceiveInteractiveCommunication() {
-        return _status.canReceiveInteractiveCommunication();
+    protected void assertInteractiveCommunicationReception(
+      Client clientToNotify) throws UnreachableOffTerminalException,
+      UnreachableBusyTerminalException, UnreachableSilentTerminalException {
+        _status.assertInteractiveCommunicationReception(clientToNotify);
     }
 
     public void addCommunication(Communication communication) {
@@ -179,16 +182,12 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
 
     private void receiveSMS(Terminal sender, Network network,
       String newMessage) throws UnreachableOffTerminalException {
-        if (canReceiveTextCommunication()) {
-            int newId = network.getNextCommunicationId();
-            TextCommunication communication =
-                new TextCommunication(newMessage, newId, this, sender);
-            network.registerCommunication(communication);
-            sender.getOwner().verifyLevelUpdateConditions(false);
-        } else {
-            addToNotify(sender.getOwner());
-            throw new UnreachableOffTerminalException();
-        }
+        assertTextCommunicationReception(sender.getOwner());
+        int newId = network.getNextCommunicationId();
+        TextCommunication communication =
+            new TextCommunication(newMessage, newId, this, sender);
+        network.registerCommunication(communication);
+        sender.getOwner().verifyLevelUpdateConditions(false);
     }
 
     public void makeVoiceCall(String terminalReceiverId, Network network)
@@ -207,15 +206,11 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
     private void receiveVoiceCall(Terminal sender, Network network)
       throws UnreachableOffTerminalException, UnreachableBusyTerminalException,
       UnreachableSilentTerminalException {
-        if (canReceiveInteractiveCommunication()) {
-            int newId = network.getNextCommunicationId();
-            VoiceCommunication communication =
-                new VoiceCommunication(newId, this, sender);
-            network.registerCommunication(communication);
-        } else {
-            addToNotify(sender.getOwner());
-            _status.sendException();
-        }
+        assertInteractiveCommunicationReception(sender.getOwner());
+        int newId = network.getNextCommunicationId();
+        VoiceCommunication communication =
+            new VoiceCommunication(newId, this, sender);
+        network.registerCommunication(communication);
     }
 
     public abstract void makeVideoCall(String terminalReceiverId,
@@ -331,7 +326,7 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
         return visitor.visit(this);
     }
 
-    public abstract class Status implements Serializable { // TODO: do visitors for the status (check test server discord for names)
+    public abstract class Status implements Serializable {
 
         /** Serial number for serialization. */
         @Serial
@@ -359,9 +354,12 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
 
         protected abstract boolean canStartCommunication();
 
-        protected abstract boolean canReceiveTextCommunication();
+        protected abstract void assertTextCommunicationReception(
+          Client clientToNotify) throws UnreachableOffTerminalException;
 
-        protected abstract boolean canReceiveInteractiveCommunication();
+        protected abstract void assertInteractiveCommunicationReception(
+          Client clientToNotify) throws UnreachableOffTerminalException,
+          UnreachableBusyTerminalException, UnreachableSilentTerminalException;
 
         protected abstract void setOnIdle()
           throws IllegalTerminalStatusException;
@@ -375,10 +373,6 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
         protected abstract void setOnBusy();
 
         protected abstract void unBusy();
-
-        protected abstract void sendException()
-          throws UnreachableOffTerminalException,
-          UnreachableBusyTerminalException, UnreachableSilentTerminalException;
 
     }
 

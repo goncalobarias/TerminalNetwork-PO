@@ -2,6 +2,7 @@ package prr.terminals;
 
 import java.io.Serial;
 
+import prr.clients.Client;
 import prr.notifications.SilentToIdleNotification;
 import prr.exceptions.IllegalTerminalStatusException;
 import prr.exceptions.UnreachableSilentTerminalException;
@@ -27,13 +28,15 @@ public class TerminalSilentStatus extends Terminal.Status {
     }
 
     @Override
-    protected boolean canReceiveTextCommunication() {
-        return true;
+    protected void assertTextCommunicationReception(Client clientToNotify) {
+        // do nothing
     }
 
     @Override
-    protected boolean canReceiveInteractiveCommunication() {
-        return false;
+    protected void assertInteractiveCommunicationReception(
+      Client clientToNotify) throws UnreachableSilentTerminalException {
+        getTerminal().addToNotify(clientToNotify);
+        throw new UnreachableSilentTerminalException();
     }
 
     @Override
@@ -62,11 +65,6 @@ public class TerminalSilentStatus extends Terminal.Status {
     @Override
     protected void unBusy() {
         // do nothing
-    }
-
-    @Override
-    protected void sendException() throws UnreachableSilentTerminalException {
-        throw new UnreachableSilentTerminalException();
     }
 
 }

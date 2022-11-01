@@ -2,6 +2,7 @@ package prr.terminals;
 
 import java.io.Serial;
 
+import prr.clients.Client;
 import prr.exceptions.IllegalTerminalStatusException;
 import prr.exceptions.UnreachableBusyTerminalException;
 
@@ -30,13 +31,15 @@ public class TerminalBusyStatus extends Terminal.Status {
     }
 
     @Override
-    protected boolean canReceiveTextCommunication() {
-        return true;
+    protected void assertTextCommunicationReception(Client clientToNotify) {
+        // do nothing
     }
 
     @Override
-    protected boolean canReceiveInteractiveCommunication() {
-        return false;
+    protected void assertInteractiveCommunicationReception(
+      Client clientToNotify) throws UnreachableBusyTerminalException {
+        getTerminal().addToNotify(clientToNotify);
+        throw new UnreachableBusyTerminalException();
     }
 
     @Override
@@ -62,12 +65,7 @@ public class TerminalBusyStatus extends Terminal.Status {
     @Override
     protected void unBusy() {
         updateStatus(_previousStatus);
-        _previousStatus.unBusy();
-    }
-
-    @Override
-    protected void sendException() throws UnreachableBusyTerminalException {
-        throw new UnreachableBusyTerminalException();
+        _previousStatus.unBusy(); // TODO: see if storing the previous state is good practice
     }
 
 }

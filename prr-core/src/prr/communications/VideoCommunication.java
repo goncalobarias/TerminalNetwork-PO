@@ -29,6 +29,7 @@ public class VideoCommunication extends InteractiveCommunication {
         return computePrice();
     }
 
+    @Override
     protected double computePrice() {
         Client client = getTerminalSender().getOwner();
         boolean areFriends =

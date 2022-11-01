@@ -7,7 +7,7 @@ import prr.util.Visitor;
 import prr.util.Visitable;
 import prr.terminals.Terminal;
 
-public abstract class Communication implements Serializable, Visitable { // TODO: do visitors for the communication types (check test discord server for names)
+public abstract class Communication implements Serializable, Visitable {
 
     /** Serial number for serialization. */
     @Serial
@@ -75,12 +75,14 @@ public abstract class Communication implements Serializable, Visitable { // TODO
         return _isPaid;
     }
 
-    protected abstract void estabilishCommunication();
-
     public double pay() {
         _isPaid = true;
         return _price;
     }
+
+    protected abstract void estabilishCommunication();
+
+    protected abstract double computePrice();
 
     public String accept(Visitor visitor) {
         return visitor.visit(this);

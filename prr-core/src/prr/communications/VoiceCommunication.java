@@ -27,6 +27,7 @@ public class VoiceCommunication extends InteractiveCommunication {
         return computePrice();
     }
 
+    @Override
     protected double computePrice() {
         Client client = getTerminalSender().getOwner();
         boolean areFriends =

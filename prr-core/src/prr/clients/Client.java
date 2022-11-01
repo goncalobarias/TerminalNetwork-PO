@@ -6,12 +6,15 @@ import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Comparator;
+import java.util.Locale;
+import java.text.Collator;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.io.Serial;
 
 import prr.util.Visitor;
 import prr.util.Visitable;
-import prr.util.NaturalTextComparator;
 import prr.communications.TextCommunication;
 import prr.communications.VideoCommunication;
 import prr.communications.VoiceCommunication;
@@ -35,7 +38,6 @@ public class Client implements Serializable, Visitable {
     private boolean _receiveNotifications;
     private Queue<Notification> _notifications;
     private NotificationDeliveryMethod _deliveryMethod;
-    private static final Comparator<String> ID_COMPARATOR = new NaturalTextComparator();
     public static final Comparator<Client> DEBT_COMPARATOR = new DebtComparator();
 
     private static class DebtComparator implements Serializable,
@@ -48,7 +50,7 @@ public class Client implements Serializable, Visitable {
         public int compare(Client c1, Client c2) {
             return Comparator
                     .comparing(Client::getDebts, Comparator.reverseOrder())
-                    .thenComparing(Client::getId, ID_COMPARATOR)
+                    .thenComparing(Client::getId, String.CASE_INSENSITIVE_ORDER)
                     .compare(c1, c2);
         }
 
@@ -58,7 +60,7 @@ public class Client implements Serializable, Visitable {
         _id = id;
         _name = name;
         _taxId = taxId;
-        _terminals = new HashMap<String, Terminal>(); // TODO: fix this data structure to a map
+        _terminals = new HashMap<String, Terminal>();
         _level = new ClientNormalLevel(this, 0D, 0D, 0, 0, new BasePlan());
         _receiveNotifications = true;
         _notifications = new LinkedList<Notification>();

@@ -46,15 +46,11 @@ public class FancyTerminal extends Terminal {
     protected void receiveVideoCall(Terminal sender, Network context)
       throws UnreachableOffTerminalException, UnreachableBusyTerminalException,
       UnreachableSilentTerminalException {
-        if (canReceiveInteractiveCommunication()) {
-            int newId = context.getNextCommunicationId();
-            VideoCommunication communication =
-                new VideoCommunication(newId, this, sender);
-            context.registerCommunication(communication);
-        } else {
-            addToNotify(sender.getOwner());
-            getStatus().sendException();
-        }
+        assertInteractiveCommunicationReception(sender.getOwner());
+        int newId = context.getNextCommunicationId();
+        VideoCommunication communication =
+            new VideoCommunication(newId, this, sender);
+        context.registerCommunication(communication);
     }
 
 }

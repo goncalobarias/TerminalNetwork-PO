@@ -2,6 +2,7 @@ package prr.terminals;
 
 import java.io.Serial;
 
+import prr.clients.Client;
 import prr.notifications.BusyToIdleNotification;
 import prr.exceptions.IllegalTerminalStatusException;
 
@@ -26,13 +27,14 @@ public class TerminalIdleStatus extends Terminal.Status {
     }
 
     @Override
-    protected boolean canReceiveTextCommunication() {
-        return true;
+    protected void assertTextCommunicationReception(Client clientToNotify) {
+        // do nothing
     }
 
     @Override
-    protected boolean canReceiveInteractiveCommunication() {
-        return true;
+    protected void assertInteractiveCommunicationReception(
+      Client clientToNotify) {
+        // do nothing
     }
 
     @Override
@@ -60,11 +62,6 @@ public class TerminalIdleStatus extends Terminal.Status {
         getTerminal().notifyAllClients(
             new BusyToIdleNotification(getTerminal())
         );
-    }
-
-    @Override
-    protected void sendException() {
-        // do nothing
     }
 
 }

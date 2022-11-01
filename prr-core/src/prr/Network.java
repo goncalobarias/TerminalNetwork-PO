@@ -11,7 +11,6 @@ import java.io.Serializable;
 import java.io.Serial;
 import java.io.IOException;
 
-import prr.util.NaturalTextComparator;
 import prr.clients.Client;
 import prr.communications.Communication;
 import prr.notifications.Notification;
@@ -61,7 +60,7 @@ public class Network implements Serializable {
 
     /** Default constructor. */
     public Network() {
-        _clients = new TreeMap<String, Client>(new NaturalTextComparator());
+        _clients = new TreeMap<String, Client>(String.CASE_INSENSITIVE_ORDER);
         _terminals = new TreeMap<String, Terminal>();
         _communications = new TreeMap<Integer, Communication>();
         _nextCommunicationId = 1;

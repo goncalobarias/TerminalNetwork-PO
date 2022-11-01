@@ -38,6 +38,7 @@ public class TextCommunication extends Communication {
         getTerminalReceiver().addCommunication(this);
     }
 
+    @Override
     protected double computePrice() {
         Client client = getTerminalSender().getOwner();
         boolean areFriends =
