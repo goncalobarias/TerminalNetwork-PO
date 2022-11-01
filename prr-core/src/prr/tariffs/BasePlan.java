@@ -9,7 +9,7 @@ import prr.communications.TextCommunication;
 import prr.communications.VideoCommunication;
 import prr.communications.VoiceCommunication;
 
-public class BasePlan extends TariffPlan {
+public class BasePlan extends TariffPlan { // TODO: see if this is the best implementation of the Base Plan
 
     /** Serial number for serialization. */
     @Serial
