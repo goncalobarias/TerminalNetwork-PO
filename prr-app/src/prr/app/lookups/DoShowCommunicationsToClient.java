@@ -1,7 +1,7 @@
 package prr.app.lookups;
 
 import prr.Network;
-import prr.app.visitors.RenderCommunication;
+import prr.app.visitors.ToStringer;
 import prr.app.exceptions.UnknownClientKeyException;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
@@ -19,11 +19,11 @@ class DoShowCommunicationsToClient extends Command<Network> {
     @Override
     protected final void execute() throws CommandException {
         try {
-            RenderCommunication _renderer = new RenderCommunication();
+            ToStringer toStringer = new ToStringer();
             String clientId = stringField("clientId");
             _receiver.getAllCommunicationsReceivedByClient(clientId)
                     .stream()
-                    .map(o -> o.accept(_renderer))
+                    .map(o -> o.accept(toStringer))
                     .forEach(_display::popup);
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());

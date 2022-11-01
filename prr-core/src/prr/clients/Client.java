@@ -9,7 +9,8 @@ import java.util.Comparator;
 import java.io.Serializable;
 import java.io.Serial;
 
-import prr.util.ClientVisitor;
+import prr.util.Visitor;
+import prr.util.Visitable;
 import prr.util.NaturalTextComparator;
 import prr.communications.TextCommunication;
 import prr.communications.VideoCommunication;
@@ -20,7 +21,7 @@ import prr.tariffs.BasePlan;
 import prr.tariffs.TariffPlan;
 import prr.terminals.Terminal;
 
-public class Client implements Serializable {
+public class Client implements Serializable, Visitable {
 
     /** Serial number for serialization. */
     @Serial
@@ -37,8 +38,8 @@ public class Client implements Serializable {
     private static final Comparator<String> ID_COMPARATOR = new NaturalTextComparator();
     public static final Comparator<Client> DEBT_COMPARATOR = new DebtComparator();
 
-    private static class DebtComparator implements Comparator<Client>,
-      Serializable {
+    private static class DebtComparator implements Serializable,
+      Comparator<Client> {
 
         /** Serial number for serialization. */
         @Serial
@@ -156,7 +157,7 @@ public class Client implements Serializable {
         _level.verifyLevelUpdateConditions(hasPayed);
     }
 
-    public String accept(ClientVisitor visitor) {
+    public String accept(Visitor visitor) {
         return visitor.visit(this);
     }
 

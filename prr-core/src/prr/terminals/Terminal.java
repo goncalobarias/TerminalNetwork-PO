@@ -10,7 +10,8 @@ import java.io.Serializable;
 import java.io.Serial;
 
 import prr.Network;
-import prr.util.TerminalVisitor;
+import prr.util.Visitor;
+import prr.util.Visitable;
 import prr.clients.Client;
 import prr.communications.Communication;
 import prr.communications.TextCommunication;
@@ -30,7 +31,8 @@ import prr.exceptions.UnsupportedCommunicationAtDestinationException;
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Comparable<Terminal>, Serializable {
+abstract public class Terminal implements Serializable, Comparable<Terminal>,
+  Visitable {
 
     /** Serial number for serialization. */
     @Serial
@@ -325,7 +327,7 @@ abstract public class Terminal implements Comparable<Terminal>, Serializable {
         return false;
     }
 
-    public String accept(TerminalVisitor visitor) {
+    public String accept(Visitor visitor) {
         return visitor.visit(this);
     }
 

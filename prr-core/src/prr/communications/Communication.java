@@ -3,10 +3,11 @@ package prr.communications;
 import java.io.Serializable;
 import java.io.Serial;
 
-import prr.util.CommunicationVisitor;
+import prr.util.Visitor;
+import prr.util.Visitable;
 import prr.terminals.Terminal;
 
-public abstract class Communication implements Serializable { // TODO: do visitors for the communication types (check test discord server for names)
+public abstract class Communication implements Serializable, Visitable { // TODO: do visitors for the communication types (check test discord server for names)
 
     /** Serial number for serialization. */
     @Serial
@@ -81,7 +82,7 @@ public abstract class Communication implements Serializable { // TODO: do visito
         return _price;
     }
 
-    public String accept(CommunicationVisitor visitor) {
+    public String accept(Visitor visitor) {
         return visitor.visit(this);
     }
 

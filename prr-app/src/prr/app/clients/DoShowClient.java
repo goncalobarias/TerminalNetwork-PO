@@ -1,8 +1,7 @@
 package prr.app.clients;
 
 import prr.Network;
-import prr.app.visitors.RenderClient;
-import prr.app.visitors.RenderNotification;
+import prr.app.visitors.ToStringer;
 import prr.app.exceptions.UnknownClientKeyException;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
@@ -20,14 +19,13 @@ class DoShowClient extends Command<Network> {
     @Override
     protected final void execute() throws CommandException {
         try {
-            RenderClient clientRenderer = new RenderClient();
-            RenderNotification notifRenderer = new RenderNotification();
+            ToStringer toStringer = new ToStringer();
             String clientId = stringField("clientId");
             _display.popup(_receiver.getClient(clientId)
-                                    .accept(clientRenderer));
+                                    .accept(toStringer));
             _receiver.getClientNotifications(clientId)
                     .stream()
-                    .map(o -> o.accept(notifRenderer))
+                    .map(o -> o.accept(toStringer))
                     .forEach(_display::popup);
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());

@@ -12,7 +12,7 @@ import java.io.Serial;
  * Comparator used between strings that provides a lexicographic order and
  * ignores case characters.
  */
-public class NaturalTextComparator implements Comparator<String>, Serializable {
+public class NaturalTextComparator implements Serializable, Comparator<String> {
 
     /** Class serial number. */
     @Serial

@@ -2,7 +2,7 @@ package prr.app.lookups;
 
 import prr.Network;
 import prr.clients.Client;
-import prr.app.visitors.RenderClient;
+import prr.app.visitors.ToStringer;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -17,11 +17,11 @@ class DoShowClientsWithDebts extends Command<Network> {
 
     @Override
     protected final void execute() throws CommandException {
-        RenderClient _renderer = new RenderClient();
+        ToStringer toStringer = new ToStringer();
         _receiver.getClientsWithDebts()
                 .stream()
                 .sorted(Client.DEBT_COMPARATOR) // TODO: make sure this doesn't break the core/app separation
-                .map(o -> o.accept(_renderer))
+                .map(o -> o.accept(toStringer))
                 .forEach(_display::popup);
     }
 

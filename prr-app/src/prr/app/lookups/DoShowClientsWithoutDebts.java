@@ -1,7 +1,7 @@
 package prr.app.lookups;
 
 import prr.Network;
-import prr.app.visitors.RenderClient;
+import prr.app.visitors.ToStringer;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 
@@ -16,10 +16,10 @@ class DoShowClientsWithoutDebts extends Command<Network> {
 
     @Override
     protected final void execute() throws CommandException {
-        RenderClient _renderer = new RenderClient();
+        ToStringer toStringer = new ToStringer();
         _receiver.getClientsWithoutDebts()
                 .stream()
-                .map(o -> o.accept(_renderer))
+                .map(o -> o.accept(toStringer))
                 .forEach(_display::popup);
     }
 

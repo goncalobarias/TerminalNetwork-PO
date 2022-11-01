@@ -3,10 +3,11 @@ package prr.notifications;
 import java.io.Serializable;
 import java.io.Serial;
 
-import prr.util.NotificationVisitor;
+import prr.util.Visitor;
+import prr.util.Visitable;
 import prr.terminals.Terminal;
 
-public abstract class Notification implements Serializable {
+public abstract class Notification implements Serializable, Visitable {
 
     /** Serial number for serialization. */
     @Serial
@@ -24,7 +25,7 @@ public abstract class Notification implements Serializable {
         return _notifyingTerminal.getTerminalId();
     }
 
-    public String accept(NotificationVisitor visitor) {
+    public String accept(Visitor visitor) {
         return visitor.visit(this);
     }
 
