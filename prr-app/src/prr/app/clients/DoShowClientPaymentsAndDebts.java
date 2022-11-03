@@ -17,8 +17,8 @@ class DoShowClientPaymentsAndDebts extends Command<Network> {
 
 	@Override
 	protected final void execute() throws CommandException {
+        String clientId = stringField("clientId");
         try {
-            String clientId = stringField("clientId");
             long clientPayments =
                 Math.round(_receiver.getClientPayments(clientId));
             long clientDebts =

@@ -17,8 +17,8 @@ class DoOpenMenuTerminalConsole extends Command<Network> {
 
     @Override
     protected final void execute() throws CommandException {
+        String terminalId = stringField("terminalId");
         try {
-            String terminalId = stringField("terminalId");
             (new prr.app.terminal.Menu(_receiver,
                 _receiver.getTerminal(terminalId))).open();
         } catch (prr.exceptions.UnknownTerminalKeyException e) {

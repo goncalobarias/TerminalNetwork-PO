@@ -18,9 +18,9 @@ class DoShowCommunicationsFromClient extends Command<Network> {
 
     @Override
     protected final void execute() throws CommandException {
+        ToStringer toStringer = new ToStringer();
+        String clientId = stringField("clientId");
         try {
-            ToStringer toStringer = new ToStringer();
-            String clientId = stringField("clientId");
             _receiver.getAllCommunicationsMadeByClient(clientId)
                     .stream()
                     .map(o -> o.accept(toStringer))

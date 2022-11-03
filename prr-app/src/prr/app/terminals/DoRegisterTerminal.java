@@ -21,10 +21,10 @@ class DoRegisterTerminal extends Command<Network> {
 
     @Override
     protected final void execute() throws CommandException {
+        String terminalType = optionField("terminalType");
+        String terminalId = stringField("terminalId");
+        String clientId = stringField("clientId");
         try {
-            String terminalType = optionField("terminalType");
-            String terminalId = stringField("terminalId");
-            String clientId = stringField("clientId");
             _receiver.registerTerminal(terminalType, terminalId, clientId);
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());

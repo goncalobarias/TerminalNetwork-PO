@@ -116,7 +116,9 @@ public class Client implements Serializable, Visitable {
     }
 
     public void notify(Notification notification) {
-        _deliveryMethod.deliver(notification);
+        if (hasNotificationsEnabled()) {
+            _deliveryMethod.deliver(notification);
+        }
     }
 
     public double getPayments() {

@@ -18,9 +18,9 @@ class DoShowClient extends Command<Network> {
 
     @Override
     protected final void execute() throws CommandException {
+        ToStringer toStringer = new ToStringer();
+        String clientId = stringField("clientId");
         try {
-            ToStringer toStringer = new ToStringer();
-            String clientId = stringField("clientId");
             _display.popup(_receiver.getClient(clientId)
                                     .accept(toStringer));
             _receiver.getClientNotifications(clientId)

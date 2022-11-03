@@ -17,8 +17,8 @@ class DoRemoveFriend extends TerminalCommand {
 
     @Override
     protected final void execute() throws CommandException {
+        String terminalFriendId = stringField("terminalFriendId");
         try {
-            String terminalFriendId = stringField("terminalFriendId");
             _receiver.removeFriend(terminalFriendId, _network);
         } catch (prr.exceptions.UnknownTerminalKeyException e) {
             throw new UnknownTerminalKeyException(e.getKey());

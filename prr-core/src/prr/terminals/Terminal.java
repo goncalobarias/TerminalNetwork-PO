@@ -31,8 +31,7 @@ import prr.exceptions.UnsupportedCommunicationAtDestinationException;
 /**
  * Abstract terminal.
  */
-abstract public class Terminal implements Serializable, Comparable<Terminal>,
-  Visitable {
+abstract public class Terminal implements Serializable, Visitable {
 
     /** Serial number for serialization. */
     @Serial
@@ -57,7 +56,7 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
         _communications = new HashMap<Integer, Communication>();
         _terminalFriends = new TreeMap<String, Terminal>();
         _status = new TerminalIdleStatus(this);
-        _clientsToNotify = new LinkedList<Client>();
+        _clientsToNotify = new LinkedList<Client>(); // TODO: this might not be the right data structure
         _owner.addTerminal(this);
     }
 
@@ -225,8 +224,7 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
       UnreachableSilentTerminalException;
 
     protected void addToNotify(Client client) {
-        if (!_clientsToNotify.contains(client) &&
-          client.hasNotificationsEnabled()) {
+        if (!_clientsToNotify.contains(client)) {
             _clientsToNotify.add(client);
         }
     }
@@ -309,18 +307,10 @@ abstract public class Terminal implements Serializable, Comparable<Terminal>,
     }
 
     @Override
-    public int compareTo(Terminal terminal) {
-        return getTerminalId().compareTo(terminal.getTerminalId());
-    }
-
-    @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
         if (o instanceof Terminal) {
             Terminal terminal = (Terminal) o;
-            return compareTo(terminal) == 0;
+            return getTerminalId().compareTo(terminal.getTerminalId()) == 0;
         }
         return false;
     }

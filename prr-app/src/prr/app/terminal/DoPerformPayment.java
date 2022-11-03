@@ -17,8 +17,8 @@ class DoPerformPayment extends TerminalCommand {
 
     @Override
     protected final void execute() throws CommandException {
+        int communicationId = integerField("communicationId");
         try {
-            int communicationId = integerField("communicationId");
             _receiver.performPayment(communicationId, _network);
         } catch (InvalidCommunicationException e) {
             _display.popup(Message.invalidCommunication());

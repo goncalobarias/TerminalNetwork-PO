@@ -18,8 +18,8 @@ class DoOpenFile extends Command<NetworkManager> {
 
     @Override
     protected final void execute() throws CommandException {
+        String filename = stringField("filename");
         try {
-            String filename = stringField("filename");
             _receiver.load(filename);
         } catch (UnavailableFileException e) {
             throw new FileOpenFailedException(e);

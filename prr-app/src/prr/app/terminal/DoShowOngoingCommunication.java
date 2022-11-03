@@ -17,8 +17,8 @@ class DoShowOngoingCommunication extends TerminalCommand {
 
     @Override
     protected final void execute() throws CommandException {
+        ToStringer toStringer = new ToStringer();
         try {
-            ToStringer toStringer = new ToStringer();
             _display.popup(_receiver.getOngoingCommunication()
                                     .accept(toStringer));
         } catch (InvalidCommunicationException e) {

@@ -17,8 +17,8 @@ class DoEnableClientNotifications extends Command<Network> {
 
     @Override
     protected final void execute() throws CommandException {
+        String clientId = stringField("clientId");
         try {
-            String clientId = stringField("clientId");
             _receiver.enableClientNotifications(clientId);
         } catch (prr.exceptions.UnknownClientKeyException e) {
             throw new UnknownClientKeyException(e.getKey());
