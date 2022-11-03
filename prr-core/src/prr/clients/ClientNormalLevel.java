@@ -14,10 +14,8 @@ public class ClientNormalLevel extends Client.Level {
     private static final long serialVersionUID = 202210192342L;
 
     public ClientNormalLevel(Client client, double payments, double debts,
-      int numberOfConsecutiveTextCommunications,
-      int numberOfConsecutiveVideoCommunications, TariffPlan plan) {
-        client.super(payments, debts, numberOfConsecutiveTextCommunications,
-                    numberOfConsecutiveVideoCommunications, plan);
+      TariffPlan plan) {
+        client.super(payments, debts, plan);
     }
 
     @Override
@@ -47,8 +45,7 @@ public class ClientNormalLevel extends Client.Level {
         }
         if (getBalance() > 500D) {
             updateLevel(new ClientGoldLevel(getClient(), getPayments(),
-                getDebts(), getNumberOfConsecutiveTextCommunications(),
-                getNumberOfConsecutiveVideoCommunications(), getTariffPlan()));
+                getDebts(), getTariffPlan()));
         }
     }
 

@@ -14,10 +14,8 @@ public class ClientGoldLevel extends Client.Level {
     private static final long serialVersionUID = 202210190314L;
 
     public ClientGoldLevel(Client client, double payments, double debts,
-      int numberOfConsecutiveTextCommunications,
-      int numberOfConsecutiveVideoCommunications, TariffPlan plan) {
-        client.super(payments, debts, numberOfConsecutiveTextCommunications,
-                    numberOfConsecutiveVideoCommunications, plan);
+      TariffPlan plan) {
+        client.super(payments, debts, plan);
     }
 
     @Override
@@ -47,12 +45,10 @@ public class ClientGoldLevel extends Client.Level {
         }
         if (getBalance() < 0D) {
             updateLevel(new ClientNormalLevel(getClient(), getPayments(),
-                getDebts(), getNumberOfConsecutiveTextCommunications(),
-                getNumberOfConsecutiveVideoCommunications(), getTariffPlan()));
+                getDebts(), getTariffPlan()));
         } else if (getNumberOfConsecutiveVideoCommunications() == 5) {
             updateLevel(new ClientPlatinumLevel(getClient(), getPayments(),
-                getDebts(), getNumberOfConsecutiveTextCommunications(),
-                getNumberOfConsecutiveVideoCommunications(), getTariffPlan()));
+                getDebts(), getTariffPlan()));
         }
     }
 

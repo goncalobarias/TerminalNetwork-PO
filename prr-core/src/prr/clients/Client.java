@@ -57,7 +57,7 @@ public class Client implements Serializable, Visitable {
         _name = name;
         _taxId = taxId;
         _terminals = new HashMap<String, Terminal>();
-        _level = new ClientNormalLevel(this, 0D, 0D, 0, 0, new BasePlan());
+        _level = new ClientNormalLevel(this, 0D, 0D, new BasePlan());
         _receiveNotifications = true;
         _notifications = new LinkedList<Notification>();
         _deliveryMethod = new DefaultDeliveryMethod();
@@ -187,14 +187,11 @@ public class Client implements Serializable, Visitable {
         private TariffPlan _plan;
 
         public Level(double payments, double debts,
-          int numberOfConsecutiveTextCommunications,
-          int numberOfConsecutiveVideoCommunications, TariffPlan plan) {
+          TariffPlan plan) {
             _payments = payments;
             _debts = debts;
-            _numberOfConsecutiveTextCommunications =
-                numberOfConsecutiveTextCommunications;
-            _numberOfConsecutiveVideoCommunications =
-                numberOfConsecutiveVideoCommunications;
+            _numberOfConsecutiveTextCommunications = 0;
+            _numberOfConsecutiveVideoCommunications = 0;
             _plan = plan;
         }
 
@@ -237,21 +234,19 @@ public class Client implements Serializable, Visitable {
             return _numberOfConsecutiveVideoCommunications;
         }
 
-        private void resetNumberOfConsecutiveCommunications() {
+        protected void resetNumberOfConsecutiveCommunications() {
             _numberOfConsecutiveTextCommunications = 0;
             _numberOfConsecutiveVideoCommunications = 0;
         }
 
         private void increaseNumberOfConsecutiveTextCommunications() {
             _numberOfConsecutiveVideoCommunications = 0;
-            _numberOfConsecutiveTextCommunications =
-                _numberOfConsecutiveTextCommunications % 2 + 1;
+            _numberOfConsecutiveTextCommunications =+ 1;
         }
 
         private void increaseNumberOfConsecutiveVideoCommunications() {
             _numberOfConsecutiveTextCommunications = 0;
-            _numberOfConsecutiveVideoCommunications =
-                _numberOfConsecutiveVideoCommunications % 5 + 1;
+            _numberOfConsecutiveVideoCommunications += 1;
         }
 
         protected TariffPlan getTariffPlan() {

@@ -423,6 +423,16 @@ public class Network implements Serializable {
     }
 
     /**
+     * Indicates whether the network has changed since it was last saved or
+     * created.
+     *
+     * @return The current value of the changed flag.
+     */
+    public boolean hasChanged() {
+        return _changed;
+    }
+
+    /**
      * Sets the changed flag to the value it receives.
      *
      * @param changed The value of the changed flag
@@ -437,16 +447,6 @@ public class Network implements Serializable {
      */
     public void changed() {
         setChanged(true);
-    }
-
-    /**
-     * Indicates whether the network has changed since it was last saved or
-     * created.
-     *
-     * @return The current value of the changed flag.
-     */
-    public boolean hasChanged() {
-        return _changed;
     }
 
     /**

@@ -37,8 +37,7 @@ public class TerminalOffStatus extends Terminal.Status {
 
     @Override
     protected void assertInteractiveCommunicationReception(
-      Client clientToNotify)
-      throws UnreachableOffTerminalException {
+      Client clientToNotify) throws UnreachableOffTerminalException {
         getTerminal().addToNotify(clientToNotify);
         throw new UnreachableOffTerminalException();
     }

@@ -8,7 +8,7 @@ import java.io.Serial;
  * or has already been paid for. Given terminal doesn't have an ongoing
  * communication.
  */
-public class InvalidCommunicationException extends Exception {
+public class InvalidCommunicationException extends Exception { // TODO: check if I can compact exceptions into one to save up space
 
     /** Class serial number. */
     @Serial

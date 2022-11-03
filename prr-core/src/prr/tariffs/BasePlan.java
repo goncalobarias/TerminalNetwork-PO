@@ -15,6 +15,7 @@ public class BasePlan extends TariffPlan { // TODO: see if this is the best impl
     @Serial
     private static final long serialVersionUID = 202210192349L;
 
+    @Override
     public double computePrice(ClientNormalLevel level,
       TextCommunication communication) {
         double price = 0D;

@@ -20,9 +20,9 @@ class DoSendTextCommunication extends TerminalCommand {
     @Override
     protected final void execute() throws CommandException {
         String terminalId = stringField("terminalId");
+        String message = Form.requestString(Prompt.textMessage());
         try {
-            _receiver.sendSMS(terminalId, _network,
-                Form.requestString(Prompt.textMessage()));
+            _receiver.sendSMS(terminalId, _network, message);
         } catch (prr.exceptions.UnknownTerminalKeyException e) {
             throw new UnknownTerminalKeyException(e.getKey());
         } catch (UnreachableOffTerminalException e) {

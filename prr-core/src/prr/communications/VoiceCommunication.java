@@ -24,6 +24,8 @@ public class VoiceCommunication extends InteractiveCommunication {
     @Override
     public double finishCommunication(int duration) {
         finishInteractiveCommunication(duration);
+        getTerminalSender().getOwner()
+            .resetNumberOfConsecutiveCommunications();
         return computePrice();
     }
 
