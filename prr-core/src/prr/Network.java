@@ -382,7 +382,7 @@ public class Network implements Serializable {
      * @throws UnknownClientKeyException if the client if is not present in the
      *                                   network.
      */
-    public Collection<Communication> getAllCommunicationsMadeByClient(
+    public Collection<Communication> getCommunicationsMadeByClient(
       String clientId) throws UnknownClientKeyException {
         final Client client = getClient(clientId);
 
@@ -403,7 +403,7 @@ public class Network implements Serializable {
      * @throws UnknownClientKeyException if the client if is not present in the
      *                                   network.
      */
-    public Collection<Communication> getAllCommunicationsReceivedByClient(
+    public Collection<Communication> getCommunicationsReceivedByClient(
       String clientId) throws UnknownClientKeyException {
         final Client client = getClient(clientId);
 

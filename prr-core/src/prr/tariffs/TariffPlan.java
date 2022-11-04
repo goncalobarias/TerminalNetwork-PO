@@ -16,14 +16,14 @@ public abstract class TariffPlan implements Serializable {
     @Serial
     private static final long serialVersionUID = 202210150056L;
 
-    private boolean _areFriends;
+    private boolean _isFriend;
 
-    protected boolean areFriends() {
-        return _areFriends;
+    protected boolean isFriend() {
+        return _isFriend;
     }
 
-    public void setFriendship(boolean areFriends) {
-        _areFriends = areFriends;
+    public void setFriendship(boolean isFriend) {
+        _isFriend = isFriend;
     }
 
     public abstract double computePrice(ClientNormalLevel level,

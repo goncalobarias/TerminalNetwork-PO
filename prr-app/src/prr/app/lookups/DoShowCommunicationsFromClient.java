@@ -21,7 +21,7 @@ class DoShowCommunicationsFromClient extends Command<Network> {
         ToStringer toStringer = new ToStringer();
         String clientId = stringField("clientId");
         try {
-            _receiver.getAllCommunicationsMadeByClient(clientId)
+            _receiver.getCommunicationsMadeByClient(clientId)
                     .stream()
                     .map(o -> o.accept(toStringer))
                     .forEach(_display::popup);

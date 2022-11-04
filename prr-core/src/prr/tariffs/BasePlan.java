@@ -18,8 +18,8 @@ public class BasePlan extends TariffPlan {
     @Override
     public double computePrice(ClientNormalLevel level,
       TextCommunication communication) {
-        double price = 0D;
         int units = communication.getUnits();
+        double price = 0D;
 
         if (units < 50) {
             price += 10D;
@@ -35,24 +35,22 @@ public class BasePlan extends TariffPlan {
     @Override
     public double computePrice(ClientNormalLevel level,
       VoiceCommunication communication) {
-        return 20D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
+        return 20D * communication.getUnits() * (isFriend() ? 0.50 : 1D);
     }
 
     @Override
     public double computePrice(ClientNormalLevel level,
       VideoCommunication communication) {
-        return 30D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
+        return 30D * communication.getUnits() * (isFriend() ? 0.50 : 1D);
     }
 
     @Override
     public double computePrice(ClientGoldLevel level,
       TextCommunication communication) {
-        double price = 0D;
         int units = communication.getUnits();
+        double price = 0D;
 
-        if (units < 50) {
-            price += 10D;
-        } else if (units < 100) {
+        if (units < 100) {
             price += 10D;
         } else {
             price += units * 2;
@@ -64,26 +62,22 @@ public class BasePlan extends TariffPlan {
     @Override
     public double computePrice(ClientGoldLevel level,
       VoiceCommunication communication) {
-        return 10D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
+        return 10D * communication.getUnits() * (isFriend() ? 0.50 : 1D);
     }
 
     @Override
     public double computePrice(ClientGoldLevel level,
       VideoCommunication communication) {
-        return 20D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
+        return 20D * communication.getUnits() * (isFriend() ? 0.50 : 1D);
     }
 
     @Override
     public double computePrice(ClientPlatinumLevel level,
       TextCommunication communication) {
-        double price = 0D;
         int units = communication.getUnits();
+        double price = 0D;
 
-        if (units < 50) {
-            price += 0D;
-        } else if (units < 100) {
-            price += 4D;
-        } else {
+        if (units >= 50) {
             price += 4D;
         }
 
@@ -93,13 +87,13 @@ public class BasePlan extends TariffPlan {
     @Override
     public double computePrice(ClientPlatinumLevel level,
       VoiceCommunication communication) {
-        return 10D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
+        return 10D * communication.getUnits() * (isFriend() ? 0.50 : 1D);
     }
 
     @Override
     public double computePrice(ClientPlatinumLevel level,
       VideoCommunication communication) {
-        return 10D * communication.getUnits() * (areFriends() ? 0.50 : 1D);
+        return 10D * communication.getUnits() * (isFriend() ? 0.50 : 1D);
     }
 
 }
