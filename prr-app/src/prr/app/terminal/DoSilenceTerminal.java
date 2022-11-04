@@ -18,7 +18,7 @@ class DoSilenceTerminal extends TerminalCommand {
     @Override
     protected final void execute() throws CommandException {
         try {
-            _receiver.setOnSilent();
+            _receiver.setOnSilent(_network);
         } catch (IllegalTerminalStatusException e) {
             _display.popup(Message.alreadySilent());
         } catch (UnreachableBusyTerminalException e) {

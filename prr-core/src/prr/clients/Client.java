@@ -1,11 +1,10 @@
 package prr.clients;
 
 import java.util.Collection;
-import java.util.Queue;
-import java.util.LinkedList;
+import java.util.Set;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Comparator;
 import java.io.Serializable;
 import java.io.Serial;
 
@@ -32,25 +31,8 @@ public class Client implements Serializable, Visitable {
     private Map<String, Terminal> _terminals;
     private Level _level;
     private boolean _receiveNotifications;
-    private Queue<Notification> _notifications;
+    private Set<Notification> _notifications;
     private NotificationDeliveryMethod _deliveryMethod;
-    public static final Comparator<Client> DEBT_COMPARATOR = new DebtComparator();
-
-    private static class DebtComparator implements Serializable,
-      Comparator<Client> {
-
-        /** Serial number for serialization. */
-        @Serial
-        private static final long serialVersionUID = 202210231030L;
-
-        public int compare(Client c1, Client c2) {
-            return Comparator
-                    .comparing(Client::getDebts, Comparator.reverseOrder())
-                    .thenComparing(Client::getId, String.CASE_INSENSITIVE_ORDER)
-                    .compare(c1, c2);
-        }
-
-    }
 
     public Client(String id, String name, int taxId) {
         _id = id;
@@ -59,7 +41,7 @@ public class Client implements Serializable, Visitable {
         _terminals = new HashMap<String, Terminal>();
         _level = new ClientNormalLevel(this, 0D, 0D, new BasePlan());
         _receiveNotifications = true;
-        _notifications = new LinkedList<Notification>();
+        _notifications = new LinkedHashSet<Notification>();
         _deliveryMethod = new DefaultDeliveryMethod();
     }
 
@@ -87,10 +69,6 @@ public class Client implements Serializable, Visitable {
         _terminals.put(terminal.getTerminalId(), terminal);
     }
 
-    public Client.Level getLevel() {
-        return _level;
-    }
-
     public String getLevelType() {
         return _level.getLevelType();
     }
@@ -110,7 +88,7 @@ public class Client implements Serializable, Visitable {
 
     public Collection<Notification> readNotifications() {
         Collection<Notification> notifications =
-            new LinkedList<>(_notifications);
+            new LinkedHashSet<>(_notifications);
         _notifications.clear();
         return notifications;
     }
@@ -151,6 +129,18 @@ public class Client implements Serializable, Visitable {
 
     public void setTariffPlan(TariffPlan plan) {
         _level.setTariffPlan(plan);
+    }
+
+    public double computePrice(TextCommunication communication) {
+        return _level.computePrice(communication);
+    }
+
+    public double computePrice(VoiceCommunication communication) {
+        return _level.computePrice(communication);
+    }
+
+    public double computePrice(VideoCommunication communication) {
+        return _level.computePrice(communication);
     }
 
     public void verifyLevelUpdateConditions(boolean hasPayed) {
@@ -241,7 +231,7 @@ public class Client implements Serializable, Visitable {
 
         private void increaseNumberOfConsecutiveTextCommunications() {
             _numberOfConsecutiveVideoCommunications = 0;
-            _numberOfConsecutiveTextCommunications =+ 1;
+            _numberOfConsecutiveTextCommunications += 1;
         }
 
         private void increaseNumberOfConsecutiveVideoCommunications() {
@@ -257,11 +247,11 @@ public class Client implements Serializable, Visitable {
             _plan = plan;
         }
 
-        public abstract double computePrice(TextCommunication communication);
+        protected abstract double computePrice(TextCommunication communication);
 
-        public abstract double computePrice(VoiceCommunication communication);
+        protected abstract double computePrice(VoiceCommunication communication);
 
-        public abstract double computePrice(VideoCommunication communication);
+        protected abstract double computePrice(VideoCommunication communication);
 
         protected abstract void verifyLevelUpdateConditions(boolean hasPayed);
 

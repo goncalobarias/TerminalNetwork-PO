@@ -1,4 +1,4 @@
-package prr.app.visitors;
+package prr.app.util;
 
 import prr.util.Visitor;
 import prr.clients.Client;

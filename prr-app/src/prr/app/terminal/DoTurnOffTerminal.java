@@ -18,7 +18,7 @@ class DoTurnOffTerminal extends TerminalCommand {
     @Override
     protected final void execute() throws CommandException {
         try {
-            _receiver.turnOff();
+            _receiver.turnOff(_network);
         } catch (IllegalTerminalStatusException e) {
             _display.popup(Message.alreadyOff());
         } catch (UnreachableBusyTerminalException e) {

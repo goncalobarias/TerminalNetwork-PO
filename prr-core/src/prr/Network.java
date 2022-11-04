@@ -56,7 +56,7 @@ public class Network implements Serializable {
     private String _currentEntry;
 
     /** Was the network changed since the last time it was saved or created? */
-    private boolean _changed; // TODO: see if I set the network as changed everywhere
+    private boolean _changed;
 
     /** Default constructor. */
     public Network() {
@@ -159,6 +159,7 @@ public class Network implements Serializable {
     public Collection<Notification> getClientNotifications(String clientId)
       throws UnknownClientKeyException {
         final Client client = getClient(clientId);
+        changed();
         return Collections.unmodifiableCollection(client.readNotifications());
     }
 

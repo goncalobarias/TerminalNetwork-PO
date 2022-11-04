@@ -44,7 +44,7 @@ public class TextCommunication extends Communication {
         boolean areFriends =
             getTerminalSender().isFriend(getTerminalReceiver());
         client.getTariffPlan().setFriendship(areFriends);
-        double price = client.getLevel().computePrice(this);
+        double price = client.computePrice(this);
         setPrice(price);
         getTerminalSender().updateBalance(price * -1);
         return price;

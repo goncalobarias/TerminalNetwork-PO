@@ -23,13 +23,13 @@ public class BasicTerminal extends Terminal {
     }
 
     @Override
-    public void makeVideoCall(String terminalReceiverId, Network context)
+    public void makeVideoCall(String terminalReceiverId, Network network)
       throws UnsupportedCommunicationAtOriginException {
         throw new UnsupportedCommunicationAtOriginException();
     }
 
     @Override
-    protected void receiveVideoCall(Terminal sender, Network context)
+    protected void receiveVideoCall(Terminal sender, Network network)
       throws UnsupportedCommunicationAtDestinationException {
         throw new UnsupportedCommunicationAtDestinationException();
     }

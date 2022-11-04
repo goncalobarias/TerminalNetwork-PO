@@ -28,7 +28,7 @@ public class FancyTerminal extends Terminal {
     }
 
     @Override
-    public void makeVideoCall(String terminalReceiverId, Network context)
+    public void makeVideoCall(String terminalReceiverId, Network network)
       throws UnsupportedCommunicationAtDestinationException,
       UnknownTerminalKeyException, UnreachableOffTerminalException,
       UnreachableBusyTerminalException, UnreachableSilentTerminalException,
@@ -37,20 +37,21 @@ public class FancyTerminal extends Terminal {
             throw new InvalidCommunicationException();
         }
         if (canStartCommunication()) {
-            Terminal receiver = context.getTerminal(terminalReceiverId);
-            receiver.receiveVideoCall(this, context);
+            network.changed();
+            Terminal receiver = network.getTerminal(terminalReceiverId);
+            receiver.receiveVideoCall(this, network);
         }
     }
 
     @Override
-    protected void receiveVideoCall(Terminal sender, Network context)
+    protected void receiveVideoCall(Terminal sender, Network network)
       throws UnreachableOffTerminalException, UnreachableBusyTerminalException,
       UnreachableSilentTerminalException {
         assertInteractiveCommunicationReception(sender.getOwner());
-        int newId = context.getNextCommunicationId();
+        int newId = network.getNextCommunicationId();
         VideoCommunication communication =
             new VideoCommunication(newId, this, sender);
-        context.registerCommunication(communication);
+        network.registerCommunication(communication);
     }
 
 }

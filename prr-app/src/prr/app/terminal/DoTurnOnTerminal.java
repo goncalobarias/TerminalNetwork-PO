@@ -18,7 +18,7 @@ class DoTurnOnTerminal extends TerminalCommand {
     @Override
     protected final void execute() throws CommandException {
         try {
-            _receiver.setOnIdle();
+            _receiver.setOnIdle(_network);
         } catch (IllegalTerminalStatusException e) {
             _display.popup(Message.alreadyOn());
         } catch (UnreachableBusyTerminalException e) {

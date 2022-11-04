@@ -1,7 +1,7 @@
 package prr.app.terminal;
 
 import prr.Network;
-import prr.app.visitors.ToStringer;
+import prr.app.util.ToStringer;
 import prr.terminals.Terminal;
 import prr.exceptions.InvalidCommunicationException;
 import pt.tecnico.uilib.menus.CommandException;

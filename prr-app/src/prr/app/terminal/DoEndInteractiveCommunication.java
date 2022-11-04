@@ -17,7 +17,8 @@ class DoEndInteractiveCommunication extends TerminalCommand {
     @Override
     protected final void execute() throws CommandException {
         int duration = Form.requestInteger(Prompt.duration());
-        double commPrice = _receiver.endOngoingCommunication(duration);
+        double commPrice =
+            _receiver.endOngoingCommunication(duration, _network);
         _display.popup(Message.communicationCost(Math.round(commPrice)));
     }
 

@@ -25,6 +25,24 @@ public abstract class Notification implements Serializable, Visitable {
         return _notifyingTerminal.getTerminalId();
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Notification) {
+            Notification notification = (Notification) o;
+            return getNotificationType().equals(
+                notification.getNotificationType()) &&
+                getNotifyingTerminalId().equals(
+                notification.getNotifyingTerminalId());
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        String code = getNotificationType() + getNotifyingTerminalId();
+        return code.hashCode();
+    }
+
     public String accept(Visitor visitor) {
         return visitor.visit(this);
     }

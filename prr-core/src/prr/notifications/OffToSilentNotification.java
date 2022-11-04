@@ -15,7 +15,7 @@ public class OffToSilentNotification extends Notification {
     }
 
     @Override
-    public String getNotificationType() { // TODO: the teacher wants this to only notify if the user tries a text communication
+    public String getNotificationType() {
         return "O2S";
     }
 

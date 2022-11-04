@@ -1,7 +1,7 @@
 package prr.app.terminals;
 
 import prr.Network;
-import prr.app.visitors.ToStringer;
+import prr.app.util.ToStringer;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
 

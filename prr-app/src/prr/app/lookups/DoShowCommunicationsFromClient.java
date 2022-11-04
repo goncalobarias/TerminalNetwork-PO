@@ -1,7 +1,7 @@
 package prr.app.lookups;
 
 import prr.Network;
-import prr.app.visitors.ToStringer;
+import prr.app.util.ToStringer;
 import prr.app.exceptions.UnknownClientKeyException;
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;

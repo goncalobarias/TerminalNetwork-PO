@@ -1,6 +1,6 @@
 package prr.terminals;
 
-import java.util.Queue;
+import java.util.List;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.HashMap;
@@ -45,7 +45,7 @@ abstract public class Terminal implements Serializable, Visitable {
     private Map<Integer, Communication> _communications;
     private Map<String, Terminal> _terminalFriends;
     private Status _status;
-    private Queue<Client> _clientsToNotify;
+    private List<Client> _clientsToNotify;
 
     public Terminal(String id, Client owner) {
         _id = id;
@@ -56,7 +56,7 @@ abstract public class Terminal implements Serializable, Visitable {
         _communications = new HashMap<Integer, Communication>();
         _terminalFriends = new TreeMap<String, Terminal>();
         _status = new TerminalIdleStatus(this);
-        _clientsToNotify = new LinkedList<Client>(); // TODO: this might not be the right data structure
+        _clientsToNotify = new LinkedList<Client>();
         _owner.addTerminal(this);
     }
 
@@ -106,6 +106,7 @@ abstract public class Terminal implements Serializable, Visitable {
         double price = communication.pay();
         updateBalance(price);
         getOwner().verifyLevelUpdateConditions(true);
+        network.changed();
     }
 
     public Communication getOngoingCommunication()
@@ -160,12 +161,13 @@ abstract public class Terminal implements Serializable, Visitable {
         _communications.put(communication.getId(), communication);
     }
 
-    public double endOngoingCommunication(int duration) {
+    public double endOngoingCommunication(int duration, Network network) {
         double communicationPrice = 0D;
         if (canEndCurrentCommunication()) {
             communicationPrice =
                 _ongoingCommunication.finishCommunication(duration);
             getOwner().verifyLevelUpdateConditions(false);
+            network.changed();
         }
         return communicationPrice;
     }
@@ -174,6 +176,7 @@ abstract public class Terminal implements Serializable, Visitable {
       String message) throws UnknownTerminalKeyException,
       UnreachableOffTerminalException {
         if (canStartCommunication()) {
+            network.changed();
             Terminal receiver = network.getTerminal(terminalReceiverId);
             receiver.receiveSMS(this, network, message);
         }
@@ -197,6 +200,7 @@ abstract public class Terminal implements Serializable, Visitable {
             throw new InvalidCommunicationException();
         }
         if (canStartCommunication()) {
+            network.changed();
             Terminal receiver = network.getTerminal(terminalReceiverId);
             receiver.receiveVoiceCall(this, network);
         }
@@ -224,16 +228,14 @@ abstract public class Terminal implements Serializable, Visitable {
       UnreachableSilentTerminalException;
 
     protected void addToNotify(Client client) {
-        if (!_clientsToNotify.contains(client)) {
-            _clientsToNotify.add(client);
-        }
+        _clientsToNotify.add(client);
     }
 
     protected void notifyAllClients(Notification notification) {
-        Client client = null;
-        while ((client = _clientsToNotify.poll()) != null) {
+        for (Client client : _clientsToNotify) {
             client.notify(notification);
         }
+        _clientsToNotify.clear();
     }
 
     public String getFriendsIds() {
@@ -271,10 +273,6 @@ abstract public class Terminal implements Serializable, Visitable {
         network.changed();
     }
 
-    protected Terminal.Status getStatus() {
-        return _status;
-    }
-
     public String getStatusType() {
         return _status.getStatusType();
     }
@@ -283,19 +281,22 @@ abstract public class Terminal implements Serializable, Visitable {
         _status.setStatus(status);
     }
 
-    public void setOnIdle() throws IllegalTerminalStatusException,
-      UnreachableBusyTerminalException {
+    public void setOnIdle(Network network)
+      throws IllegalTerminalStatusException, UnreachableBusyTerminalException {
         _status.setOnIdle();
+        network.changed();
     }
 
-    public void setOnSilent() throws IllegalTerminalStatusException,
-      UnreachableBusyTerminalException {
+    public void setOnSilent(Network network)
+      throws IllegalTerminalStatusException, UnreachableBusyTerminalException {
         _status.setOnSilent();
+        network.changed();
     }
 
-    public void turnOff() throws IllegalTerminalStatusException,
-      UnreachableBusyTerminalException {
+    public void turnOff(Network network)
+      throws IllegalTerminalStatusException, UnreachableBusyTerminalException {
         _status.turnOff();
+        network.changed();
     }
 
     public void setOnBusy() {

@@ -39,10 +39,10 @@ public abstract class InteractiveCommunication extends Communication {
 
     protected void finishInteractiveCommunication(int duration) {
         setProgress(false);
-        getTerminalReceiver().setOngoingCommunication(null);
-        getTerminalReceiver().unBusy();
         getTerminalSender().setOngoingCommunication(null);
         getTerminalSender().unBusy();
+        getTerminalReceiver().setOngoingCommunication(null);
+        getTerminalReceiver().unBusy();
         setUnits(duration);
     }
 

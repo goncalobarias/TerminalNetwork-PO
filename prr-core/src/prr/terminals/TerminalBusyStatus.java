@@ -64,7 +64,7 @@ public class TerminalBusyStatus extends Terminal.Status {
     @Override
     protected void unBusy() {
         updateStatus(_previousStatus);
-        _previousStatus.unBusy(); // TODO: see if storing the previous state is good practice
+        _previousStatus.unBusy();
     }
 
 }
