@@ -1,0 +1,275 @@
+MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: Ficheiro a abrir: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: GESTÃO DE TERMINAIS
+1 - Mostrar todos os terminais
+2 - Registar terminal
+3 - Operações de terminal
+0 - Sair
+Escolha uma opção: Número do terminal: OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+8 - Enviar comunicação de texto
+9 - Iniciar comunicação
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: Número do terminal: Tipo de comunicação a iniciar (VOICE, VIDEO): OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+10 - Terminar comunicação activa
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: Duração da comunicação (em minutos): Custo da comunicação: 400 unidades.
+OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+8 - Enviar comunicação de texto
+9 - Iniciar comunicação
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: GESTÃO DE TERMINAIS
+1 - Mostrar todos os terminais
+2 - Registar terminal
+3 - Operações de terminal
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: GESTÃO DE CLIENTES
+1 - Visualizar cliente
+2 - Visualizar todos os clientes
+3 - Registar cliente
+4 - Activar notificações
+5 - Desactivar notificações
+6 - Mostrar saldo de cliente
+0 - Sair
+Escolha uma opção: CLIENT|cli001|Manuel Pinheiro|103443|PLATINUM|YES|4|520|520
+CLIENT|cli002|Pedro Pinheiro|103447|NORMAL|YES|2|0|0
+CLIENT|cli003|Pedro Oliveira|103449|NORMAL|YES|3|0|0
+CLIENT|cli201|Ludgero Oliveira|103440|NORMAL|YES|0|0|0
+GESTÃO DE CLIENTES
+1 - Visualizar cliente
+2 - Visualizar todos os clientes
+3 - Registar cliente
+4 - Activar notificações
+5 - Desactivar notificações
+6 - Mostrar saldo de cliente
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: GESTÃO DE TERMINAIS
+1 - Mostrar todos os terminais
+2 - Registar terminal
+3 - Operações de terminal
+0 - Sair
+Escolha uma opção: Número do terminal: OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+8 - Enviar comunicação de texto
+9 - Iniciar comunicação
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: Número do terminal: Mensagem de texto a enviar: OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+8 - Enviar comunicação de texto
+9 - Iniciar comunicação
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: GESTÃO DE TERMINAIS
+1 - Mostrar todos os terminais
+2 - Registar terminal
+3 - Operações de terminal
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: GESTÃO DE CLIENTES
+1 - Visualizar cliente
+2 - Visualizar todos os clientes
+3 - Registar cliente
+4 - Activar notificações
+5 - Desactivar notificações
+6 - Mostrar saldo de cliente
+0 - Sair
+Escolha uma opção: CLIENT|cli001|Manuel Pinheiro|103443|PLATINUM|YES|4|520|520
+CLIENT|cli002|Pedro Pinheiro|103447|NORMAL|YES|2|0|0
+CLIENT|cli003|Pedro Oliveira|103449|NORMAL|YES|3|0|0
+CLIENT|cli201|Ludgero Oliveira|103440|NORMAL|YES|0|0|0
+GESTÃO DE CLIENTES
+1 - Visualizar cliente
+2 - Visualizar todos os clientes
+3 - Registar cliente
+4 - Activar notificações
+5 - Desactivar notificações
+6 - Mostrar saldo de cliente
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: GESTÃO DE TERMINAIS
+1 - Mostrar todos os terminais
+2 - Registar terminal
+3 - Operações de terminal
+0 - Sair
+Escolha uma opção: Número do terminal: OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+8 - Enviar comunicação de texto
+9 - Iniciar comunicação
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: Número do terminal: Mensagem de texto a enviar: OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+8 - Enviar comunicação de texto
+9 - Iniciar comunicação
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: GESTÃO DE TERMINAIS
+1 - Mostrar todos os terminais
+2 - Registar terminal
+3 - Operações de terminal
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: GESTÃO DE CLIENTES
+1 - Visualizar cliente
+2 - Visualizar todos os clientes
+3 - Registar cliente
+4 - Activar notificações
+5 - Desactivar notificações
+6 - Mostrar saldo de cliente
+0 - Sair
+Escolha uma opção: CLIENT|cli001|Manuel Pinheiro|103443|NORMAL|YES|4|520|524
+CLIENT|cli002|Pedro Pinheiro|103447|NORMAL|YES|2|0|0
+CLIENT|cli003|Pedro Oliveira|103449|NORMAL|YES|3|0|0
+CLIENT|cli201|Ludgero Oliveira|103440|NORMAL|YES|0|0|0
+GESTÃO DE CLIENTES
+1 - Visualizar cliente
+2 - Visualizar todos os clientes
+3 - Registar cliente
+4 - Activar notificações
+5 - Desactivar notificações
+6 - Mostrar saldo de cliente
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: CONSULTAS
+1 - Mostrar todas as comunicações
+2 - Mostrar comunicações feitas por um cliente
+3 - Mostrar comunicações recebidas por um cliente
+4 - Mostrar clientes sem dívidas
+5 - Mostrar clientes com dívidas
+6 - Mostrar terminais sem actividade
+7 - Mostrar terminais com saldo positivo
+0 - Sair
+Escolha uma opção: VOICE|1|969001|969006|13|260|FINISHED
+VOICE|2|969001|969014|13|260|FINISHED
+VIDEO|3|969011|969014|1|20|FINISHED
+VIDEO|4|969011|969015|1|20|FINISHED
+VIDEO|5|969011|969014|1|20|FINISHED
+VIDEO|6|969011|969015|1|20|FINISHED
+VIDEO|7|969011|969014|2|40|FINISHED
+VIDEO|8|969011|969015|40|400|FINISHED
+TEXT|9|969011|969015|10|0|FINISHED
+TEXT|10|969011|969015|60|4|FINISHED
+CONSULTAS
+1 - Mostrar todas as comunicações
+2 - Mostrar comunicações feitas por um cliente
+3 - Mostrar comunicações recebidas por um cliente
+4 - Mostrar clientes sem dívidas
+5 - Mostrar clientes com dívidas
+6 - Mostrar terminais sem actividade
+7 - Mostrar terminais com saldo positivo
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: 

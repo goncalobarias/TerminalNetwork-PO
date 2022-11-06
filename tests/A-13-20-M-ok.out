@@ -1,0 +1,93 @@
+MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: Ficheiro a abrir: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: GESTÃO DE TERMINAIS
+1 - Mostrar todos os terminais
+2 - Registar terminal
+3 - Operações de terminal
+0 - Sair
+Escolha uma opção: Número do terminal: OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+8 - Enviar comunicação de texto
+9 - Iniciar comunicação
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: Número do terminal: Mensagem de texto a enviar: OPERAÇÕES DO TERMINAL
+1 - Ligar
+2 - Colocar no silêncio
+3 - Desligar
+4 - Adicionar amigo
+5 - Retirar amigo
+6 - Pagamento
+7 - Consultar saldo
+8 - Enviar comunicação de texto
+9 - Iniciar comunicação
+11 - Mostrar comunicação em curso
+0 - Sair
+Escolha uma opção: GESTÃO DE TERMINAIS
+1 - Mostrar todos os terminais
+2 - Registar terminal
+3 - Operações de terminal
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: CONSULTAS
+1 - Mostrar todas as comunicações
+2 - Mostrar comunicações feitas por um cliente
+3 - Mostrar comunicações recebidas por um cliente
+4 - Mostrar clientes sem dívidas
+5 - Mostrar clientes com dívidas
+6 - Mostrar terminais sem actividade
+7 - Mostrar terminais com saldo positivo
+0 - Sair
+Escolha uma opção: VOICE|1|969001|969006|13|260|FINISHED
+VOICE|2|969001|969014|13|260|FINISHED
+VIDEO|3|969011|969014|1|20|FINISHED
+VIDEO|4|969011|969015|1|20|FINISHED
+VIDEO|5|969011|969014|1|20|FINISHED
+VIDEO|6|969011|969015|1|20|FINISHED
+VIDEO|7|969011|969014|2|40|FINISHED
+TEXT|8|969011|969014|7|0|FINISHED
+CONSULTAS
+1 - Mostrar todas as comunicações
+2 - Mostrar comunicações feitas por um cliente
+3 - Mostrar comunicações recebidas por um cliente
+4 - Mostrar clientes sem dívidas
+5 - Mostrar clientes com dívidas
+6 - Mostrar terminais sem actividade
+7 - Mostrar terminais com saldo positivo
+0 - Sair
+Escolha uma opção: MENU PRINCIPAL
+1 - Abrir
+2 - Guardar
+3 - Gestão de clientes
+4 - Gestão de terminais
+5 - Menu de consultas
+6 - Ver saldo global
+0 - Sair
+Escolha uma opção: 
